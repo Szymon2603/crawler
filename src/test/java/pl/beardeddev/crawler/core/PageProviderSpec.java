@@ -23,45 +23,67 @@
  */
 package pl.beardeddev.crawler.core;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
 import org.jsoup.nodes.Document;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 import pl.beardeddev.crawler.exceptions.CoreException;
 
 /**
- *
+ * Specyfikacja wykonywalna dla klasy {@code PagePRovider}
+ * 
  * @author Szymon Grzelak
  */
 public class PageProviderSpec {
     
-    private Document page;
     private PageProvider pageProvider;
     private URL url;
+    private URLWrapper urlWrapper;
+    private URLConnection urlConnection;
     
     @Before
-    public void setUp() throws MalformedURLException {
+    public void setUp() throws MalformedURLException, IOException {
         pageProvider = spy(new PageProvider());
-        page = mock(Document.class);
         url = this.getClass().getClassLoader().getResource("testPage.html");
-    }
-
-    @Test
-    public void whenGetPageByURLThenReturnPage() throws CoreException {
-        doReturn(page).when(pageProvider).getPage(url);
-        Document result = pageProvider.getPage(url);
-        Assert.assertNotNull("Page can't be null", result);
+        urlWrapper = spy(new URLWrapper(url));
+        urlConnection = mock(URLConnection.class);
     }
     
     @Test
     public void whenGetPageByLocalURLThenReturnPage() throws CoreException {
-        Document result = pageProvider.getPage(url);
+        Document result = pageProvider.getPage(urlWrapper);
         Assert.assertNotNull("Page can't be null", result);
     }
     
+    @Test
+    public void whenGetEncodingIsSetThenReturnDocumentWithThatEncoding() throws CoreException, IOException {
+        doReturn(urlConnection).when(urlWrapper).openConnection();
+        doReturn("UTF-8").when(urlConnection).getContentEncoding();
+        doReturn(url.openStream()).when(urlConnection).getInputStream();
+        Document result = pageProvider.getPage(urlWrapper);
+        Assert.assertTrue("Encdocing should be UTF-8", result.charset().contains(Charset.forName("UTF-8")));
+    }
+    
+    @Test(expected = CoreException.class)
+    public void givenIOExceptionWhenGetInputStreamThenThrowCoreException() throws CoreException, IOException {
+        doReturn(urlConnection).when(urlWrapper).openConnection();
+        doThrow(IOException.class).when(urlConnection).getInputStream();
+        pageProvider.getPage(urlWrapper);
+    }
+    
+    @Test(expected = CoreException.class)
+    public void gicenIOExceptionWhenOpenConnectionThenThrowCoreException() throws CoreException, IOException {
+        doThrow(IOException.class).when(urlWrapper).openConnection();
+        pageProvider.getPage(urlWrapper);
+    }
 }

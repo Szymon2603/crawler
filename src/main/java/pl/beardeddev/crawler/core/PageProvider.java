@@ -27,26 +27,35 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.StringJoiner;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import pl.beardeddev.crawler.core.wrappers.URLSource;
 import pl.beardeddev.crawler.exceptions.CoreException;
 
 /**
- *
+ * Klasa odpowiedzialna za pobranie z danego źródła określonego adresem URL zawartości oraz próba sparsowania
+ * jej za pomocą biblioteki Jsoup
+ * 
  * @author Szymon Grzelak
  */
 public class PageProvider {
     
     private final Logger LOGGER = Logger.getLogger(PageProvider.class);
 
-    public Document getPage(URL url) throws CoreException {
+    /**
+     * Metoda pobierająca strona z danego źródła określonego adresem URL
+     * 
+     * @param urlSource zasób URL
+     * @return sparsowany dokument przedstawiony jako instancja klasy {@code org.jsoup.nodes.Document}
+     * @throws CoreException wyjątek zgłaszany w przypadku błędów odczytywania zasobów z podanego adresu URL
+     */
+    public Document getPage(URLSource urlSource) throws CoreException {
         try {
-            URLConnection connection = url.openConnection();
+            URLConnection connection = urlSource.openConnection();
             String charset = getCharset(connection);
             return getBody(connection, charset);
         } catch(CoreException ex) {
