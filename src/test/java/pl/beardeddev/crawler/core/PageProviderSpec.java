@@ -29,7 +29,6 @@ import org.jsoup.nodes.Document;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
