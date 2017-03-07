@@ -27,11 +27,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.StringJoiner;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -44,7 +44,9 @@ import pl.beardeddev.crawler.exceptions.CoreException;
  * 
  * @author Szymon Grzelak
  */
-public class PageProvider {
+public class PageProvider implements DocumentProvider, Serializable {
+
+    private static final long serialVersionUID = 3609424201008737736L;
     
     private final Logger LOGGER = Logger.getLogger(PageProvider.class);
 
@@ -55,7 +57,8 @@ public class PageProvider {
      * @return sparsowany dokument przedstawiony jako instancja klasy {@code org.jsoup.nodes.Document}
      * @throws CoreException wyjątek zgłaszany w przypadku błędów odczytywania zasobów z podanego adresu URL
      */
-    public Document getPage(URLSource urlSource) throws CoreException {
+    @Override
+    public Document getDocument(URLSource urlSource) throws CoreException {
         try {
             URLConnection connection = urlSource.openConnection();
             String charset = getCharset(connection);

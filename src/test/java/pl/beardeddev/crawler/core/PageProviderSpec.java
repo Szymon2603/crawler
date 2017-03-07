@@ -61,7 +61,7 @@ public class PageProviderSpec {
     
     @Test
     public void whenGetPageByLocalURLThenReturnPage() throws CoreException {
-        Document result = pageProvider.getPage(urlWrapper);
+        Document result = pageProvider.getDocument(urlWrapper);
         Assert.assertNotNull("Page can't be null", result);
     }
     
@@ -70,7 +70,7 @@ public class PageProviderSpec {
         doReturn(urlConnection).when(urlWrapper).openConnection();
         doReturn("UTF-8").when(urlConnection).getContentEncoding();
         doReturn(url.openStream()).when(urlConnection).getInputStream();
-        Document result = pageProvider.getPage(urlWrapper);
+        Document result = pageProvider.getDocument(urlWrapper);
         Assert.assertTrue("Encdocing should be UTF-8", result.charset().contains(Charset.forName("UTF-8")));
     }
     
@@ -78,12 +78,12 @@ public class PageProviderSpec {
     public void givenIOExceptionWhenGetInputStreamThenThrowCoreException() throws CoreException, IOException {
         doReturn(urlConnection).when(urlWrapper).openConnection();
         doThrow(IOException.class).when(urlConnection).getInputStream();
-        pageProvider.getPage(urlWrapper);
+        pageProvider.getDocument(urlWrapper);
     }
     
     @Test(expected = CoreException.class)
     public void gicenIOExceptionWhenOpenConnectionThenThrowCoreException() throws CoreException, IOException {
         doThrow(IOException.class).when(urlWrapper).openConnection();
-        pageProvider.getPage(urlWrapper);
+        pageProvider.getDocument(urlWrapper);
     }
 }
