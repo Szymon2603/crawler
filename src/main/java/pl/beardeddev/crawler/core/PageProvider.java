@@ -27,9 +27,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.StringJoiner;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -70,15 +72,20 @@ public class PageProvider {
     private Document getBody(URLConnection connection, String charset) throws CoreException {
         try(InputStream input = connection.getInputStream()) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(input, charset));
-            StringJoiner sj = new StringJoiner(System.lineSeparator());
-            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-                sj.add(line);
-            }
-            return Jsoup.parse(sj.toString());
+            String source = convertToString(reader);
+            return Jsoup.parse(source);
         } catch(IOException ex) {
             LOGGER.error("Error while trying get page", ex);
             throw new CoreException("Core exception while geting page.", ex);
         }
+    }
+
+    private String convertToString(final BufferedReader reader) throws UnsupportedEncodingException, IOException {
+        StringJoiner sj = new StringJoiner(System.lineSeparator());
+        for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+            sj.add(line);
+        }
+        return sj.toString();
     }
 
     private String getCharset(URLConnection connection) {
