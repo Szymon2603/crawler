@@ -35,7 +35,7 @@ import java.util.StringJoiner;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import pl.beardeddev.crawler.core.wrappers.URLSource;
+import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 import pl.beardeddev.crawler.exceptions.CoreException;
 
 /**
@@ -53,14 +53,14 @@ public class PageProvider implements DocumentProvider, Serializable {
     /**
      * Metoda pobierająca strona z danego źródła określonego adresem URL
      * 
-     * @param urlSource zasób URL
+     * @param urlWrapper zasób URL
      * @return sparsowany dokument przedstawiony jako instancja klasy {@code org.jsoup.nodes.Document}
      * @throws CoreException wyjątek zgłaszany w przypadku błędów odczytywania zasobów z podanego adresu URL
      */
     @Override
-    public Document getDocument(URLSource urlSource) throws CoreException {
+    public Document getDocument(URLWrapper urlWrapper) throws CoreException {
         try {
-            URLConnection connection = urlSource.openConnection();
+            URLConnection connection = urlWrapper.openConnection();
             String charset = getCharset(connection);
             return getBody(connection, charset);
         } catch(CoreException ex) {
@@ -94,7 +94,7 @@ public class PageProvider implements DocumentProvider, Serializable {
     private String getCharset(URLConnection connection) {
         String charset = connection.getContentEncoding();
         if(charset == null) {
-            LOGGER.info("Charset is unknow. Trying with derfault");
+            LOGGER.info("Charset is unknow. Trying with default UTF-8");
             return StandardCharsets.UTF_8.name();
         }
         return charset;

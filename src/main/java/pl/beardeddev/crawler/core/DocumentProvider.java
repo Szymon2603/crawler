@@ -24,7 +24,7 @@
 package pl.beardeddev.crawler.core;
 
 import org.jsoup.nodes.Document;
-import pl.beardeddev.crawler.core.wrappers.URLSource;
+import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 import pl.beardeddev.crawler.exceptions.CoreException;
 
 /**
@@ -37,9 +37,9 @@ public interface DocumentProvider {
     /**
      * Pobiera dokument HTML z danego źródła URL
      * 
-     * @param urlSource adres URL
+     * @param urlWrapper adres URL
      * @return sparsowany dokument HTML
      * @throws CoreException błędy związane z próbą pobrania dokumentu
      */
-    public Document getDocument(URLSource urlSource) throws CoreException;
+    public Document getDocument(URLWrapper urlWrapper) throws CoreException;
 }

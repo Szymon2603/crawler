@@ -24,6 +24,7 @@
 package pl.beardeddev.crawler.core.wrappers;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -32,7 +33,9 @@ import java.net.URLConnection;
  * 
  * @author Szymon Grzelak
  */
-public class URLWrapper implements URLSource {
+public class URLWrapper implements Serializable {
+
+    private static final long serialVersionUID = 6024044659311363956L;
 
     private URL url;
 
@@ -44,21 +47,20 @@ public class URLWrapper implements URLSource {
     }
     
     /**
-     * Metoda wywołująca odpowiednią metodę klasy {@code java.net.URL} w celu uzyskania połączenia z danym zasobem
+     * Wywołuje odpowiednią metodę klasy {@code java.net.URL} w celu uzyskania połączenia z danym zasobem
      * 
-     * @return
-     * @throws IOException 
+     * @return połączenie z danym zasobem
+     * @throws IOException błędy przy próbie utworzenia połączenia
      */
-    @Override
     public URLConnection openConnection() throws IOException {
         return url.openConnection();
     }
 
-    public URL getUrl() {
+    public URL getURL() {
         return url;
     }
 
-    public void setUrl(URL url) {
+    public void setURL(URL url) {
         this.url = url;
     }
     
