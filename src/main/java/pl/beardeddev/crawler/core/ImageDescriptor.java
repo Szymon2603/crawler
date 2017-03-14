@@ -24,37 +24,58 @@
 package pl.beardeddev.crawler.core;
 
 /**
- *
+ * Klasa zawierająca selektor do elementów, które mają zostać odnalezione na stronach HTML.
+ * 
  * @author Szymon Grzelak
  */
 public class ImageDescriptor {
 
-    private String imageSelector;
-    private String nextElementSelector;
-    private String commentsSelector;
-    private String ratingSelector;
+    private final String IMAGE_SELECTOR;
+    private final String NEXT_ELEMENT_SELECTOR;
+    private final String COMMENTS_SELECTOR;
+    private final String RATING_SELECTOR;
 
     public ImageDescriptor(String imageSelector, String nextElementSelector, String commentsSelector, String ratingSelector) {
-        this.imageSelector = imageSelector;
-        this.nextElementSelector = nextElementSelector;
-        this.commentsSelector = commentsSelector;
-        this.ratingSelector = ratingSelector;
+        this.IMAGE_SELECTOR = imageSelector;
+        this.NEXT_ELEMENT_SELECTOR = nextElementSelector;
+        this.COMMENTS_SELECTOR = commentsSelector;
+        this.RATING_SELECTOR = ratingSelector;
     }
     
+    /**
+     * Zwraca selektor elementu zawierającego obrazek.
+     * 
+     * @return selektor w postaci łańcucha znakowego.
+     */
     public String getImageSelector() {
-        return imageSelector;
+        return IMAGE_SELECTOR;
     }
 
+    /**
+     * Zwraca selektor linku prowadzącego do następnej strony z obrazkiem.
+     * 
+     * @return selektor w postaci łańcucha znakowego.
+     */
     public String getNextElementSelector() {
-        return nextElementSelector;
+        return NEXT_ELEMENT_SELECTOR;
     }
 
+    /**
+     * Zwraca selektor do elementu zawierającego liczbę komentarzy.
+     * 
+     * @return selektor w postaci łańcucha znakowego.
+     */
     public String getCommentsSelector() {
-        return commentsSelector;
+        return COMMENTS_SELECTOR;
     }
 
+    /**
+     * Zwraca selektor do elementu zawierającego ocenę obrazka.
+     * 
+     * @return selektor w postaci łańcucha znakowego.
+     */
     public String getRatingSelector() {
-        return ratingSelector;
+        return RATING_SELECTOR;
     }
     
 }

@@ -102,4 +102,20 @@ public class CrawlerSpec {
         Integer actual = result.getNumberOfComments();
         Assert.assertNull(String.format("Number of comments should be null"), actual);
     }
+    
+    @Test()
+    public void givenRatingWhenGetImageThenRatingPropertyIsSet() throws CoreException, MalformedURLException {
+        Image result = crawler.getImage(urlWrapper);
+        Integer expected = 15;
+        Integer actual = result.getRating();
+        Assert.assertTrue(String.format("Ratings are not equals! Actual is: %d", actual), expected.equals(actual));
+    }
+    
+    @Test()
+    public void givenBadRatingsSelectorWhenGetImageThenValueIsNotSet() throws CoreException, MalformedURLException {
+        doReturn("div#badId").when(imageDescriptor).getRatingSelector();
+        Image result = crawler.getImage(urlWrapper);
+        Integer actual = result.getRating();
+        Assert.assertNull(String.format("Ratings should be null"), actual);
+    }
 }

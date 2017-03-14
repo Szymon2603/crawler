@@ -35,7 +35,10 @@ import pl.beardeddev.crawler.domain.Image;
 import pl.beardeddev.crawler.exceptions.CoreException;
 
 /**
- *
+ * Klasa robota internetowego (pająka internetowego). Przeszukuje podane strony internetowe pod kątem elementów opisanych
+ * za pomocą {@see ImageDescriptor} i transformuje je na obiekty klasy {@see Image}. Dokument do przetworzenia dostarczany
+ * jest za pomocą instancji klasy implementującej {@see DocumentProvider}.
+ * 
  * @author Szymon Grzelak
  */
 public class Crawler implements ImageCollector, Serializable {
@@ -43,12 +46,19 @@ public class Crawler implements ImageCollector, Serializable {
     private static final long serialVersionUID = 6393778875493770690L;
     private static final Logger LOGGER = Logger.getLogger(Crawler.class);
     
-    private DocumentProvider documentProvider;
-    private ImageDescriptor imageDescriptor;
+    private final DocumentProvider DOCUMENT_PROVIDER;
+    private final ImageDescriptor IMAGE_DESCRIPTOR;
 
+    /**
+     * Konstruktor parametrowy. Stworzona instancja za pomocą tego konstruktora jest gotowa do przetwarzania dokumentów.
+     * Wszystkie parametry konstruktora są wymagane (nie mogą posiadać wartości null).
+     * 
+     * @param documentProvider obiekt dostarczający dokumenty do przetworzenia.
+     * @param imageDescriptor obiekt zawierający selektory elementów do przetworzenia.
+     */
     public Crawler(DocumentProvider documentProvider, ImageDescriptor imageDescriptor) {
-        this.documentProvider = documentProvider;
-        this.imageDescriptor = imageDescriptor;
+        this.DOCUMENT_PROVIDER = documentProvider;
+        this.IMAGE_DESCRIPTOR = imageDescriptor;
     }
     
     public List<Image> getImages(URLWrapper urlStartPoint) throws CoreException {
@@ -56,6 +66,15 @@ public class Crawler implements ImageCollector, Serializable {
         return null;
     }
     
+    /**
+     * Przetwarza dokument znajdujący się pod podanym adresem URL na instancję {@see Image}.
+     * 
+     * @param url adres dokumentu do przetworzenia, nie może być to wartość null
+     * @return instancja {@see Image}
+     * @throws CoreException jeżeli przekazany obiekt {@see URLWrapper} jest null oraz błędy zgłaszane przez pozostałe
+     * komponenty składowe pająka.
+     * @throws MalformedURLException niepoprawny format adresu URL.
+     */
     public Image getImage(URLWrapper url) throws CoreException, MalformedURLException {
         isNotNull(url);
         return createImage(url);
@@ -63,13 +82,15 @@ public class Crawler implements ImageCollector, Serializable {
 
     private Image createImage(URLWrapper url) throws CoreException, MalformedURLException {
         LOGGER.trace(String.format("Creating image for: %s.", url.getURL().toString()));
-        Document document = documentProvider.getDocument(url);
+        Document document = DOCUMENT_PROVIDER.getDocument(url);
         URL urlImg = findImageURL(document);
         if(urlImg != null) {
             Image image = new Image();
             image.setImageURL(urlImg);
             Integer numberOfComments = findNumberOfComments(document);
             image.setNumberOfComments(numberOfComments);
+            Integer rating = findRatings(document);
+            image.setRating(rating);
             LOGGER.trace(String.format("Return image object: %s.", image.toString()));
             return image;
         }
@@ -78,7 +99,7 @@ public class Crawler implements ImageCollector, Serializable {
     }
 
     private Integer findNumberOfComments(Document document) throws NumberFormatException {
-        Elements elements = document.select(imageDescriptor.getCommentsSelector());
+        Elements elements = document.select(IMAGE_DESCRIPTOR.getCommentsSelector());
         String elementValue = elements.text();
         try {
             Integer numberOfComments = Integer.parseInt(elementValue);
@@ -88,9 +109,21 @@ public class Crawler implements ImageCollector, Serializable {
             return null;
         }
     }
+
+    private Integer findRatings(Document document) throws NumberFormatException {
+        Elements elements = document.select(IMAGE_DESCRIPTOR.getRatingSelector());
+        String elementValue = elements.text();
+        try {
+            Integer rating = Integer.parseInt(elementValue);
+            return rating;
+        } catch (NumberFormatException ex) {
+            LOGGER.warn("Can't parse ratings. Return null instead.", ex);
+            return null;
+        }
+    }
     
     private URL findImageURL(Document document) throws MalformedURLException {
-        Elements elements = document.select(imageDescriptor.getImageSelector());
+        Elements elements = document.select(IMAGE_DESCRIPTOR.getImageSelector());
         if(elements.isEmpty()) {
             return null;
         }

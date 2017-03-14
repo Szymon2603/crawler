@@ -24,10 +24,10 @@
 package pl.beardeddev.crawler.domain;
 
 import java.net.URL;
-import java.util.Objects;
 
 /**
- *
+ * Klasa modelu, reprezentuje produkt robota internetowego przetwarzającego strony HTML
+ * 
  * @author Szymon Grzelak
  */
 public class Image {
