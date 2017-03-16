@@ -29,11 +29,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.jsoup.nodes.Document;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.any;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 import pl.beardeddev.crawler.domain.Image;
 import pl.beardeddev.crawler.exceptions.CoreException;
@@ -74,9 +77,10 @@ public class CrawlerSpec {
         crawler.getImage(null);
     }
     
-    @Test(expected = CoreException.class)
-    public void givenNullArgWhenGetImagesThenThrowCoreException() throws CoreException, MalformedURLException {
-        crawler.getImages(null, 1);
+    @Test()
+    public void givenNullArgWhenGetImagesThenListIsEmpty() {
+        List<Image> result = crawler.getImages(null, 1);
+        Assert.assertTrue("List should be empty!", result.isEmpty());
     }
     
     @Test()
@@ -126,20 +130,20 @@ public class CrawlerSpec {
     }
     
     @Test()
-    public void givenCorrectURLWhenGetImagesThenListIsNotEmpty() throws CoreException, MalformedURLException {
+    public void givenCorrectURLWhenGetImagesThenListIsNotEmpty() {
         List<Image> result = crawler.getImages(urlWrapper, 1);
         Assert.assertFalse("List is empty!", result.isEmpty());
     }
     
     @Test()
-    public void givenBadImageSelectorWhenGetImagesThenListIsEmpty() throws CoreException, MalformedURLException {
+    public void givenBadImageSelectorWhenGetImagesThenListIsEmpty() {
         doReturn("img[id=notexist]").when(imageDescriptor).getImageSelector();
         List<Image> result = crawler.getImages(urlWrapper, 1);
         Assert.assertTrue("List is not empty!", result.isEmpty());
     }
     
     @Test()
-    public void givenMaxNumOfImagesWhenGetImagesThenListHaveCorrectSize() throws CoreException, MalformedURLException {
+    public void givenMaxNumOfImagesWhenGetImagesThenListHaveCorrectSize() {
         int expected = 2;
         List<Image> result = crawler.getImages(urlWrapper, expected);
         int actual = result.size();
@@ -147,8 +151,38 @@ public class CrawlerSpec {
     }
     
     @Test()
-    public void whenGetImagesThenListHaveDiffrentImages() throws CoreException, MalformedURLException {
+    public void whenGetImagesThenListHaveDiffrentImages() {
         int expected = 2;
+        List<Image> result = crawler.getImages(urlWrapper, expected);
+        Set<Image> resultSet = result.stream().collect(Collectors.toCollection(() -> new HashSet()));
+        int actual = resultSet.size();
+        Assert.assertEquals("List have incorrect size!", expected, actual);
+    }
+    
+    @Test()
+    public void givenNoNextElementURLWhenGetImagesThenReturnResult() throws CoreException {
+        doReturn(null).when(imageElementsSupplier).getNextImageURL(any(Document.class));
+        int expected = 1;
+        List<Image> result = crawler.getImages(urlWrapper, expected);
+        Set<Image> resultSet = result.stream().collect(Collectors.toCollection(() -> new HashSet()));
+        int actual = resultSet.size();
+        Assert.assertEquals("List have incorrect size!", expected, actual);
+    }
+    
+    @Test()
+    public void givenCoreExceptionWhenGetImagesThenReturnResult() throws CoreException {
+        doThrow(CoreException.class).when(imageElementsSupplier).getNextImageURL(any(Document.class));
+        int expected = 1;
+        List<Image> result = crawler.getImages(urlWrapper, expected);
+        Set<Image> resultSet = result.stream().collect(Collectors.toCollection(() -> new HashSet()));
+        int actual = resultSet.size();
+        Assert.assertEquals("List have incorrect size!", expected, actual);
+    }
+    
+    @Test()
+    public void givenCoreExceptionWhenGetImagesThenReturnNoResult() throws CoreException {
+        doThrow(CoreException.class).when(crawler).getImage(any(URLWrapper.class));
+        int expected = 0;
         List<Image> result = crawler.getImages(urlWrapper, expected);
         Set<Image> resultSet = result.stream().collect(Collectors.toCollection(() -> new HashSet()));
         int actual = resultSet.size();

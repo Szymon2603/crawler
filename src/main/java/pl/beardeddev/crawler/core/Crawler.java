@@ -61,17 +61,30 @@ public class Crawler implements ImageCollector, Serializable {
         this.IMAGE_ELEMENTS_SUPPLIER = imageElementsSupplier;
     }
     
-    public List<Image> getImages(URLWrapper urlStartPoint, int maxVisits) throws CoreException, MalformedURLException {
-        isNotNull(urlStartPoint);
+    /**
+     * Przetwarza dokument pod podanym adresem URL. Następnie próbuje uzyskać nastęnym element i powtórzyć dla niego
+     * operację przetworzenia dokumentu na instancję {@see Image}. Jeżeli dokument nie będzie możliwy do uzyskania w
+     * wyniku błędów, zostanie zwrócony dotychczasowy rezultat przetwazrania.
+     * 
+     * @param urlStartPoint początkowy adres dokumentu, nie może być null.
+     * @param maxVisits maksymalna ilość stron do odwiezenia.
+     * @return lista obiektów {@see Image}.
+     */
+    public List<Image> getImages(URLWrapper urlStartPoint, int maxVisits) {
         List<Image> result = new ArrayList<>();
-        URLWrapper nextURLToVisit = urlStartPoint;
-        for(int i = 0; i < maxVisits && nextURLToVisit != null; ++i) {
-            Image image = getImage(nextURLToVisit);
-            if(image == null) {
-                break;
+        try {
+            isNotNull(urlStartPoint);
+            URLWrapper nextURLToVisit = urlStartPoint;
+            for (int i = 0; i < maxVisits && nextURLToVisit != null; ++i) {
+                Image image = getImage(nextURLToVisit);
+                if (image == null) {
+                    break;
+                }
+                result.add(image);
+                nextURLToVisit = IMAGE_ELEMENTS_SUPPLIER.getNextImageURL(document);
             }
-            result.add(image);
-            nextURLToVisit = IMAGE_ELEMENTS_SUPPLIER.getNextImageURL(document);
+        } catch(CoreException ex) {
+            LOGGER.warn("Przerwanie przetwarzania zbierania!", ex);
         }
         return result;
     }
@@ -79,18 +92,17 @@ public class Crawler implements ImageCollector, Serializable {
     /**
      * Przetwarza dokument znajdujący się pod podanym adresem URL na instancję {@see Image}.
      * 
-     * @param url adres dokumentu do przetworzenia, nie może być to wartość null
-     * @return instancja {@see Image}
+     * @param url adres dokumentu do przetworzenia, nie może być to wartość null.
+     * @return instancja {@see Image}, null jeżeli nie udało znaleźć się adresu obrazka.
      * @throws CoreException jeżeli przekazany obiekt {@see URLWrapper} jest null oraz błędy zgłaszane przez pozostałe
      * komponenty składowe pająka.
-     * @throws MalformedURLException niepoprawny format adresu URL.
      */
-    public Image getImage(URLWrapper url) throws CoreException, MalformedURLException {
+    public Image getImage(URLWrapper url) throws CoreException {
         isNotNull(url);
         return createImage(url);
     }
 
-    private Image createImage(URLWrapper url) throws CoreException, MalformedURLException {
+    private Image createImage(URLWrapper url) throws CoreException {
         LOGGER.trace(String.format("Creating image for: %s.", url.getURL().toString()));
         document = DOCUMENT_PROVIDER.getDocument(url);
         URLWrapper urlImg = IMAGE_ELEMENTS_SUPPLIER.getImageURL(document);
