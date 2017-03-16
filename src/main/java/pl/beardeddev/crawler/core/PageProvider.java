@@ -64,7 +64,6 @@ public class PageProvider implements DocumentProvider, Serializable {
             String charset = getCharset(connection);
             return getBody(connection, charset);
         } catch(CoreException ex) {
-            LOGGER.error("Error while trying get page", ex);
             throw ex;
         } catch (IOException ex) {
             LOGGER.error("Error while trying get page", ex);
