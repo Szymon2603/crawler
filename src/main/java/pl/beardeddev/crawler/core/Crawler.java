@@ -25,18 +25,17 @@ package pl.beardeddev.crawler.core;
 
 import java.io.Serializable;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 import pl.beardeddev.crawler.domain.Image;
 import pl.beardeddev.crawler.exceptions.CoreException;
 
 /**
- * Klasa robota internetowego (pająka internetowego). Przeszukuje podane strony internetowe pod kątem elementów opisanych
- * za pomocą {@see ImageDescriptor} i transformuje je na obiekty klasy {@see Image}. Dokument do przetworzenia dostarczany
+ * Klasa robota internetowego (pająka internetowego). Przeszukuje podane strony internetowe pod kątem elementów zwracanych
+ * za pomocą {@see ImageElementsSupplier} i transformuje je na obiekty klasy {@see Image}. Dokument do przetworzenia dostarczany
  * jest za pomocą instancji klasy implementującej {@see DocumentProvider}.
  * 
  * @author Szymon Grzelak
@@ -47,23 +46,34 @@ public class Crawler implements ImageCollector, Serializable {
     private static final Logger LOGGER = Logger.getLogger(Crawler.class);
     
     private final DocumentProvider DOCUMENT_PROVIDER;
-    private final ImageDescriptor IMAGE_DESCRIPTOR;
+    private final ImageElementsSupplier IMAGE_ELEMENTS_SUPPLIER;
+    private Document document;
 
     /**
      * Konstruktor parametrowy. Stworzona instancja za pomocą tego konstruktora jest gotowa do przetwarzania dokumentów.
      * Wszystkie parametry konstruktora są wymagane (nie mogą posiadać wartości null).
      * 
      * @param documentProvider obiekt dostarczający dokumenty do przetworzenia.
-     * @param imageDescriptor obiekt zawierający selektory elementów do przetworzenia.
+     * @param imageElementsSupplier obiekt dostarczajacy wymagane elementy obrazka
      */
-    public Crawler(DocumentProvider documentProvider, ImageDescriptor imageDescriptor) {
+    public Crawler(DocumentProvider documentProvider, ImageElementsSupplier imageElementsSupplier) {
         this.DOCUMENT_PROVIDER = documentProvider;
-        this.IMAGE_DESCRIPTOR = imageDescriptor;
+        this.IMAGE_ELEMENTS_SUPPLIER = imageElementsSupplier;
     }
     
-    public List<Image> getImages(URLWrapper urlStartPoint) throws CoreException {
+    public List<Image> getImages(URLWrapper urlStartPoint, int maxVisits) throws CoreException, MalformedURLException {
         isNotNull(urlStartPoint);
-        return null;
+        List<Image> result = new ArrayList<>();
+        URLWrapper nextURLToVisit = urlStartPoint;
+        for(int i = 0; i < maxVisits && nextURLToVisit != null; ++i) {
+            Image image = getImage(nextURLToVisit);
+            if(image == null) {
+                break;
+            }
+            result.add(image);
+            nextURLToVisit = IMAGE_ELEMENTS_SUPPLIER.getNextImageURL(document);
+        }
+        return result;
     }
     
     /**
@@ -82,14 +92,14 @@ public class Crawler implements ImageCollector, Serializable {
 
     private Image createImage(URLWrapper url) throws CoreException, MalformedURLException {
         LOGGER.trace(String.format("Creating image for: %s.", url.getURL().toString()));
-        Document document = DOCUMENT_PROVIDER.getDocument(url);
-        URL urlImg = findImageURL(document);
+        document = DOCUMENT_PROVIDER.getDocument(url);
+        URLWrapper urlImg = IMAGE_ELEMENTS_SUPPLIER.getImageURL(document);
         if(urlImg != null) {
             Image image = new Image();
-            image.setImageURL(urlImg);
-            Integer numberOfComments = findNumberOfComments(document);
+            image.setImageURL(urlImg.getURL());
+            Integer numberOfComments = IMAGE_ELEMENTS_SUPPLIER.getImageNumberOfComments(document);
             image.setNumberOfComments(numberOfComments);
-            Integer rating = findRatings(document);
+            Integer rating = IMAGE_ELEMENTS_SUPPLIER.getImageRatings(document);
             image.setRating(rating);
             LOGGER.trace(String.format("Return image object: %s.", image.toString()));
             return image;
@@ -97,39 +107,7 @@ public class Crawler implements ImageCollector, Serializable {
         LOGGER.trace("Can't find image URL, returning null reference.");
         return null;
     }
-
-    private Integer findNumberOfComments(Document document) throws NumberFormatException {
-        Elements elements = document.select(IMAGE_DESCRIPTOR.getCommentsSelector());
-        String elementValue = elements.text();
-        try {
-            Integer numberOfComments = Integer.parseInt(elementValue);
-            return numberOfComments;
-        } catch(NumberFormatException ex) {
-            LOGGER.warn("Can't parse number of comments. Return null instead.", ex);
-            return null;
-        }
-    }
-
-    private Integer findRatings(Document document) throws NumberFormatException {
-        Elements elements = document.select(IMAGE_DESCRIPTOR.getRatingSelector());
-        String elementValue = elements.text();
-        try {
-            Integer rating = Integer.parseInt(elementValue);
-            return rating;
-        } catch (NumberFormatException ex) {
-            LOGGER.warn("Can't parse ratings. Return null instead.", ex);
-            return null;
-        }
-    }
     
-    private URL findImageURL(Document document) throws MalformedURLException {
-        Elements elements = document.select(IMAGE_DESCRIPTOR.getImageSelector());
-        if(elements.isEmpty()) {
-            return null;
-        }
-        return new URL(elements.attr("src"));
-    }
-
     private void isNotNull(URLWrapper url) throws CoreException {
         if(url == null) {
             LOGGER.error("URL is null!");

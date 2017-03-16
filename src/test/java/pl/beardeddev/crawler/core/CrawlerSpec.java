@@ -25,6 +25,10 @@ package pl.beardeddev.crawler.core;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +49,7 @@ public class CrawlerSpec {
     private Crawler crawler;
     private DocumentProvider documentProvider;
     private ImageDescriptor imageDescriptor;
+    private ImageElementsSupplier imageElementsSupplier;
     private String imageSelector;
     private String nextElementSelector;
     private String commentsSelector;
@@ -60,7 +65,8 @@ public class CrawlerSpec {
         commentsSelector = "div#commentsNumber";
         ratingSelector = "div[id=rateNummber]";
         imageDescriptor = spy(new ImageDescriptor(imageSelector, nextElementSelector, commentsSelector, ratingSelector));
-        crawler = spy(new Crawler(documentProvider, imageDescriptor));
+        imageElementsSupplier = spy(new LocalTestPageSupplier(imageDescriptor));
+        crawler = spy(new Crawler(documentProvider, imageElementsSupplier));
     }
     
     @Test(expected = CoreException.class)
@@ -69,8 +75,8 @@ public class CrawlerSpec {
     }
     
     @Test(expected = CoreException.class)
-    public void givenNullArgWhenGetImagesThenThrowCoreException() throws CoreException {
-        crawler.getImages(null);
+    public void givenNullArgWhenGetImagesThenThrowCoreException() throws CoreException, MalformedURLException {
+        crawler.getImages(null, 1);
     }
     
     @Test()
@@ -117,5 +123,35 @@ public class CrawlerSpec {
         Image result = crawler.getImage(urlWrapper);
         Integer actual = result.getRating();
         Assert.assertNull(String.format("Ratings should be null"), actual);
+    }
+    
+    @Test()
+    public void givenCorrectURLWhenGetImagesThenListIsNotEmpty() throws CoreException, MalformedURLException {
+        List<Image> result = crawler.getImages(urlWrapper, 1);
+        Assert.assertFalse("List is empty!", result.isEmpty());
+    }
+    
+    @Test()
+    public void givenBadImageSelectorWhenGetImagesThenListIsEmpty() throws CoreException, MalformedURLException {
+        doReturn("img[id=notexist]").when(imageDescriptor).getImageSelector();
+        List<Image> result = crawler.getImages(urlWrapper, 1);
+        Assert.assertTrue("List is not empty!", result.isEmpty());
+    }
+    
+    @Test()
+    public void givenMaxNumOfImagesWhenGetImagesThenListHaveCorrectSize() throws CoreException, MalformedURLException {
+        int expected = 2;
+        List<Image> result = crawler.getImages(urlWrapper, expected);
+        int actual = result.size();
+        Assert.assertEquals("List have incorrect size!", expected, actual);
+    }
+    
+    @Test()
+    public void whenGetImagesThenListHaveDiffrentImages() throws CoreException, MalformedURLException {
+        int expected = 2;
+        List<Image> result = crawler.getImages(urlWrapper, expected);
+        Set<Image> resultSet = result.stream().collect(Collectors.toCollection(() -> new HashSet()));
+        int actual = resultSet.size();
+        Assert.assertEquals("List have incorrect size!", expected, actual);
     }
 }
