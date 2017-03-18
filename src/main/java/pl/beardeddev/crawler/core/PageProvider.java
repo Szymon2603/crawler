@@ -51,11 +51,11 @@ public class PageProvider implements DocumentProvider, Serializable {
     private final Logger LOGGER = Logger.getLogger(PageProvider.class);
 
     /**
-     * Metoda pobierająca strona z danego źródła określonego adresem URL
+     * Metoda pobierająca dokument HTML z danego źródła określonego adresem URL.
      * 
-     * @param urlWrapper zasób URL
-     * @return sparsowany dokument przedstawiony jako instancja klasy {@code org.jsoup.nodes.Document}
-     * @throws CoreException wyjątek zgłaszany w przypadku błędów odczytywania zasobów z podanego adresu URL
+     * @param urlWrapper zasób URL.
+     * @return sparsowany dokument przedstawiony jako instancja klasy {@code org.jsoup.nodes.Document}.
+     * @throws CoreException wyjątek zgłaszany w przypadku błędów odczytywania zasobów z podanego adresu URL.
      */
     @Override
     public Document getDocument(URLWrapper urlWrapper) throws CoreException {

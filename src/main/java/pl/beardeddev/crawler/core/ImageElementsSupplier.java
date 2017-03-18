@@ -34,8 +34,39 @@ import pl.beardeddev.crawler.exceptions.CoreException;
  */
 public interface ImageElementsSupplier {
    
+    /**
+     * Zwraca adres URL do obrazka zawarty w dokumencie.
+     * 
+     * @param document dokument, dla którego ma zostać pobrany adres obrazka.
+     * @return adres URL obrazka, null jeżei nie udało się znaleźć elementu.
+     * @throws CoreException błędy związane z przetwarzanie dokumentu lub próbą utworzenia adresu URL.
+     */
     public URLWrapper getImageURL(Document document) throws CoreException;
+    
+    /**
+     * Zwraca liczbę komentarzy obrazka zawartą w dokumencie.
+     * 
+     * @param document dokument, dla którego ma zostać pobrana liczba komentarzy.
+     * @return liczba komentarzy, null jeżeli nie udało się znaleźć elementu.
+     * @throws CoreException błędy związane z przetwarzanie dokumentu lub parsowaniem wyników na obiekt {@see Integer}.
+     */
     public Integer getImageNumberOfComments(Document document) throws CoreException;
+    
+    /**
+     * Zwraca ranking obrazka zawarty w dokumencie.
+     * 
+     * @param document dokument, dla którego ma zostać pobrany ranking.
+     * @return ranking, null jeżeli nie udało się znaleźć elementu.
+     * @throws CoreException błędy związane z przetwarzanie dokumentu lub parsowaniem wyników na obiekt {@see Integer}.
+     */
     public Integer getImageRatings(Document document) throws CoreException;
+    
+    /**
+     * Zwraca adres URL do następnego obrazka zawarty w dokumencie.
+     * 
+     * @param document dokument, dla którego ma zostać pobrany adres URL.
+     * @return adres URL, null jeżeli nie udało się znaleźć elementu.
+     * @throws CoreException błędy związane z przetwarzanie dokumentu lub próbą utworzenia adresu URL.
+     */
     public URLWrapper getNextImageURL(Document document) throws CoreException;
 }

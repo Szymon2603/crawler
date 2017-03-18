@@ -24,7 +24,6 @@
 package pl.beardeddev.crawler.core;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -40,7 +39,7 @@ import pl.beardeddev.crawler.exceptions.CoreException;
  * 
  * @author Szymon Grzelak
  */
-public class Crawler implements ImageCollector, Serializable {
+public class Crawler implements Serializable {
 
     private static final long serialVersionUID = 6393778875493770690L;
     private static final Logger LOGGER = Logger.getLogger(Crawler.class);

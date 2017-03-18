@@ -24,7 +24,9 @@
 package pl.beardeddev.crawler.exceptions;
 
 /**
- *
+ * Wyjątek zgłaszany przez elementy główne wchodzące w skład robota internetowego. Sygnalizuje różne ogólne błędy
+ * jake napotkano w czasie pracy crawler-a.
+ * 
  * @author Szymon Grzelak
  */
 public class CoreException extends Exception {
