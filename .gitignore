@@ -14,3 +14,6 @@ hs_err_pid*
 nb-configuration.xml
 /nbproject/
 /logs/
+/crawler-core/target/
+/crawler-app/target/
+/crawler-core/logs/*
