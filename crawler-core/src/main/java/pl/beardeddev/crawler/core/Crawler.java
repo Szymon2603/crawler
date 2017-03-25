@@ -26,8 +26,9 @@ package pl.beardeddev.crawler.core;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 import pl.beardeddev.crawler.core.model.Image;
 import pl.beardeddev.crawler.core.exceptions.CoreException;
@@ -42,7 +43,7 @@ import pl.beardeddev.crawler.core.exceptions.CoreException;
 public class Crawler implements Serializable {
 
     private static final long serialVersionUID = 6393778875493770690L;
-    private static final Logger LOGGER = Logger.getLogger(Crawler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Crawler.class);
     
     private final DocumentProvider DOCUMENT_PROVIDER;
     private final ImageElementsSupplier IMAGE_ELEMENTS_SUPPLIER;

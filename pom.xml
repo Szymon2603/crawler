@@ -10,7 +10,16 @@
     <name>crawler</name>
 
     <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <versions.spring>4.3.7.RELEASE</versions.spring>
+        <versions.crawler-core>0.0.1-SNAPSHOT</versions.crawler-core>
+        <versions.log4j>1.2.17</versions.log4j>
+        <versions.junit>4.12</versions.junit>
+        <versions.mockito>1.10.19</versions.mockito>
+        <versions.jsoup>1.10.2</versions.jsoup>
+        <versions.slf4j>1.7.25</versions.slf4j>
     </properties>
     
     <modules>
@@ -20,26 +29,48 @@
     
     <dependencyManagement>
         <dependencies>
+            <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${versions.slf4j}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${versions.slf4j}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${versions.slf4j}</version>
+                <scope>test</scope>
+            </dependency>
+
             <!-- https://mvnrepository.com/artifact/log4j/log4j -->
             <dependency>
                 <groupId>log4j</groupId>
                 <artifactId>log4j</artifactId>
-                <version>1.2.17</version>
-                <scope>compile</scope>
+                <version>${versions.log4j}</version>
             </dependency>
-        
+
             <!-- https://mvnrepository.com/artifact/junit/junit -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>${versions.junit}</version>
                 <scope>test</scope>
             </dependency>
+
             <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-all</artifactId>
-                <version>1.10.19</version>
+                <version>${versions.mockito}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
