@@ -32,9 +32,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.StringJoiner;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.LoggerFactory;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 import pl.beardeddev.crawler.core.exceptions.CoreException;
 
@@ -48,7 +49,7 @@ public class PageProvider implements DocumentProvider, Serializable {
 
     private static final long serialVersionUID = 3609424201008737736L;
     
-    private final Logger LOGGER = Logger.getLogger(PageProvider.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(PageProvider.class);
 
     /**
      * Metoda pobierająca dokument HTML z danego źródła określonego adresem URL.

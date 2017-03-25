@@ -25,9 +25,10 @@ package pl.beardeddev.crawler.core;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 import pl.beardeddev.crawler.core.exceptions.CoreException;
 
@@ -38,7 +39,7 @@ import pl.beardeddev.crawler.core.exceptions.CoreException;
  */
 public class LocalTestPageSupplier implements ImageElementsSupplier {
     
-    private static final Logger LOGGER = Logger.getLogger(LocalTestPageSupplier.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LocalTestPageSupplier.class);
     private final ImageDescriptor IMAGE_DESCRIPTOR;
     private final String PROTOCOL;
     
