@@ -20,6 +20,9 @@
         <versions.mockito>1.10.19</versions.mockito>
         <versions.jsoup>1.10.2</versions.jsoup>
         <versions.slf4j>1.7.25</versions.slf4j>
+        <versions.spring.data>1.11.1.RELEASE</versions.spring.data>
+        <versions.mysql.connector>6.0.6</versions.mysql.connector>
+        <versions.hibernate.core>5.2.9.Final</versions.hibernate.core>
     </properties>
     
     <modules>
