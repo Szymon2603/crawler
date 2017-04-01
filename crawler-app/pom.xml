@@ -32,6 +32,20 @@
             <scope>provided</scope>
         </dependency>
         
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${versions.mysql.connector}</version>
+        </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${versions.hibernate.core}</version>
+        </dependency>
+        
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -44,6 +58,21 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${versions.spring}</version>
+        </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-test -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${versions.spring}</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${versions.spring.data}</version>
         </dependency>
         
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
@@ -126,5 +155,5 @@
             </plugin>
         </plugins>
     </build>
-
+    
 </project>
