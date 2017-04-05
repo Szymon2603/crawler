@@ -23,21 +23,34 @@
  */
 package pl.beardeddev.crawler.app.services;
 
-import javax.transaction.Transactional;
-import org.springframework.stereotype.Service;
-import pl.beardeddev.crawler.core.Crawler;
+import java.util.List;
+import pl.beardeddev.crawler.app.domain.ParsedImage;
 import pl.beardeddev.crawler.core.factory.CrawlerFactory;
+import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 
 /**
- *
+ * Interfejs serwisu związanego z głównymi funkcjonalnościami robota internetowego.
+ * 
  * @author Szymon Grzelak
  */
-@Service
-@Transactional
-public class CrawlerServiceImpl {
+public interface CrawlerService {
     
-    public void runCrawler(CrawlerFactory crawlerFactory) {
-        Crawler crawler = crawlerFactory.makeCrawler();
-    }
+    /**
+     * Uruchamia robota internetowego w zadanej konfiguracji przekazanej jako parametry. Rezultatem jest
+     * lista sprasowanych obiektów przetworzonych na odpowiednią klasę domenową.
+     * 
+     * @param crawlerFactory fabryka tworząca skonfigurowanego robota internetowego.
+     * @param startUrl początkowy adres.
+     * @param maxVisits maksymalna liczba wizyt.
+     * @return lista sprasowanych dokumentów.
+     */
+    List<ParsedImage> runCrawler(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits);
+    
+    /**
+     * Zapis listy sparsowanych dokumentów.
+     * 
+     * @param parsedImages lista obiektów do zapisu.
+     */
+    void saveParsedImage(List<ParsedImage> parsedImages);
     
 }
