@@ -67,7 +67,7 @@ public class Crawler implements Serializable {
      * wyniku błędów, zostanie zwrócony dotychczasowy rezultat przetwazrania.
      * 
      * @param urlStartPoint początkowy adres dokumentu, nie może być null.
-     * @param maxVisits maksymalna ilość stron do odwiezenia.
+     * @param maxVisits maksymalna ilość stron do odwiedzenia.
      * @return lista obiektów {@see Image}.
      */
     public List<Image> getImages(URLWrapper urlStartPoint, int maxVisits) {
@@ -75,13 +75,13 @@ public class Crawler implements Serializable {
         try {
             isNotNull(urlStartPoint);
             URLWrapper nextURLToVisit = urlStartPoint;
-            for (int i = 0; i < maxVisits && nextURLToVisit != null; ++i) {
+            int visitsLeft = maxVisits;
+            while(visitsLeft-- != 0 && nextURLToVisit != null) {
                 Image image = getImage(nextURLToVisit);
-                if (image == null) {
-                    break;
+                if (image != null) {
+                    result.add(image);
+                    nextURLToVisit = IMAGE_ELEMENTS_SUPPLIER.getNextImageURL(document);
                 }
-                result.add(image);
-                nextURLToVisit = IMAGE_ELEMENTS_SUPPLIER.getNextImageURL(document);
             }
         } catch(CoreException ex) {
             LOGGER.warn("Przerwanie przetwarzania zbierania!", ex);
