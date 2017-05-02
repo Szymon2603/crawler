@@ -32,6 +32,7 @@ public class ConfigConstants {
     
     // Profile
     public static final String DEVELOPMENT_PROFILE = "development";
+    public static final String TEST_PROFILE = "test";
     
     // Pliki z właściwościami
     public static final String APP_DEV_PROPERTIES_FILE = "app-dev.properties";
@@ -45,6 +46,7 @@ public class ConfigConstants {
     public static final String DATA_SOURCE_PORT = "dataSource.port";
     public static final String DOMAIN_CLASS_PACKAGE = "pl.beardeddev.crawler.app.domain";
     public static final String MYSQL_DIALECT_CLASS = "org.hibernate.dialect.MySQL57Dialect";
+    public static final String H2_DIALECT_CLASS = "org.hibernate.dialect.H2Dialect";
     public static final String JPA_VENDOR_ADAPTER_GENERATE_DDL = "jpaVendorAdapter.setGenerateDdl";
     public static final String JPA_VENDOR_ADAPTER_SHOW_SQL = "jpaVendorAdapter.showSql";
 }

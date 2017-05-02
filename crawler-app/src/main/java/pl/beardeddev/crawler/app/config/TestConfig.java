@@ -23,6 +23,7 @@
  */
 package pl.beardeddev.crawler.app.config;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,8 +31,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -41,24 +40,29 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
- * Konfiguracja dla środowiska developerskiego
+ * Konfiguracja dla środowiska testowego.
  * 
  * @author Szymon Grzelak
  */
 @Configuration
-@Profile(ConfigConstants.DEVELOPMENT_PROFILE)
+@Profile(ConfigConstants.TEST_PROFILE)
 @EnableTransactionManagement
 @PropertySource(ConfigConstants.APP_DEV_PROPERTIES_FILE)
-public class DevelopmentConfig {
+public class TestConfig {
     
     @Autowired
     Environment environment;
     
     @Bean
     public DataSource dataSource() {
-        return new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.H2)
-                .build();
+        MysqlDataSource dataSource = new MysqlDataSource();
+        dataSource.setUser(environment.getProperty(ConfigConstants.DATA_SOURCE_USER));
+        dataSource.setPassword(environment.getProperty(ConfigConstants.DATA_SOURCE_PASSWORD));
+        dataSource.setDatabaseName(environment.getProperty(ConfigConstants.DATA_SOURCE_DATABASE_NAME));
+        dataSource.setPort(environment.getProperty(ConfigConstants.DATA_SOURCE_PORT, Integer.class));
+        dataSource.setServerName(environment.getProperty(ConfigConstants.DATA_SOURCE_SERVER_NAME));
+        dataSource.setURL(environment.getProperty(ConfigConstants.DATA_SOURCE_URL));
+        return dataSource;
     }
 
     @Bean
@@ -73,10 +77,10 @@ public class DevelopmentConfig {
     @Bean
     public JpaVendorAdapter jpaVendorAdapter() {
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
-        adapter.setDatabase(Database.H2);
+        adapter.setDatabase(Database.MYSQL);
         adapter.setShowSql(environment.getProperty(ConfigConstants.JPA_VENDOR_ADAPTER_SHOW_SQL, Boolean.class));
         adapter.setGenerateDdl(environment.getProperty(ConfigConstants.JPA_VENDOR_ADAPTER_GENERATE_DDL, Boolean.class));
-        adapter.setDatabasePlatform(ConfigConstants.H2_DIALECT_CLASS);
+        adapter.setDatabasePlatform(ConfigConstants.MYSQL_DIALECT_CLASS);
         return adapter;
     }
 
