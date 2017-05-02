@@ -103,6 +103,14 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
         </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${versions.h2-database}</version>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
