@@ -24,6 +24,7 @@
 package pl.beardeddev.crawler.app.services;
 
 import java.util.List;
+import java.util.concurrent.Future;
 import pl.beardeddev.crawler.app.domain.ParsedImage;
 import pl.beardeddev.crawler.core.factory.CrawlerFactory;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
@@ -34,6 +35,18 @@ import pl.beardeddev.crawler.core.wrappers.URLWrapper;
  * @author Szymon Grzelak
  */
 public interface CrawlerService {
+    
+    /**
+     * Uruchamia asynchronicznie robota internetowego w zadanej konfiguracji przekazanej jako parametry. Rezultatem jest
+     * instancja klasy implementującej {@class Future} umożliwiająca pobranie rezultatu pracy robota jako listy po
+     * zakończeniu zadania.
+     * 
+     * @param crawlerFactory fabryka tworząca skonfigurowanego robota internetowego.
+     * @param startUrl początkowy adres.
+     * @param maxVisits maksymalna liczba wizyt.
+     * @return instancja {@class Future} będąca powiązaniem z wątkiem roboczym obsułguacym pracę robota.
+     */
+    Future<List<ParsedImage>> runCralwerAsync(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits);
     
     /**
      * Uruchamia robota internetowego w zadanej konfiguracji przekazanej jako parametry. Rezultatem jest

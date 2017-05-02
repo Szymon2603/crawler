@@ -26,9 +26,12 @@ package pl.beardeddev.crawler.app.services.impl;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -113,6 +116,23 @@ public class CrawlerServiceImplTest {
         List<Image> imagesListMock = prepareImagesListMock(listSize);
         doReturn(imagesListMock).when(crawler).getImages(urlWrapper, defaultMaxVisits);
         List<ParsedImage> result = crawlerService.runCrawler(crawlerFactory, urlWrapper, defaultMaxVisits);
+        Assert.assertFalse("List shouldn't be empty!", result.isEmpty() && result.size() == listSize);
+    }
+    
+    @Test
+    public void givenEmptyListWhenCallAssyncMethodThenReturnFutureAndEmptyList() throws InterruptedException, ExecutionException, TimeoutException {
+        doReturn(Collections.EMPTY_LIST).when(crawler).getImages(urlWrapper, defaultMaxVisits);
+        Future<List<ParsedImage>> result = crawlerService.runCralwerAsync(crawlerFactory, urlWrapper, defaultMaxVisits);
+        Assert.assertTrue("List should be empty!", result.get(10, TimeUnit.SECONDS).isEmpty());
+    }
+    
+    @Test
+    public void givenNotEmptyListWhenCallAssyncMethodThenReturnFutureAndNotEmptyList() throws MalformedURLException, InterruptedException, ExecutionException, TimeoutException {
+        final int listSize = 3;
+        List<Image> imagesListMock = prepareImagesListMock(listSize);
+        doReturn(imagesListMock).when(crawler).getImages(urlWrapper, defaultMaxVisits);
+        Future<List<ParsedImage>> future = crawlerService.runCralwerAsync(crawlerFactory, urlWrapper, defaultMaxVisits);
+        List<ParsedImage> result = future.get(10, TimeUnit.SECONDS);
         Assert.assertFalse("List shouldn't be empty!", result.isEmpty() && result.size() == listSize);
     }
 }

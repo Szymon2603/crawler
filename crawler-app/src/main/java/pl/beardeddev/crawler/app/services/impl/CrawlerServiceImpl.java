@@ -26,6 +26,9 @@ package pl.beardeddev.crawler.app.services.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +55,15 @@ public class CrawlerServiceImpl implements CrawlerService {
     
     @Autowired
     private ParsedImageRepository parsedImageRepository;
+    
+    @Override
+    public Future<List<ParsedImage>> runCralwerAsync(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<List<ParsedImage>> result = executor.submit(() -> { 
+            return runCrawler(crawlerFactory, startUrl, maxVisits);
+        });
+        return result;
+    }
     
     @Override
     public List<ParsedImage> runCrawler(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits) {
