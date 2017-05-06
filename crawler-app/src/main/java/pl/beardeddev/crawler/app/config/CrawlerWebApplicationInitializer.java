@@ -23,20 +23,27 @@
  */
 package pl.beardeddev.crawler.app.config;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
- * Konfiguracja ogólna dla całej aplikacji
+ * Klasa konfigurująca dyspozytora Web MVC bazującego na komponentach zdefiniowanych za pomocą adnotacji.
  * 
  * @author Szymon Grzelak
  */
-@Configuration
-@ComponentScan(basePackages = ConfigConstants.SERVICES_PACKAGE)
-@EnableJpaRepositories(basePackages = ConfigConstants.REPOSITORIES_PACKAGE)
-@Import({ DevelopmentConfig.class, TestConfig.class})
-public class ApplicationConfig {
+public class CrawlerWebApplicationInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
+    @Override
+    protected Class<?>[] getRootConfigClasses() {
+        return new Class<?>[] { ApplicationConfig.class };
+    }
+
+    @Override
+    protected Class<?>[] getServletConfigClasses() {
+        return new Class<?>[] { WebConfig.class };
+    }
+
+    @Override
+    protected String[] getServletMappings() {
+        return new String[] { "/" };
+    }
 }
