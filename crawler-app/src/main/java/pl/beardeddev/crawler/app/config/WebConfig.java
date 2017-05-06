@@ -25,18 +25,29 @@ package pl.beardeddev.crawler.app.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.http.MediaType;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
- * Konfiguracja ogólna dla całej aplikacji
+ * Konfiguracja elementów potrzebnych do działania aplikacji internetowej.
  * 
  * @author Szymon Grzelak
  */
+@EnableWebMvc
 @Configuration
-@ComponentScan(basePackages = ConfigConstants.SERVICES_PACKAGE)
-@EnableJpaRepositories(basePackages = ConfigConstants.REPOSITORIES_PACKAGE)
-@Import({ DevelopmentConfig.class, TestConfig.class})
-public class ApplicationConfig {
+@ComponentScan(basePackages = ConfigConstants.CONTROLLERS_PACKAGE)
+public class WebConfig extends WebMvcConfigurerAdapter {
 
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
+
+    @Override
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+        configurer.defaultContentType(MediaType.APPLICATION_JSON);
+    }
 }

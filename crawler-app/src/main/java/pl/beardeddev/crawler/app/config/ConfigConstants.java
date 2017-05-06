@@ -30,12 +30,17 @@ package pl.beardeddev.crawler.app.config;
  */
 public class ConfigConstants {
     
+    // Pakiety komponentów
+    public static final String SERVICES_PACKAGE = "pl.beardeddev.crawler.app.services";
+    public static final String REPOSITORIES_PACKAGE = "pl.beardeddev.crawler.app.repositories";
+    public static final String CONTROLLERS_PACKAGE = "pl.beardeddev.crawler.app.controllers";
+    
     // Profile
     public static final String DEVELOPMENT_PROFILE = "development";
     public static final String TEST_PROFILE = "test";
     
     // Pliki z właściwościami
-    public static final String APP_DEV_PROPERTIES_FILE = "app-dev.properties";
+    public static final String APP_DEV_PROPERTIES_FILE = "classpath:app-dev.properties";
     
     // Właściwości na potrzeby konfiguracji dostępu do danych
     public static final String DATA_SOURCE_DATABASE_NAME = "dataSource.databaseName";

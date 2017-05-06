@@ -44,7 +44,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import pl.beardeddev.crawler.app.config.ApplicationConfig;
 import pl.beardeddev.crawler.app.config.ConfigConstants;
-import pl.beardeddev.crawler.app.config.DevelopmentConfig;
 import pl.beardeddev.crawler.app.domain.ParsedImage;
 import pl.beardeddev.crawler.app.services.CrawlerService;
 import pl.beardeddev.crawler.core.Crawler;
@@ -58,7 +57,7 @@ import pl.beardeddev.crawler.core.wrappers.URLWrapper;
  * @author Szymon Grzelak
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { ApplicationConfig.class, DevelopmentConfig.class })
+@ContextConfiguration(classes = { ApplicationConfig.class })
 @ActiveProfiles(profiles = ConfigConstants.DEVELOPMENT_PROFILE)
 public class CrawlerServiceImplTest {
     
