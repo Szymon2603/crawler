@@ -29,7 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Klasa pozyskująca wartość tekstową z elementu określonego za pomocą selektora CSS.
+ * 
  * @author Szymon Grzelak
  */
 public class TextValueExtractor implements ElementValueExtractor {
@@ -38,6 +39,11 @@ public class TextValueExtractor implements ElementValueExtractor {
 
     private String elementQuery;
 
+    /**
+     * Konstruktor parametrowy.
+     * 
+     * @param elementQuery selektro elementu z którego ma zostać pozyskana wartość tekstowa.
+     */
     public TextValueExtractor(String elementQuery) {
         this.elementQuery = elementQuery;
     }

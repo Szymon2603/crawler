@@ -24,7 +24,8 @@
 package pl.beardeddev.crawler.core.suppliers;
 
 /**
- *
+ * Klasa agregujaca ekstraktory {@class ElementValueExtractor}.
+ * 
  * @author Szymon Grzelak
  */
 public class ImageElementsExtractors {

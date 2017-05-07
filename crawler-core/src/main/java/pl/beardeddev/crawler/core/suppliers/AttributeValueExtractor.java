@@ -29,7 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Klasa pozyskująca wartość atrybutu o danej nazwie z elementu określonego za pomocą selektora CSS.
+ * 
  * @author Szymon Grzelak
  */
 public class AttributeValueExtractor implements ElementValueExtractor {
@@ -39,6 +40,12 @@ public class AttributeValueExtractor implements ElementValueExtractor {
     private String elementQuery;
     private String attributeName;
 
+    /**
+     * Konstruktor parametrowy.
+     * 
+     * @param elementQuery selektor CSS elementu.
+     * @param attributeName nazwa atrybutu dla którego ma zostać pozyskana wartość.
+     */
     public AttributeValueExtractor(String elementQuery, String attributeName) {
         this.elementQuery = elementQuery;
         this.attributeName = attributeName;

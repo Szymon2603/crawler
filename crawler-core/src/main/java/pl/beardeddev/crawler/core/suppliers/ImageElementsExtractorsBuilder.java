@@ -23,7 +23,11 @@
  */
 package pl.beardeddev.crawler.core.suppliers;
 
-
+/**
+ * Implementacja Budowniczego dla {@class ImageElementsExtractors}.
+ * 
+ * @author Szymon Grzelak
+ */
 public class ImageElementsExtractorsBuilder {
 
     private ElementValueExtractor imageExtractor;

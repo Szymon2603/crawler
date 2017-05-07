@@ -26,10 +26,17 @@ package pl.beardeddev.crawler.core.suppliers;
 import org.jsoup.nodes.Document;
 
 /**
- *
+ * Interfejs umożliwiający konfigurację pozyskiwania elementów z danego dokumentu.
+ * 
  * @author Szymon Grzelak
  */
 public interface ElementValueExtractor {
 
-    String getValue(Document document);   
+    /**
+     * Metoda pozyskująca wartość elementu z dokumentu. Zwraca ją w postaci łańcucha znakowego.
+     * 
+     * @param document dokument z którego ma zostać pozyskana wartość.
+     * @return wartość elementu.
+     */
+    String getValue(Document document);
 }
