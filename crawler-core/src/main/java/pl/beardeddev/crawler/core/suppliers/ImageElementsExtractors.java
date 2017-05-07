@@ -21,51 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.core.wrappers;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+package pl.beardeddev.crawler.core.suppliers;
 
 /**
- * Klasa opakowująca klasę {@code java.net.URL} umożliwiająca wykonanie testów jednostkowych.
- * 
+ *
  * @author Szymon Grzelak
  */
-public class URLWrapper implements Serializable {
-
-    private static final long serialVersionUID = 6024044659311363956L;
-
-    private URL url;
-
-    public URLWrapper() {}
-
-    public URLWrapper(String url) throws MalformedURLException {
-        this.url = new URL(url);
-    }
+public class ImageElementsExtractors {
     
-    public URLWrapper(URL url) {
-        this.url = url;
-    }
-    
-    /**
-     * Wywołuje odpowiednią metodę klasy {@code java.net.URL} w celu uzyskania połączenia z danym zasobem
-     * 
-     * @return połączenie z danym zasobem
-     * @throws IOException błędy przy próbie utworzenia połączenia
-     */
-    public URLConnection openConnection() throws IOException {
-        return url.openConnection();
+    private final ElementValueExtractor IMAGE_EXTRACTOR;
+    private final ElementValueExtractor NEXT_ELEMENT_EXTRACTOR;
+    private final ElementValueExtractor COMMENTS_EXTRACTOR;
+    private final ElementValueExtractor RATING_EXTRACTOR;
+
+    public ImageElementsExtractors(ElementValueExtractor imageExtractor, ElementValueExtractor nextElementExtractor, ElementValueExtractor commentsExtractor, ElementValueExtractor ratingExtractor) {
+        this.IMAGE_EXTRACTOR = imageExtractor;
+        this.NEXT_ELEMENT_EXTRACTOR = nextElementExtractor;
+        this.COMMENTS_EXTRACTOR = commentsExtractor;
+        this.RATING_EXTRACTOR = ratingExtractor;
     }
 
-    public URL getURL() {
-        return url;
+    public ElementValueExtractor getImageExtractor() {
+        return IMAGE_EXTRACTOR;
     }
 
-    public void setURL(URL url) {
-        this.url = url;
+    public ElementValueExtractor getNextElementExtractor() {
+        return NEXT_ELEMENT_EXTRACTOR;
     }
-    
+
+    public ElementValueExtractor getCommentsExtractor() {
+        return COMMENTS_EXTRACTOR;
+    }
+
+    public ElementValueExtractor getRatingExtractor() {
+        return RATING_EXTRACTOR;
+    }
 }

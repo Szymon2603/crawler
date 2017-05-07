@@ -23,14 +23,16 @@
  */
 package pl.beardeddev.crawler.core;
 
+import pl.beardeddev.crawler.core.suppliers.ImageElementsSupplier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 import pl.beardeddev.crawler.core.exceptions.CoreException;
+import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
+import pl.beardeddev.crawler.core.suppliers.ImageElementsExtractors;
 
 /**
  * Klasa implementująca {@see ImageElementsSupplier} dla testów jednostkowych {@see Crawler}
@@ -40,11 +42,12 @@ import pl.beardeddev.crawler.core.exceptions.CoreException;
 public class LocalTestPageSupplier implements ImageElementsSupplier {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(LocalTestPageSupplier.class);
-    private final ImageDescriptor IMAGE_DESCRIPTOR;
+    //private final ImageDescriptor IMAGE_DESCRIPTOR;
+    private final ImageElementsExtractors IMAGE_ELEMENTS_EXTRACTORS;
     private final String PROTOCOL;
     
-    public LocalTestPageSupplier(ImageDescriptor imageDescriptor) {
-        IMAGE_DESCRIPTOR = imageDescriptor;
+    public LocalTestPageSupplier(ImageElementsExtractors imageElementsExtractors) {
+        IMAGE_ELEMENTS_EXTRACTORS = imageElementsExtractors;
         //Pozyskanie sciezki katalogu z lokalnymi plikami testowymi
         String file = getClass().getClassLoader().getResource("testPage.html").getPath();
         int lastIndex = file.lastIndexOf("/") + 1;
@@ -53,13 +56,11 @@ public class LocalTestPageSupplier implements ImageElementsSupplier {
 
     @Override
     public URLWrapper getImageURL(Document document) throws CoreException {
-        Elements elements = document.select(IMAGE_DESCRIPTOR.getImageSelector());
-        if(elements.isEmpty()) {
-            return null;
-        }
         try {
-            URL url = new URL(elements.attr("src"));
-            return new URLWrapper(url);
+            ElementValueExtractor extractor = IMAGE_ELEMENTS_EXTRACTORS.getImageExtractor();
+            String urlString = extractor.getValue(document);
+            LOGGER.debug("Extracted URL: %s", urlString);
+            return urlString != null ? new URLWrapper(urlString) : null;
         } catch(MalformedURLException ex) {
             LOGGER.error("Bad URL!", ex);
             throw new CoreException("Bad URL!", ex);
@@ -68,8 +69,8 @@ public class LocalTestPageSupplier implements ImageElementsSupplier {
 
     @Override
     public Integer getImageNumberOfComments(Document document) throws CoreException {
-        Elements elements = document.select(IMAGE_DESCRIPTOR.getCommentsSelector());
-        String elementValue = elements.text();
+        ElementValueExtractor extractor = IMAGE_ELEMENTS_EXTRACTORS.getCommentsExtractor();
+        String elementValue = extractor.getValue(document);
         try {
             Integer numberOfComments = Integer.parseInt(elementValue);
             return numberOfComments;
@@ -81,8 +82,8 @@ public class LocalTestPageSupplier implements ImageElementsSupplier {
 
     @Override
     public Integer getImageRatings(Document document) throws CoreException {
-        Elements elements = document.select(IMAGE_DESCRIPTOR.getRatingSelector());
-        String elementValue = elements.text();
+        ElementValueExtractor extractor = IMAGE_ELEMENTS_EXTRACTORS.getRatingExtractor();
+        String elementValue = extractor.getValue(document);
         try {
             Integer rating = Integer.parseInt(elementValue);
             return rating;
@@ -94,18 +95,18 @@ public class LocalTestPageSupplier implements ImageElementsSupplier {
 
     @Override
     public URLWrapper getNextImageURL(Document document) throws CoreException {
-        Elements elements = document.select(IMAGE_DESCRIPTOR.getNextElementSelector());
-        String elementValue = fixProtocol(elements.attr("href"));
-        if(elements.isEmpty()) {
+        ElementValueExtractor extractor = IMAGE_ELEMENTS_EXTRACTORS.getNextElementExtractor();
+        String elementValue = fixProtocol(extractor.getValue(document));
+        if(elementValue == null) {
             LOGGER.warn("URL not found!");
             return null;
         }
         try {
-            LOGGER.info(String.format("Next image URL is: %s", elementValue));
+            LOGGER.info("Next image URL is: %s", elementValue);
             URL url = new URL(elementValue);
             return new URLWrapper(url);
         } catch(MalformedURLException ex) {
-            LOGGER.warn(String.format("Bad URL! [%s]", elementValue), ex);
+            LOGGER.warn("Bad URL! [%s]", elementValue, ex);
             return null;
         }
     }

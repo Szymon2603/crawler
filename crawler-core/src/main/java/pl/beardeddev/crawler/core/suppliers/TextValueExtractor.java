@@ -21,51 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.core.wrappers;
+package pl.beardeddev.crawler.core.suppliers;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Klasa opakowująca klasę {@code java.net.URL} umożliwiająca wykonanie testów jednostkowych.
- * 
+ *
  * @author Szymon Grzelak
  */
-public class URLWrapper implements Serializable {
+public class TextValueExtractor implements ElementValueExtractor {
 
-    private static final long serialVersionUID = 6024044659311363956L;
+    private static final Logger LOGGER = LoggerFactory.getLogger(TextValueExtractor.class);
 
-    private URL url;
+    private String elementQuery;
 
-    public URLWrapper() {}
-
-    public URLWrapper(String url) throws MalformedURLException {
-        this.url = new URL(url);
+    public TextValueExtractor(String elementQuery) {
+        this.elementQuery = elementQuery;
     }
     
-    public URLWrapper(URL url) {
-        this.url = url;
+    @Override
+    public String getValue(Document document) {
+        Elements elements = document.select(elementQuery);
+        String value = elements.text();
+        LOGGER.debug("Return value: %s", value);
+        return value;
     }
-    
-    /**
-     * Wywołuje odpowiednią metodę klasy {@code java.net.URL} w celu uzyskania połączenia z danym zasobem
-     * 
-     * @return połączenie z danym zasobem
-     * @throws IOException błędy przy próbie utworzenia połączenia
-     */
-    public URLConnection openConnection() throws IOException {
-        return url.openConnection();
-    }
-
-    public URL getURL() {
-        return url;
-    }
-
-    public void setURL(URL url) {
-        this.url = url;
-    }
-    
 }

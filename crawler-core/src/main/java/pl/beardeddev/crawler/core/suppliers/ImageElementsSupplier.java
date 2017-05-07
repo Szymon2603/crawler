@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.core;
+package pl.beardeddev.crawler.core.suppliers;
 
 import org.jsoup.nodes.Document;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
