@@ -41,11 +41,12 @@ import static org.mockito.Mockito.any;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 import pl.beardeddev.crawler.core.model.Image;
 import pl.beardeddev.crawler.core.exceptions.CoreException;
-import pl.beardeddev.crawler.core.suppliers.AttributeValueExtractor;
+import pl.beardeddev.crawler.core.suppliers.impl.AttributeValueExtractor;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 import pl.beardeddev.crawler.core.suppliers.ImageElementsExtractors;
 import pl.beardeddev.crawler.core.suppliers.ImageElementsExtractorsBuilder;
-import pl.beardeddev.crawler.core.suppliers.TextValueExtractor;
+import pl.beardeddev.crawler.core.suppliers.impl.ImageElementsSupplierImpl;
+import pl.beardeddev.crawler.core.suppliers.impl.TextValueExtractor;
 
 /**
  *
@@ -86,7 +87,13 @@ public class CrawlerSpec {
                .setCommentsExtractor(commentsExtractor)
                .setRatingExtractor(ratingExtractor);
         extractors = builder.build();
-        imageElementsSupplier = spy(new LocalTestPageSupplier(extractors));
+        
+        // Pozyskanie sciezki katalogu z lokalnymi plikami testowymi
+        String file = getClass().getClassLoader().getResource("testPage.html").getPath();
+        int lastIndex = file.lastIndexOf("/") + 1;
+        String protocol = "file:///" + file.substring(0, lastIndex);
+        
+        imageElementsSupplier = spy(new ImageElementsSupplierImpl(extractors, protocol));
         
         crawler = spy(new Crawler(documentProvider, imageElementsSupplier));
     }

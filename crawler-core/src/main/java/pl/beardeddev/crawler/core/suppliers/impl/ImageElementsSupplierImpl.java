@@ -21,39 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.core;
+package pl.beardeddev.crawler.core.suppliers.impl;
 
-import pl.beardeddev.crawler.core.suppliers.ImageElementsSupplier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 import pl.beardeddev.crawler.core.exceptions.CoreException;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 import pl.beardeddev.crawler.core.suppliers.ImageElementsExtractors;
+import pl.beardeddev.crawler.core.suppliers.ImageElementsSupplier;
+import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 
 /**
- * Klasa implementująca {@see ImageElementsSupplier} dla testów jednostkowych {@see Crawler}
+ * Domyślna implementacja interfejsu {@class ImageElementsSupplier}. Do poprawnego działania potrzeuje informacji
+ * na temat protokołu jaki jest używany przez dany serwis w celu utworzenia poprawnych adresów URL do zasobów takich
+ * jak adres obrazka lub adres następnego elementu.
  * 
  * @author Szymon Grzelak
  */
-public class LocalTestPageSupplier implements ImageElementsSupplier {
+public class ImageElementsSupplierImpl implements ImageElementsSupplier {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(LocalTestPageSupplier.class);
-    //private final ImageDescriptor IMAGE_DESCRIPTOR;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageElementsSupplierImpl.class);
     private final ImageElementsExtractors IMAGE_ELEMENTS_EXTRACTORS;
     private final String PROTOCOL;
-    
-    public LocalTestPageSupplier(ImageElementsExtractors imageElementsExtractors) {
-        IMAGE_ELEMENTS_EXTRACTORS = imageElementsExtractors;
-        //Pozyskanie sciezki katalogu z lokalnymi plikami testowymi
-        String file = getClass().getClassLoader().getResource("testPage.html").getPath();
-        int lastIndex = file.lastIndexOf("/") + 1;
-        PROTOCOL = "file:///" + file.substring(0, lastIndex);
-    }
 
+    public ImageElementsSupplierImpl(ImageElementsExtractors imageElementsExtractors, String protocol) {
+        this.IMAGE_ELEMENTS_EXTRACTORS = imageElementsExtractors;
+        this.PROTOCOL = protocol;
+    }
+    
     @Override
     public URLWrapper getImageURL(Document document) throws CoreException {
         try {
@@ -112,10 +110,6 @@ public class LocalTestPageSupplier implements ImageElementsSupplier {
     }
     
     private String fixProtocol(String url) {
-        if(url.startsWith(PROTOCOL)) {
-            return url;
-        } else {
-            return PROTOCOL + url;
-        }
+        return url.startsWith(PROTOCOL) ? url : PROTOCOL + url;
     }
 }

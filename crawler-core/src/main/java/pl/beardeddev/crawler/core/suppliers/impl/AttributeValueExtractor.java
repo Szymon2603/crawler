@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.core.suppliers;
+package pl.beardeddev.crawler.core.suppliers.impl;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 
 /**
  * Klasa pozyskująca wartość atrybutu o danej nazwie z elementu określonego za pomocą selektora CSS.

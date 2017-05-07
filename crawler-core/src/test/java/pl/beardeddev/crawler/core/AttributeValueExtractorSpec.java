@@ -29,7 +29,7 @@ import org.jsoup.select.Elements;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.doReturn;
-import pl.beardeddev.crawler.core.suppliers.AttributeValueExtractor;
+import pl.beardeddev.crawler.core.suppliers.impl.AttributeValueExtractor;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 import static org.mockito.Mockito.mock;
 

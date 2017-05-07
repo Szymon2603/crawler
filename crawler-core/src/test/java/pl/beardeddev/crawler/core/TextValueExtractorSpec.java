@@ -31,7 +31,7 @@ import org.junit.Test;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
-import pl.beardeddev.crawler.core.suppliers.TextValueExtractor;
+import pl.beardeddev.crawler.core.suppliers.impl.TextValueExtractor;
 
 /**
  *
