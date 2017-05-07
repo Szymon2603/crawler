@@ -23,6 +23,7 @@
  */
 package pl.beardeddev.crawler.core;
 
+import pl.beardeddev.crawler.core.suppliers.ImageElementsSupplier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
@@ -40,6 +41,12 @@ import static org.mockito.Mockito.any;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 import pl.beardeddev.crawler.core.model.Image;
 import pl.beardeddev.crawler.core.exceptions.CoreException;
+import pl.beardeddev.crawler.core.suppliers.impl.AttributeValueExtractor;
+import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
+import pl.beardeddev.crawler.core.suppliers.ImageElementsExtractors;
+import pl.beardeddev.crawler.core.suppliers.ImageElementsExtractorsBuilder;
+import pl.beardeddev.crawler.core.suppliers.impl.ImageElementsSupplierImpl;
+import pl.beardeddev.crawler.core.suppliers.impl.TextValueExtractor;
 
 /**
  *
@@ -51,24 +58,43 @@ public class CrawlerSpec {
     private URLWrapper urlWrapper;
     private Crawler crawler;
     private DocumentProvider documentProvider;
-    private ImageDescriptor imageDescriptor;
+    private ElementValueExtractor ratingExtractor;
+    private ElementValueExtractor commentsExtractor;
+    private ElementValueExtractor nextElementExtractor;
+    private ElementValueExtractor imageExtractor;
+    private ImageElementsExtractors extractors;
     private ImageElementsSupplier imageElementsSupplier;
-    private String imageSelector;
-    private String nextElementSelector;
-    private String commentsSelector;
-    private String ratingSelector;
     
     @Before
     public void setUp() {
         url = this.getClass().getClassLoader().getResource("testPage.html");
         urlWrapper = spy(new URLWrapper(url));
         documentProvider = spy(new PageProvider());
-        imageSelector = "img";
-        nextElementSelector = "a";
-        commentsSelector = "div#commentsNumber";
-        ratingSelector = "div[id=rateNummber]";
-        imageDescriptor = spy(new ImageDescriptor(imageSelector, nextElementSelector, commentsSelector, ratingSelector));
-        imageElementsSupplier = spy(new LocalTestPageSupplier(imageDescriptor));
+        
+        String imageSelector = "img";
+        String nextElementSelector = "a";
+        String commentsSelector = "div#commentsNumber";
+        String ratingSelector = "div[id=rateNummber]";
+        
+        imageExtractor = spy(new AttributeValueExtractor(imageSelector, "src"));
+        nextElementExtractor = spy(new AttributeValueExtractor(nextElementSelector, "href"));
+        commentsExtractor = spy(new TextValueExtractor(commentsSelector));
+        ratingExtractor = spy(new TextValueExtractor(ratingSelector));
+        
+        ImageElementsExtractorsBuilder builder = new ImageElementsExtractorsBuilder();
+        builder.setImageExtractor(imageExtractor)
+               .setNextElementExtractor(nextElementExtractor)
+               .setCommentsExtractor(commentsExtractor)
+               .setRatingExtractor(ratingExtractor);
+        extractors = builder.build();
+        
+        // Pozyskanie sciezki katalogu z lokalnymi plikami testowymi
+        String file = getClass().getClassLoader().getResource("testPage.html").getPath();
+        int lastIndex = file.lastIndexOf("/") + 1;
+        String protocol = "file:///" + file.substring(0, lastIndex);
+        
+        imageElementsSupplier = spy(new ImageElementsSupplierImpl(extractors, protocol));
+        
         crawler = spy(new Crawler(documentProvider, imageElementsSupplier));
     }
     
@@ -85,7 +111,7 @@ public class CrawlerSpec {
     
     @Test()
     public void givenNoImageWhenGetImageThenReturnNull() throws CoreException, MalformedURLException {
-        doReturn("img[id=notexist]").when(imageDescriptor).getImageSelector();
+        doReturn(null).when(imageExtractor).getValue(any());
         Image result = crawler.getImage(urlWrapper);
         Assert.assertNull("Should be null", result);
     }
@@ -107,7 +133,7 @@ public class CrawlerSpec {
     
     @Test()
     public void givenBadNumOfCommentsSelectorWhenGetImageThenValueIsNotSet() throws CoreException, MalformedURLException {
-        doReturn("div#badId").when(imageDescriptor).getCommentsSelector();
+        doReturn(null).when(commentsExtractor).getValue(any());
         Image result = crawler.getImage(urlWrapper);
         Integer actual = result.getNumberOfComments();
         Assert.assertNull(String.format("Number of comments should be null"), actual);
@@ -123,7 +149,7 @@ public class CrawlerSpec {
     
     @Test()
     public void givenBadRatingsSelectorWhenGetImageThenValueIsNotSet() throws CoreException, MalformedURLException {
-        doReturn("div#badId").when(imageDescriptor).getRatingSelector();
+        doReturn(null).when(ratingExtractor).getValue(any());
         Image result = crawler.getImage(urlWrapper);
         Integer actual = result.getRating();
         Assert.assertNull(String.format("Ratings should be null"), actual);
@@ -137,7 +163,7 @@ public class CrawlerSpec {
     
     @Test()
     public void givenBadImageSelectorWhenGetImagesThenListIsEmpty() {
-        doReturn("img[id=notexist]").when(imageDescriptor).getImageSelector();
+        doReturn(null).when(imageExtractor).getValue(any());
         List<Image> result = crawler.getImages(urlWrapper, 1);
         Assert.assertTrue("List is not empty!", result.isEmpty());
     }

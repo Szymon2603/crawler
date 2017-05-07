@@ -23,6 +23,7 @@
  */
 package pl.beardeddev.crawler.core;
 
+import pl.beardeddev.crawler.core.suppliers.ImageElementsSupplier;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
