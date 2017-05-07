@@ -41,7 +41,7 @@ import static org.mockito.Mockito.any;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 import pl.beardeddev.crawler.core.model.Image;
 import pl.beardeddev.crawler.core.exceptions.CoreException;
-import pl.beardeddev.crawler.core.suppliers.AttribtueValueExtractor;
+import pl.beardeddev.crawler.core.suppliers.AttributeValueExtractor;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 import pl.beardeddev.crawler.core.suppliers.ImageElementsExtractors;
 import pl.beardeddev.crawler.core.suppliers.ImageElementsExtractorsBuilder;
@@ -75,8 +75,8 @@ public class CrawlerSpec {
         String commentsSelector = "div#commentsNumber";
         String ratingSelector = "div[id=rateNummber]";
         
-        imageExtractor = spy(new AttribtueValueExtractor(imageSelector, "src"));
-        nextElementExtractor = spy(new AttribtueValueExtractor(nextElementSelector, "href"));
+        imageExtractor = spy(new AttributeValueExtractor(imageSelector, "src"));
+        nextElementExtractor = spy(new AttributeValueExtractor(nextElementSelector, "href"));
         commentsExtractor = spy(new TextValueExtractor(commentsSelector));
         ratingExtractor = spy(new TextValueExtractor(ratingSelector));
         

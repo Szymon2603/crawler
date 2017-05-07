@@ -32,14 +32,14 @@ import org.slf4j.LoggerFactory;
  *
  * @author Szymon Grzelak
  */
-public class AttribtueValueExtractor implements ElementValueExtractor {
+public class AttributeValueExtractor implements ElementValueExtractor {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(AttribtueValueExtractor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AttributeValueExtractor.class);
     
     private String elementQuery;
     private String attributeName;
 
-    public AttribtueValueExtractor(String elementQuery, String attributeName) {
+    public AttributeValueExtractor(String elementQuery, String attributeName) {
         this.elementQuery = elementQuery;
         this.attributeName = attributeName;
     }
