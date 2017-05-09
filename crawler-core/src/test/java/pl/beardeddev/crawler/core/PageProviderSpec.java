@@ -68,7 +68,7 @@ public class PageProviderSpec {
     @Test
     public void whenGetEncodingIsSetThenReturnDocumentWithThatEncoding() throws CoreException, IOException {
         doReturn(urlConnection).when(urlWrapper).openConnection();
-        doReturn("UTF-8").when(urlConnection).getContentEncoding();
+        doReturn(url).when(urlConnection).getURL();
         doReturn(url.openStream()).when(urlConnection).getInputStream();
         Document result = pageProvider.getDocument(urlWrapper);
         Assert.assertTrue("Encdocing should be UTF-8", result.charset().contains(Charset.forName("UTF-8")));

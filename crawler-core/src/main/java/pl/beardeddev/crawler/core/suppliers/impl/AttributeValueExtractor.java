@@ -42,7 +42,8 @@ public class AttributeValueExtractor implements ElementValueExtractor {
     private String attributeName;
 
     /**
-     * Konstruktor parametrowy.
+     * Konstruktor parametrowy. Jeżeli chcemy uzyskać odnośnik ze ścieżką absolutną do nazwy atrybutu należy dodać
+     * przedrostek "abs:".
      * 
      * @param elementQuery selektor CSS elementu.
      * @param attributeName nazwa atrybutu dla którego ma zostać pozyskana wartość.
@@ -59,7 +60,7 @@ public class AttributeValueExtractor implements ElementValueExtractor {
             return null;
         }
         String value = elements.attr(attributeName);
-        LOGGER.debug("Return value: %s", value);
+        LOGGER.debug("Return value: {}", value);
         return value;
     }
 }

@@ -25,6 +25,11 @@ package pl.beardeddev.crawler.core.suppliers.impl;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,11 +50,11 @@ public class ImageElementsSupplierImpl implements ImageElementsSupplier {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageElementsSupplierImpl.class);
     private final ImageElementsExtractors IMAGE_ELEMENTS_EXTRACTORS;
-    private final String PROTOCOL;
+    private final NumberFormat NUMBER_FORMAT;
 
-    public ImageElementsSupplierImpl(ImageElementsExtractors imageElementsExtractors, String protocol) {
-        this.IMAGE_ELEMENTS_EXTRACTORS = imageElementsExtractors;
-        this.PROTOCOL = protocol;
+    public ImageElementsSupplierImpl(ImageElementsExtractors imageElementsExtractors, Locale locale) {
+        IMAGE_ELEMENTS_EXTRACTORS = imageElementsExtractors;
+        NUMBER_FORMAT = NumberFormat.getIntegerInstance(locale);
     }
     
     @Override
@@ -57,7 +62,7 @@ public class ImageElementsSupplierImpl implements ImageElementsSupplier {
         try {
             ElementValueExtractor extractor = IMAGE_ELEMENTS_EXTRACTORS.getImageExtractor();
             String urlString = extractor.getValue(document);
-            LOGGER.debug("Extracted URL: %s", urlString);
+            LOGGER.debug("Extracted URL: {}", urlString);
             return urlString != null ? new URLWrapper(urlString) : null;
         } catch(MalformedURLException ex) {
             LOGGER.error("Bad URL!", ex);
@@ -68,48 +73,46 @@ public class ImageElementsSupplierImpl implements ImageElementsSupplier {
     @Override
     public Integer getImageNumberOfComments(Document document) throws CoreException {
         ElementValueExtractor extractor = IMAGE_ELEMENTS_EXTRACTORS.getCommentsExtractor();
-        String elementValue = extractor.getValue(document);
         try {
-            Integer numberOfComments = Integer.parseInt(elementValue);
+            String elementValue = Optional.ofNullable(extractor.getValue(document)).get();
+            Integer numberOfComments = NUMBER_FORMAT.parse(elementValue).intValue();
             return numberOfComments;
-        } catch(NumberFormatException ex) {
+        } catch(ParseException ex) {
             LOGGER.warn("Can't parse number of comments. Return null instead.", ex);
-            return null;
+        } catch(NoSuchElementException ex) {
+            LOGGER.info("Can't find number of comments. Return null instead");
         }
+        return null;
     }
 
     @Override
     public Integer getImageRatings(Document document) throws CoreException {
         ElementValueExtractor extractor = IMAGE_ELEMENTS_EXTRACTORS.getRatingExtractor();
-        String elementValue = extractor.getValue(document);
         try {
-            Integer rating = Integer.parseInt(elementValue);
+            String elementValue = Optional.ofNullable(extractor.getValue(document)).get();
+            Integer rating = NUMBER_FORMAT.parse(elementValue).intValue();
             return rating;
-        } catch (NumberFormatException ex) {
+        } catch (ParseException ex) {
             LOGGER.warn("Can't parse ratings. Return null instead.", ex);
-            return null;
+        } catch(NoSuchElementException ex) {
+            LOGGER.info("Can't find ratings. Return null instead"); 
         }
+        return null;
     }
 
     @Override
     public URLWrapper getNextImageURL(Document document) throws CoreException {
         ElementValueExtractor extractor = IMAGE_ELEMENTS_EXTRACTORS.getNextElementExtractor();
-        String elementValue = fixProtocol(extractor.getValue(document));
-        if(elementValue == null) {
-            LOGGER.warn("URL not found!");
-            return null;
-        }
         try {
-            LOGGER.info("Next image URL is: %s", elementValue);
+            String elementValue = Optional.ofNullable(extractor.getValue(document)).get();
+            LOGGER.info("Extracted next image URL is: {}", elementValue);
             URL url = new URL(elementValue);
             return new URLWrapper(url);
         } catch(MalformedURLException ex) {
-            LOGGER.warn("Bad URL! [%s]", elementValue, ex);
-            return null;
+            LOGGER.warn("Bad URL!", ex);
+        } catch(NoSuchElementException ex) {
+            LOGGER.warn("URL not found!");
         }
-    }
-    
-    private String fixProtocol(String url) {
-        return url.startsWith(PROTOCOL) ? url : PROTOCOL + url;
+        return null;
     }
 }

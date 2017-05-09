@@ -30,6 +30,7 @@ import pl.beardeddev.crawler.core.Crawler;
  * 
  * @author Szymon Grzelak
  */
+@FunctionalInterface
 public interface CrawlerFactory {
     
     /**

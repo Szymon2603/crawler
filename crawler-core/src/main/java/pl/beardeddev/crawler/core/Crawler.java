@@ -104,7 +104,7 @@ public class Crawler implements Serializable {
     }
 
     private Image createImage(URLWrapper url) throws CoreException {
-        LOGGER.trace(String.format("Creating image for: %s.", url.getURL().toString()));
+        LOGGER.trace("Creating image for: {}.", url.getURL().toString());
         document = DOCUMENT_PROVIDER.getDocument(url);
         URLWrapper urlImg = IMAGE_ELEMENTS_SUPPLIER.getImageURL(document);
         if(urlImg != null) {

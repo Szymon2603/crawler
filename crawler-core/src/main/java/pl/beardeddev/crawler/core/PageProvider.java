@@ -23,15 +23,10 @@
  */
 package pl.beardeddev.crawler.core;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
 import org.slf4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -62,8 +57,7 @@ public class PageProvider implements DocumentProvider, Serializable {
     public Document getDocument(URLWrapper urlWrapper) throws CoreException {
         try {
             URLConnection connection = urlWrapper.openConnection();
-            String charset = getCharset(connection);
-            return getBody(connection, charset);
+            return getBody(connection);
         } catch(CoreException ex) {
             throw ex;
         } catch (IOException ex) {
@@ -72,31 +66,12 @@ public class PageProvider implements DocumentProvider, Serializable {
         }
     }
 
-    private Document getBody(URLConnection connection, String charset) throws CoreException {
+    private Document getBody(URLConnection connection) throws CoreException {
         try(InputStream input = connection.getInputStream()) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input, charset));
-            String source = convertToString(reader);
-            return Jsoup.parse(source);
+            return Jsoup.parse(input, null, connection.getURL().toString());
         } catch(IOException ex) {
             LOGGER.error("Error while trying get page", ex);
             throw new CoreException("Core exception while geting page.", ex);
         }
-    }
-
-    private String convertToString(final BufferedReader reader) throws UnsupportedEncodingException, IOException {
-        StringJoiner sj = new StringJoiner(System.lineSeparator());
-        for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-            sj.add(line);
-        }
-        return sj.toString();
-    }
-
-    private String getCharset(URLConnection connection) {
-        String charset = connection.getContentEncoding();
-        if(charset == null) {
-            LOGGER.info("Charset is unknow. Trying with default UTF-8");
-            return StandardCharsets.UTF_8.name();
-        }
-        return charset;
     }
 }

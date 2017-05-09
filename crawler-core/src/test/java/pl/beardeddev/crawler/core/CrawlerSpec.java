@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.jsoup.nodes.Document;
@@ -76,8 +77,8 @@ public class CrawlerSpec {
         String commentsSelector = "div#commentsNumber";
         String ratingSelector = "div[id=rateNummber]";
         
-        imageExtractor = spy(new AttributeValueExtractor(imageSelector, "src"));
-        nextElementExtractor = spy(new AttributeValueExtractor(nextElementSelector, "href"));
+        imageExtractor = spy(new AttributeValueExtractor(imageSelector, "abs:src"));
+        nextElementExtractor = spy(new AttributeValueExtractor(nextElementSelector, "abs:href"));
         commentsExtractor = spy(new TextValueExtractor(commentsSelector));
         ratingExtractor = spy(new TextValueExtractor(ratingSelector));
         
@@ -88,12 +89,7 @@ public class CrawlerSpec {
                .setRatingExtractor(ratingExtractor);
         extractors = builder.build();
         
-        // Pozyskanie sciezki katalogu z lokalnymi plikami testowymi
-        String file = getClass().getClassLoader().getResource("testPage.html").getPath();
-        int lastIndex = file.lastIndexOf("/") + 1;
-        String protocol = "file:///" + file.substring(0, lastIndex);
-        
-        imageElementsSupplier = spy(new ImageElementsSupplierImpl(extractors, protocol));
+        imageElementsSupplier = spy(new ImageElementsSupplierImpl(extractors, Locale.getDefault()));
         
         crawler = spy(new Crawler(documentProvider, imageElementsSupplier));
     }

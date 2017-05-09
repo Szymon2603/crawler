@@ -53,7 +53,7 @@ public class TextValueExtractor implements ElementValueExtractor {
     public String getValue(Document document) {
         Elements elements = document.select(elementQuery);
         String value = elements.text();
-        LOGGER.debug("Return value: %s", value);
+        LOGGER.debug("Return value: {}", value);
         return value;
     }
 }
