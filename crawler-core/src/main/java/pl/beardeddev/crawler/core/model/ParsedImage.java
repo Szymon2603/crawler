@@ -21,78 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.app.domain;
+package pl.beardeddev.crawler.core.model;
 
-import java.io.Serializable;
-import java.util.Date;
+import java.net.URL;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import pl.beardeddev.crawler.core.model.Image;
 
 /**
- * Klasa encyjna reprezentująca przetworzony przez crawler dokument zawierający poszukiwany obraz.
+ * Klasa modelu, reprezentuje produkt robota internetowego przetwarzającego strony HTML
  * 
  * @author Szymon Grzelak
  */
-@Entity
-@Table(name = "PARSED_IMAGE")
-public class ParsedImage implements Serializable {
-
-    private static final long serialVersionUID = -5416841741916906006L;
+public class ParsedImage {
     
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-    
-    @Column(name = "IMAGE_URL")
-    private String imageURL;    
-    
-    @Column(name = "NUMBER_OF_COMMENTS")
+    private URL imageURL;
     private Integer numberOfComments;
-    
-    @Column(name = "RATING")
     private Integer rating;
-    
-    @Temporal(TemporalType.DATE)
-    @Column(name = "CREATE_DATE")
-    private Date createDate;
-    
-    public ParsedImage() {}
 
-    public ParsedImage(Long id, String imageURL, Integer numberOfComments, Integer rating, Date createDate) {
-        this.id = id;
-        this.imageURL = imageURL;
-        this.numberOfComments = numberOfComments;
+    public ParsedImage() {
+    }
+    
+    public ParsedImage(URL url, Integer comments, Integer rating) {
+        this.imageURL = url;
+        this.numberOfComments = comments;
         this.rating = rating;
-        this.createDate = createDate;
-    }
-    
-    public ParsedImage(Image image) {
-        imageURL = image.getImageURL().toString();
-        numberOfComments = image.getNumberOfComments();
-        rating = image.getRating();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getImageURL() {
+    public URL getImageURL() {
         return imageURL;
     }
 
-    public void setImageURL(String imageURL) {
+    public void setImageURL(URL imageURL) {
         this.imageURL = imageURL;
     }
 
@@ -112,18 +70,17 @@ public class ParsedImage implements Serializable {
         this.rating = rating;
     }
 
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    @Override
+    public String toString() {
+        return "Image{" + "imageURL=" + imageURL + ", numberOfComments=" + numberOfComments + ", rating=" + rating + '}';
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 23 * hash + Objects.hashCode(this.id);
+        int hash = 3;
+        hash = 61 * hash + Objects.hashCode(this.imageURL);
+        hash = 61 * hash + Objects.hashCode(this.numberOfComments);
+        hash = 61 * hash + Objects.hashCode(this.rating);
         return hash;
     }
 
@@ -139,7 +96,13 @@ public class ParsedImage implements Serializable {
             return false;
         }
         final ParsedImage other = (ParsedImage) obj;
-        if (!Objects.equals(this.id, other.id)) {
+        if (!Objects.equals(this.imageURL, other.imageURL)) {
+            return false;
+        }
+        if (!Objects.equals(this.numberOfComments, other.numberOfComments)) {
+            return false;
+        }
+        if (!Objects.equals(this.rating, other.rating)) {
             return false;
         }
         return true;

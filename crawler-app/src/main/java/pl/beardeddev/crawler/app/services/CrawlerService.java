@@ -24,8 +24,10 @@
 package pl.beardeddev.crawler.app.services;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Future;
-import pl.beardeddev.crawler.app.domain.ParsedImage;
+import pl.beardeddev.crawler.app.domain.ConfigPackageMaster;
+import pl.beardeddev.crawler.app.domain.Image;
 import pl.beardeddev.crawler.core.factory.CrawlerFactory;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 
@@ -46,7 +48,7 @@ public interface CrawlerService {
      * @param maxVisits maksymalna liczba wizyt.
      * @return instancja {@class Future} będąca powiązaniem z wątkiem roboczym obsułguacym pracę robota.
      */
-    Future<List<ParsedImage>> runCralwerAsync(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits);
+    Future<List<Image>> runCralwerAsync(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits);
     
     /**
      * Uruchamia robota internetowego w zadanej konfiguracji przekazanej jako parametry. Rezultatem jest
@@ -57,13 +59,13 @@ public interface CrawlerService {
      * @param maxVisits maksymalna liczba wizyt.
      * @return lista sprasowanych dokumentów.
      */
-    List<ParsedImage> runCrawler(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits);
+    List<Image> runCrawler(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits);
     
     /**
      * Zapis listy sparsowanych dokumentów.
      * 
      * @param parsedImages lista obiektów do zapisu.
      */
-    void saveParsedImage(List<ParsedImage> parsedImages);
+    void saveParsedImage(List<Image> parsedImages);
     
 }

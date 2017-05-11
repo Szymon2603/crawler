@@ -40,7 +40,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.any;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
-import pl.beardeddev.crawler.core.model.Image;
+import pl.beardeddev.crawler.core.model.ParsedImage;
 import pl.beardeddev.crawler.core.exceptions.CoreException;
 import pl.beardeddev.crawler.core.suppliers.impl.AttributeValueExtractor;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
@@ -101,27 +101,27 @@ public class CrawlerSpec {
     
     @Test()
     public void givenNullArgWhenGetImagesThenListIsEmpty() {
-        List<Image> result = crawler.getImages(null, 1);
+        List<ParsedImage> result = crawler.getImages(null, 1);
         Assert.assertTrue("List should be empty!", result.isEmpty());
     }
     
     @Test()
     public void givenNoImageWhenGetImageThenReturnNull() throws CoreException, MalformedURLException {
         doReturn(null).when(imageExtractor).getValue(any());
-        Image result = crawler.getImage(urlWrapper);
+        ParsedImage result = crawler.getImage(urlWrapper);
         Assert.assertNull("Should be null", result);
     }
     
     @Test()
     public void givenImageWhenGetImageThenImageURLIsSet() throws CoreException, MalformedURLException {
-        Image result = crawler.getImage(urlWrapper);
+        ParsedImage result = crawler.getImage(urlWrapper);
         URL expected = new URL("https://local");
         Assert.assertTrue("URL is not equals!", expected.equals(result.getImageURL()));
     }
     
     @Test()
     public void givenNumOfCommentsWhenGetImageThenNumOfCommentsPropertyIsSet() throws CoreException, MalformedURLException {
-        Image result = crawler.getImage(urlWrapper);
+        ParsedImage result = crawler.getImage(urlWrapper);
         Integer expected = 10;
         Integer actual = result.getNumberOfComments();
         Assert.assertTrue(String.format("Number of comments is not equals! Actual is: %d", actual), expected.equals(actual));
@@ -130,14 +130,14 @@ public class CrawlerSpec {
     @Test()
     public void givenBadNumOfCommentsSelectorWhenGetImageThenValueIsNotSet() throws CoreException, MalformedURLException {
         doReturn(null).when(commentsExtractor).getValue(any());
-        Image result = crawler.getImage(urlWrapper);
+        ParsedImage result = crawler.getImage(urlWrapper);
         Integer actual = result.getNumberOfComments();
         Assert.assertNull(String.format("Number of comments should be null"), actual);
     }
     
     @Test()
     public void givenRatingWhenGetImageThenRatingPropertyIsSet() throws CoreException, MalformedURLException {
-        Image result = crawler.getImage(urlWrapper);
+        ParsedImage result = crawler.getImage(urlWrapper);
         Integer expected = 15;
         Integer actual = result.getRating();
         Assert.assertTrue(String.format("Ratings are not equals! Actual is: %d", actual), expected.equals(actual));
@@ -146,28 +146,28 @@ public class CrawlerSpec {
     @Test()
     public void givenBadRatingsSelectorWhenGetImageThenValueIsNotSet() throws CoreException, MalformedURLException {
         doReturn(null).when(ratingExtractor).getValue(any());
-        Image result = crawler.getImage(urlWrapper);
+        ParsedImage result = crawler.getImage(urlWrapper);
         Integer actual = result.getRating();
         Assert.assertNull(String.format("Ratings should be null"), actual);
     }
     
     @Test()
     public void givenCorrectURLWhenGetImagesThenListIsNotEmpty() {
-        List<Image> result = crawler.getImages(urlWrapper, 1);
+        List<ParsedImage> result = crawler.getImages(urlWrapper, 1);
         Assert.assertFalse("List is empty!", result.isEmpty());
     }
     
     @Test()
     public void givenBadImageSelectorWhenGetImagesThenListIsEmpty() {
         doReturn(null).when(imageExtractor).getValue(any());
-        List<Image> result = crawler.getImages(urlWrapper, 1);
+        List<ParsedImage> result = crawler.getImages(urlWrapper, 1);
         Assert.assertTrue("List is not empty!", result.isEmpty());
     }
     
     @Test()
     public void givenMaxNumOfImagesWhenGetImagesThenListHaveCorrectSize() {
         int expected = 2;
-        List<Image> result = crawler.getImages(urlWrapper, expected);
+        List<ParsedImage> result = crawler.getImages(urlWrapper, expected);
         int actual = result.size();
         Assert.assertEquals("List have incorrect size!", expected, actual);
     }
@@ -175,8 +175,8 @@ public class CrawlerSpec {
     @Test()
     public void whenGetImagesThenListHaveDiffrentImages() {
         int expected = 2;
-        List<Image> result = crawler.getImages(urlWrapper, expected);
-        Set<Image> resultSet = result.stream().collect(Collectors.toCollection(() -> new HashSet()));
+        List<ParsedImage> result = crawler.getImages(urlWrapper, expected);
+        Set<ParsedImage> resultSet = result.stream().collect(Collectors.toCollection(() -> new HashSet()));
         int actual = resultSet.size();
         Assert.assertEquals("List have incorrect size!", expected, actual);
     }
@@ -185,8 +185,8 @@ public class CrawlerSpec {
     public void givenNoNextElementURLWhenGetImagesThenReturnResult() throws CoreException {
         doReturn(null).when(imageElementsSupplier).getNextImageURL(any(Document.class));
         int expected = 1;
-        List<Image> result = crawler.getImages(urlWrapper, expected);
-        Set<Image> resultSet = result.stream().collect(Collectors.toCollection(() -> new HashSet()));
+        List<ParsedImage> result = crawler.getImages(urlWrapper, expected);
+        Set<ParsedImage> resultSet = result.stream().collect(Collectors.toCollection(() -> new HashSet()));
         int actual = resultSet.size();
         Assert.assertEquals("List have incorrect size!", expected, actual);
     }
@@ -195,8 +195,8 @@ public class CrawlerSpec {
     public void givenCoreExceptionWhenGetImagesThenReturnResult() throws CoreException {
         doThrow(CoreException.class).when(imageElementsSupplier).getNextImageURL(any(Document.class));
         int expected = 1;
-        List<Image> result = crawler.getImages(urlWrapper, expected);
-        Set<Image> resultSet = result.stream().collect(Collectors.toCollection(() -> new HashSet()));
+        List<ParsedImage> result = crawler.getImages(urlWrapper, expected);
+        Set<ParsedImage> resultSet = result.stream().collect(Collectors.toCollection(() -> new HashSet()));
         int actual = resultSet.size();
         Assert.assertEquals("List have incorrect size!", expected, actual);
     }
@@ -205,8 +205,8 @@ public class CrawlerSpec {
     public void givenCoreExceptionWhenGetImagesThenReturnNoResult() throws CoreException {
         doThrow(CoreException.class).when(crawler).getImage(any(URLWrapper.class));
         int expected = 0;
-        List<Image> result = crawler.getImages(urlWrapper, expected);
-        Set<Image> resultSet = result.stream().collect(Collectors.toCollection(() -> new HashSet()));
+        List<ParsedImage> result = crawler.getImages(urlWrapper, expected);
+        Set<ParsedImage> resultSet = result.stream().collect(Collectors.toCollection(() -> new HashSet()));
         int actual = resultSet.size();
         Assert.assertEquals("List have incorrect size!", expected, actual);
     }

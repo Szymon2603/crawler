@@ -24,12 +24,12 @@
 package pl.beardeddev.crawler.app.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.beardeddev.crawler.app.domain.ParsedImage;
+import pl.beardeddev.crawler.app.domain.Image;
 
 /**
  * Automatycznie generowane repozytorium Spring-Data dla encji {@class ParsedImage}.
  * 
  * @author Szymon Grzelak
  */
-public interface ParsedImageRepository extends JpaRepository<ParsedImage, Long> {
+public interface ImageRepository extends JpaRepository<Image, Long> {
 }
