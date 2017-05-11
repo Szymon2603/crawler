@@ -24,60 +24,52 @@
 package pl.beardeddev.crawler.app.domain;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import pl.beardeddev.crawler.core.model.Image;
+import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 
 /**
- * Klasa encyjna reprezentująca przetworzony przez crawler dokument zawierający poszukiwany obraz.
- * 
+ *
  * @author Szymon Grzelak
  */
 @Entity
-@Table(name = "PARSED_IMAGE")
-public class ParsedImage implements Serializable {
+@Table(name = "CONFIG_PACKAGE_DETAIL")
+public class ConfigPackageDetail implements Serializable {
 
-    private static final long serialVersionUID = -5416841741916906006L;
+    private static final long serialVersionUID = -3819581089894532412L;
     
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
     
-    @Column(name = "IMAGE_URL")
-    private String imageURL;    
+    @Column(name = "DETAIL_NAME")
+    @Enumerated(EnumType.STRING)
+    private Configs detailName;
     
-    @Column(name = "NUMBER_OF_COMMENTS")
-    private Integer numberOfComments;
+    @JoinColumn(name = "CONFIG")
+    @ManyToOne(optional = false)
+    private ExtractorConfig config;
     
-    @Column(name = "RATING")
-    private Integer rating;
-    
-    @Temporal(TemporalType.DATE)
-    @Column(name = "CREATE_DATE")
-    private Date createDate;
-    
-    public ParsedImage() {}
+    @JoinColumn(name = "PACKAGE_MASTER")
+    @ManyToOne(optional = false)
+    private ConfigPackageMaster packageMaster;
 
-    public ParsedImage(Long id, String imageURL, Integer numberOfComments, Integer rating, Date createDate) {
+    public ConfigPackageDetail() {}
+
+    public ConfigPackageDetail(Long id, Configs detailName, ExtractorConfig config, ConfigPackageMaster packageMaster) {
         this.id = id;
-        this.imageURL = imageURL;
-        this.numberOfComments = numberOfComments;
-        this.rating = rating;
-        this.createDate = createDate;
-    }
-    
-    public ParsedImage(Image image) {
-        imageURL = image.getImageURL().toString();
-        numberOfComments = image.getNumberOfComments();
-        rating = image.getRating();
+        this.detailName = detailName;
+        this.config = config;
+        this.packageMaster = packageMaster;
     }
 
     public Long getId() {
@@ -88,42 +80,34 @@ public class ParsedImage implements Serializable {
         this.id = id;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public Configs getDetailName() {
+        return detailName;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setDetailName(Configs detailName) {
+        this.detailName = detailName;
     }
 
-    public Integer getNumberOfComments() {
-        return numberOfComments;
+    public ExtractorConfig getConfig() {
+        return config;
     }
 
-    public void setNumberOfComments(Integer numberOfComments) {
-        this.numberOfComments = numberOfComments;
+    public void setConfig(ExtractorConfig config) {
+        this.config = config;
     }
 
-    public Integer getRating() {
-        return rating;
+    public ConfigPackageMaster getPackageMaster() {
+        return packageMaster;
     }
 
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setPackageMaster(ConfigPackageMaster packageMaster) {
+        this.packageMaster = packageMaster;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 23 * hash + Objects.hashCode(this.id);
+        int hash = 3;
+        hash = 67 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -138,7 +122,7 @@ public class ParsedImage implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ParsedImage other = (ParsedImage) obj;
+        final ConfigPackageDetail other = (ConfigPackageDetail) obj;
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }

@@ -23,15 +23,20 @@
  */
 package pl.beardeddev.crawler.app.config;
 
+import java.nio.charset.StandardCharsets;
 import javax.sql.DataSource;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -60,6 +65,19 @@ public class DevelopmentConfig {
                 .setType(EmbeddedDatabaseType.H2)
                 .build();
     }
+    
+    @Bean
+    public ResourceDatabasePopulator databasePopulator() {
+        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+        populator.setSqlScriptEncoding(StandardCharsets.UTF_8.name());
+        populator.addScript(new ClassPathResource(ConfigConstants.DEVELOPMENT_INIT_DATA_FILE));
+        return populator;
+    }
+    
+    @Bean
+    public InitializingBean populatorExecutor(ResourceDatabasePopulator databasePopulator, DataSource dataSource) {
+        return () -> DatabasePopulatorUtils.execute(databasePopulator, dataSource);
+    }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
@@ -77,6 +95,7 @@ public class DevelopmentConfig {
         adapter.setShowSql(environment.getProperty(ConfigConstants.JPA_VENDOR_ADAPTER_SHOW_SQL, Boolean.class));
         adapter.setGenerateDdl(environment.getProperty(ConfigConstants.JPA_VENDOR_ADAPTER_GENERATE_DDL, Boolean.class));
         adapter.setDatabasePlatform(ConfigConstants.H2_DIALECT_CLASS);
+        adapter.setGenerateDdl(true);
         return adapter;
     }
 

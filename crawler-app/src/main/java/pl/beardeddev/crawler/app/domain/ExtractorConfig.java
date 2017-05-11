@@ -24,60 +24,47 @@
 package pl.beardeddev.crawler.app.domain;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import pl.beardeddev.crawler.core.model.Image;
+import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 
 /**
- * Klasa encyjna reprezentująca przetworzony przez crawler dokument zawierający poszukiwany obraz.
- * 
+ *
  * @author Szymon Grzelak
  */
 @Entity
-@Table(name = "PARSED_IMAGE")
-public class ParsedImage implements Serializable {
+@Table(name = "EXTRACTOR_CONFIG")
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+public abstract class ExtractorConfig implements Serializable {
 
-    private static final long serialVersionUID = -5416841741916906006L;
+    private static final long serialVersionUID = 6853121706485850783L;
     
     @Id
     @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
+    @Column(name = "ID") 
+    protected Long id;
     
-    @Column(name = "IMAGE_URL")
-    private String imageURL;    
+    @Column(name = "TYPE")
+    @Enumerated(EnumType.STRING)
+    protected Extractors type;
     
-    @Column(name = "NUMBER_OF_COMMENTS")
-    private Integer numberOfComments;
-    
-    @Column(name = "RATING")
-    private Integer rating;
-    
-    @Temporal(TemporalType.DATE)
-    @Column(name = "CREATE_DATE")
-    private Date createDate;
-    
-    public ParsedImage() {}
+    @Column(name = "ELEMENT_SELECTOR")
+    protected String elementSelector;
 
-    public ParsedImage(Long id, String imageURL, Integer numberOfComments, Integer rating, Date createDate) {
-        this.id = id;
-        this.imageURL = imageURL;
-        this.numberOfComments = numberOfComments;
-        this.rating = rating;
-        this.createDate = createDate;
-    }
+    public ExtractorConfig() {}
     
-    public ParsedImage(Image image) {
-        imageURL = image.getImageURL().toString();
-        numberOfComments = image.getNumberOfComments();
-        rating = image.getRating();
+    public ExtractorConfig(Long id, Extractors type, String elementSelector) {
+        this.id = id;
+        this.type = type;
+        this.elementSelector = elementSelector;
     }
 
     public Long getId() {
@@ -88,42 +75,30 @@ public class ParsedImage implements Serializable {
         this.id = id;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public Extractors getType() {
+        return type;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setType(Extractors type) {
+        this.type = type;
+    }
+    
+    public String getElementSelector() {
+        return elementSelector;
     }
 
-    public Integer getNumberOfComments() {
-        return numberOfComments;
+    public void setElementSelector(String elementSelector) {
+        this.elementSelector = elementSelector;
     }
-
-    public void setNumberOfComments(Integer numberOfComments) {
-        this.numberOfComments = numberOfComments;
-    }
-
-    public Integer getRating() {
-        return rating;
-    }
-
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    
+    public ElementValueExtractor getElementValueExtractor() {
+        return type.getElementValueExtractor(this);
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 23 * hash + Objects.hashCode(this.id);
+        hash = 47 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -138,7 +113,7 @@ public class ParsedImage implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ParsedImage other = (ParsedImage) obj;
+        final ExtractorConfig other = (ExtractorConfig) obj;
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }

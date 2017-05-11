@@ -24,60 +24,44 @@
 package pl.beardeddev.crawler.app.domain;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import pl.beardeddev.crawler.core.model.Image;
 
 /**
- * Klasa encyjna reprezentująca przetworzony przez crawler dokument zawierający poszukiwany obraz.
- * 
+ *
  * @author Szymon Grzelak
  */
 @Entity
-@Table(name = "PARSED_IMAGE")
-public class ParsedImage implements Serializable {
+@Table(name = "CONFIG_PACKAGE_MASTER")
+public class ConfigPackageMaster implements Serializable {
 
-    private static final long serialVersionUID = -5416841741916906006L;
+    private static final long serialVersionUID = 5012196746521016730L;
     
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
     
-    @Column(name = "IMAGE_URL")
-    private String imageURL;    
+    @Column(name = "NAME")
+    private String name;
     
-    @Column(name = "NUMBER_OF_COMMENTS")
-    private Integer numberOfComments;
-    
-    @Column(name = "RATING")
-    private Integer rating;
-    
-    @Temporal(TemporalType.DATE)
-    @Column(name = "CREATE_DATE")
-    private Date createDate;
-    
-    public ParsedImage() {}
+    @OneToMany(mappedBy = "packageMaster", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
+    private Set<ConfigPackageDetail> packageDetails;
 
-    public ParsedImage(Long id, String imageURL, Integer numberOfComments, Integer rating, Date createDate) {
+    public ConfigPackageMaster() {}
+
+    public ConfigPackageMaster(Long id, String name, Set<ConfigPackageDetail> packageDetails) {
         this.id = id;
-        this.imageURL = imageURL;
-        this.numberOfComments = numberOfComments;
-        this.rating = rating;
-        this.createDate = createDate;
-    }
-    
-    public ParsedImage(Image image) {
-        imageURL = image.getImageURL().toString();
-        numberOfComments = image.getNumberOfComments();
-        rating = image.getRating();
+        this.name = name;
+        this.packageDetails = packageDetails;
     }
 
     public Long getId() {
@@ -88,42 +72,26 @@ public class ParsedImage implements Serializable {
         this.id = id;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getName() {
+        return name;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public Set<ConfigPackageDetail> getPackageDetails() {
+        return packageDetails;
     }
 
-    public Integer getNumberOfComments() {
-        return numberOfComments;
-    }
-
-    public void setNumberOfComments(Integer numberOfComments) {
-        this.numberOfComments = numberOfComments;
-    }
-
-    public Integer getRating() {
-        return rating;
-    }
-
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setPackageDetails(Set<ConfigPackageDetail> packageDetails) {
+        this.packageDetails = packageDetails;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 23 * hash + Objects.hashCode(this.id);
+        hash = 53 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -138,7 +106,7 @@ public class ParsedImage implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ParsedImage other = (ParsedImage) obj;
+        final ConfigPackageMaster other = (ConfigPackageMaster) obj;
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
