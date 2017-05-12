@@ -29,7 +29,9 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 /**
- *
+ * Klasa encyjna przechowująca informacje na temat selektora i nazwy atrybutu elementu z którego ma zostać pobrana
+ * wartość w dokumencie.
+ * 
  * @author Szymon Grzelak
  */
 @Entity

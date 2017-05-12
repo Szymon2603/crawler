@@ -27,7 +27,9 @@ import pl.beardeddev.crawler.app.factory.ExtractorFactory;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 
 /**
- *
+ * Typ wyliczeniowy zawierający rodzaje konfiguracji potrzebne do działania crawler-a. Dotyczą one rodzaju ekstraktorów
+ * pozysukjących elementy zawarte w dokumencie.
+ * 
  * @author Szymon Grzelak
  */
 public enum Extractors {

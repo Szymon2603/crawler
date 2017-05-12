@@ -27,7 +27,9 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- *
+ * Klasa encyjna przechowująca informacje na temat selektora elementu z którego ma zostać pobrana wartość tekstowa w
+ * dokumencie.
+ * 
  * @author Szymon Grzelak
  */
 @Entity

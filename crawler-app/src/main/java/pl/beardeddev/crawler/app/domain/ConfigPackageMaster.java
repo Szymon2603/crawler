@@ -36,7 +36,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- *
+ * Klasa encyjna będąca reprezentacją pakietu konfiguracji dla crawlera. Jest to encja z ogólnymi informacjami pakietu.
+ * 
  * @author Szymon Grzelak
  */
 @Entity

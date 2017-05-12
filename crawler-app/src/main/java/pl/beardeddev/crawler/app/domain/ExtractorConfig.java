@@ -37,7 +37,8 @@ import javax.persistence.Table;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 
 /**
- *
+ * Klasa abstrakcyjna dla konfiguracji sposobu pozyskiwania elementów zawartych w dokumencie.
+ * 
  * @author Szymon Grzelak
  */
 @Entity

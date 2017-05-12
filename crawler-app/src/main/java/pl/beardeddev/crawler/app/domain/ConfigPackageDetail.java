@@ -34,10 +34,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 
 /**
- *
+ * Klasa encyjna będąca reprezentacją pakietu konfiguracji dla crawlera. Jest to encja ze szczegółami pakietu, przechowu
+ * jąca informację o jednej wybranej konfiguracji.
+ * 
  * @author Szymon Grzelak
  */
 @Entity

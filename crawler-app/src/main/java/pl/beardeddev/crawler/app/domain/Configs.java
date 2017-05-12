@@ -24,7 +24,9 @@
 package pl.beardeddev.crawler.app.domain;
 
 /**
- *
+ * Typ wyliczeniowy zawierający rodzaje konfiguracji potrzebne do działania crawler-a. Dotyczą one ekstraktorów
+ * elementów szukanych przez crawler-a.
+ * 
  * @author Szymon Grzelak
  */
 public enum Configs {
