@@ -23,7 +23,6 @@
  */
 package pl.beardeddev.crawler.app.factory;
 
-import java.util.Locale;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +30,7 @@ import pl.beardeddev.crawler.app.domain.ConfigPackageDetail;
 import pl.beardeddev.crawler.app.domain.ConfigPackageMaster;
 import pl.beardeddev.crawler.app.domain.Configs;
 import pl.beardeddev.crawler.app.domain.ExtractorConfig;
+import pl.beardeddev.crawler.app.domain.NumberFormatLocale;
 import pl.beardeddev.crawler.app.exceptions.BusinessLogicRuntimeException;
 import pl.beardeddev.crawler.core.Crawler;
 import pl.beardeddev.crawler.core.factory.BaseCrawlerFactory;
@@ -50,12 +50,10 @@ public class CrawlerFactoryImpl extends BaseCrawlerFactory {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CrawlerFactoryImpl.class);
     
-    private final Locale locale;
-    private final ConfigPackageMaster config;
+    private final ConfigPackageMaster CONFIG;
 
-    public CrawlerFactoryImpl(Locale locale, ConfigPackageMaster config) {
-        this.locale = locale;
-        this.config = config;
+    public CrawlerFactoryImpl(ConfigPackageMaster config) {
+        CONFIG = config;
     }
     
     @Override
@@ -70,14 +68,15 @@ public class CrawlerFactoryImpl extends BaseCrawlerFactory {
     private ImageElementsSupplier createImageElementsSupplier() {
         LOGGER.debug("Create ImageElementsSupplier");
         ImageElementsExtractors imageElementsExtractors = createImageElementsExtractors();
-        ImageElementsSupplier imageElementsSupplier = new ImageElementsSupplierImpl(imageElementsExtractors, locale);
+        NumberFormatLocale locale = CONFIG.getNumberFormatLocale();
+        ImageElementsSupplier imageElementsSupplier = new ImageElementsSupplierImpl(imageElementsExtractors, locale.getAsLocale());
         return imageElementsSupplier;
     }
     
     private ImageElementsExtractors createImageElementsExtractors() {
-        LOGGER.debug("Create ImageElementsExtractors based on config -> {}", config);
+        LOGGER.debug("Create ImageElementsExtractors based on config -> {}", CONFIG);
         ImageElementsExtractorsBuilder builder = new ImageElementsExtractorsBuilder();
-        Set<ConfigPackageDetail> details = config.getPackageDetails();
+        Set<ConfigPackageDetail> details = CONFIG.getPackageDetails();
         builder.setImageExtractor(findElementValueExtractor(details, Configs.IMAGE_EXTRACTOR))
                 .setCommentsExtractor(findElementValueExtractor(details, Configs.COMMENTS_EXTRACTOR))
                 .setRatingExtractor(findElementValueExtractor(details, Configs.RATING_EXTRACTOR))

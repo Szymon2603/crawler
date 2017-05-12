@@ -26,7 +26,6 @@ package pl.beardeddev.crawler.app.services.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -88,8 +87,9 @@ public class CrawlerServiceImpl implements CrawlerService {
     }
     
     @Override
-    public List<Image> runCrawler(ConfigPackageMaster config, URLWrapper startUrl, int maxVisits, Locale locale) {
-        CrawlerFactory factory = new CrawlerFactoryImpl(locale, config);
+    public List<Image> runCrawler(ConfigPackageMaster config, URLWrapper startUrl, int maxVisits) {
+        LOGGER.info("Running crawler with: {}, {}, {}", config, startUrl, maxVisits);
+        CrawlerFactory factory = new CrawlerFactoryImpl(config);
         return runCrawler(factory, startUrl, maxVisits);
     }
 

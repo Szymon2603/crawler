@@ -68,10 +68,9 @@ public interface CrawlerService {
      * @param config konfiguracja potrzebna do utworzenia fabryki robotów internetowych.
      * @param startUrl początkowy adres.
      * @param maxVisits maksymalna liczba wizyt.
-     * @param locale lokalizacja.
      * @return lista sprasowanych dokumentów.
      */
-    List<Image> runCrawler(ConfigPackageMaster config, URLWrapper startUrl, int maxVisits, Locale locale);
+    List<Image> runCrawler(ConfigPackageMaster config, URLWrapper startUrl, int maxVisits);
     
     /**
      * Zapis listy sparsowanych dokumentów.

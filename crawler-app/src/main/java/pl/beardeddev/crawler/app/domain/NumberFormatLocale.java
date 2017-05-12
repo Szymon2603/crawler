@@ -24,57 +24,46 @@
 package pl.beardeddev.crawler.app.domain;
 
 import java.io.Serializable;
-import java.util.Set;
-import javax.persistence.CascadeType;
+import java.util.Locale;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Klasa encyjna będąca reprezentacją pakietu konfiguracji dla crawlera. Jest to encja z ogólnymi informacjami pakietu.
- * 
+ *
  * @author Szymon Grzelak
  */
 @Entity
-@Table(name = "CONFIG_PACKAGE_MASTER")
+@Table(name = "NUMBER_FORMAT_LOCALE")
 @ToString
 @EqualsAndHashCode(of = "id")
-public class ConfigPackageMaster implements Serializable {
+public class NumberFormatLocale implements Serializable {
 
-    private static final long serialVersionUID = 5012196746521016730L;
+    private static final long serialVersionUID = -8053120765959189890L;
     
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
     
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "LANGUAGE_TAG")
+    private String languageTag;
     
-    @JoinColumn(name = "LOCALE")
-    @ManyToOne
-    private NumberFormatLocale numberFormatLocale;
-    
-    @OneToMany(mappedBy = "packageMaster", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
-    private Set<ConfigPackageDetail> packageDetails;
+    @Column(name = "DESCRIPTION")
+    private String description;
 
-    public ConfigPackageMaster() {}
+    public NumberFormatLocale() {}
 
-    public ConfigPackageMaster(Long id, String name, NumberFormatLocale numberFormatLocale, Set<ConfigPackageDetail> packageDetails) {
+    public NumberFormatLocale(Long id, String languageTag, String description) {
         this.id = id;
-        this.name = name;
-        this.numberFormatLocale = numberFormatLocale;
-        this.packageDetails = packageDetails;
+        this.languageTag = languageTag;
+        this.description = description;
     }
-
+    
     public Long getId() {
         return id;
     }
@@ -83,27 +72,23 @@ public class ConfigPackageMaster implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getLanguageTag() {
+        return languageTag;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLanguageTag(String languageTag) {
+        this.languageTag = languageTag;
     }
 
-    public NumberFormatLocale getNumberFormatLocale() {
-        return numberFormatLocale;
+    public String getDescription() {
+        return description;
     }
 
-    public void setNumberFormatLocale(NumberFormatLocale numberFormatLocale) {
-        this.numberFormatLocale = numberFormatLocale;
+    public void setDescription(String description) {
+        this.description = description;
     }
     
-    public Set<ConfigPackageDetail> getPackageDetails() {
-        return packageDetails;
-    }
-
-    public void setPackageDetails(Set<ConfigPackageDetail> packageDetails) {
-        this.packageDetails = packageDetails;
+    public Locale getAsLocale() {
+        return Locale.forLanguageTag(languageTag);
     }
 }
