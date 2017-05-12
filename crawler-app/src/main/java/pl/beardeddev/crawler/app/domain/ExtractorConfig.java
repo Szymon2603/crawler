@@ -34,6 +34,8 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 
 /**
@@ -44,6 +46,8 @@ import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 @Entity
 @Table(name = "EXTRACTOR_CONFIG")
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+@ToString
+@EqualsAndHashCode(of = "id")
 public abstract class ExtractorConfig implements Serializable {
 
     private static final long serialVersionUID = 6853121706485850783L;
@@ -94,30 +98,5 @@ public abstract class ExtractorConfig implements Serializable {
     
     public ElementValueExtractor getElementValueExtractor() {
         return type.getElementValueExtractor(this);
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 47 * hash + Objects.hashCode(this.id);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ExtractorConfig other = (ExtractorConfig) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return true;
     }
 }

@@ -24,7 +24,6 @@
 package pl.beardeddev.crawler.app.domain;
 
 import java.io.Serializable;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -34,6 +33,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Klasa encyjna będąca reprezentacją pakietu konfiguracji dla crawlera. Jest to encja ze szczegółami pakietu, przechowu
@@ -43,6 +44,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "CONFIG_PACKAGE_DETAIL")
+@ToString(exclude = "packageMaster")
+@EqualsAndHashCode(of = "id")
 public class ConfigPackageDetail implements Serializable {
 
     private static final long serialVersionUID = -3819581089894532412L;
@@ -103,30 +106,5 @@ public class ConfigPackageDetail implements Serializable {
 
     public void setPackageMaster(ConfigPackageMaster packageMaster) {
         this.packageMaster = packageMaster;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 67 * hash + Objects.hashCode(this.id);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ConfigPackageDetail other = (ConfigPackageDetail) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return true;
     }
 }

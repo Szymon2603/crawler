@@ -27,6 +27,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Klasa encyjna przechowująca informacje na temat selektora i nazwy atrybutu elementu z którego ma zostać pobrana
@@ -37,6 +39,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "ATTRIBUTE_VALUE_EXTRACTOR_CONFIG")
 @PrimaryKeyJoinColumn(name = "ID")
+@ToString
+@EqualsAndHashCode(callSuper = true)
 public class AttributeValueExtractorConfig extends ExtractorConfig {
 
     private static final long serialVersionUID = -3522944652114728696L;

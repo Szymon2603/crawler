@@ -25,6 +25,8 @@ package pl.beardeddev.crawler.app.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Klasa encyjna przechowująca informacje na temat selektora elementu z którego ma zostać pobrana wartość tekstowa w
@@ -34,6 +36,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "TEXT_VALUE_EXTRACTOR_CONFIG")
+@ToString
+@EqualsAndHashCode(callSuper = true)
 public class TextValueExtractorConfig extends ExtractorConfig {
     
     private static final long serialVersionUID = 2709012905733592758L;
