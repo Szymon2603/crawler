@@ -31,7 +31,7 @@ import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
-import pl.beardeddev.crawler.core.model.Image;
+import pl.beardeddev.crawler.core.model.ParsedImage;
 import pl.beardeddev.crawler.core.exceptions.CoreException;
 
 /**
@@ -71,14 +71,14 @@ public class Crawler implements Serializable {
      * @param maxVisits maksymalna ilość stron do odwiedzenia.
      * @return lista obiektów {@see Image}.
      */
-    public List<Image> getImages(URLWrapper urlStartPoint, int maxVisits) {
-        List<Image> result = new ArrayList<>();
+    public List<ParsedImage> getImages(URLWrapper urlStartPoint, int maxVisits) {
+        List<ParsedImage> result = new ArrayList<>();
         try {
             isNotNull(urlStartPoint);
             URLWrapper nextURLToVisit = urlStartPoint;
             int visitsLeft = maxVisits;
             while(visitsLeft-- != 0 && nextURLToVisit != null) {
-                Image image = getImage(nextURLToVisit);
+                ParsedImage image = getImage(nextURLToVisit);
                 if (image != null) {
                     result.add(image);
                     nextURLToVisit = IMAGE_ELEMENTS_SUPPLIER.getNextImageURL(document);
@@ -98,17 +98,17 @@ public class Crawler implements Serializable {
      * @throws CoreException jeżeli przekazany obiekt {@see URLWrapper} jest null oraz błędy zgłaszane przez pozostałe
      * komponenty składowe pająka.
      */
-    public Image getImage(URLWrapper url) throws CoreException {
+    public ParsedImage getImage(URLWrapper url) throws CoreException {
         isNotNull(url);
         return createImage(url);
     }
 
-    private Image createImage(URLWrapper url) throws CoreException {
+    private ParsedImage createImage(URLWrapper url) throws CoreException {
         LOGGER.trace("Creating image for: {}.", url.getURL().toString());
         document = DOCUMENT_PROVIDER.getDocument(url);
         URLWrapper urlImg = IMAGE_ELEMENTS_SUPPLIER.getImageURL(document);
         if(urlImg != null) {
-            Image image = new Image();
+            ParsedImage image = new ParsedImage();
             image.setImageURL(urlImg.getURL());
             Integer numberOfComments = IMAGE_ELEMENTS_SUPPLIER.getImageNumberOfComments(document);
             image.setNumberOfComments(numberOfComments);

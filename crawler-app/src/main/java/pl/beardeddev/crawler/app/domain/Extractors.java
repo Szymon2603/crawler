@@ -21,15 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.app.repositories;
+package pl.beardeddev.crawler.app.domain;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import pl.beardeddev.crawler.app.domain.ParsedImage;
+import pl.beardeddev.crawler.app.factory.ExtractorFactory;
+import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 
 /**
- * Automatycznie generowane repozytorium Spring-Data dla encji {@class ParsedImage}.
+ * Typ wyliczeniowy zawierający rodzaje konfiguracji potrzebne do działania crawler-a. Dotyczą one rodzaju ekstraktorów
+ * pozysukjących elementy zawarte w dokumencie.
  * 
  * @author Szymon Grzelak
  */
-public interface ParsedImageRepository extends JpaRepository<ParsedImage, Long> {
+public enum Extractors {
+    
+    ATTRIBUTE_VALUE_EXTRACTOR {
+        @Override
+        public ElementValueExtractor getElementValueExtractor(ExtractorConfig config) {
+            return ExtractorFactory.createExtractor((AttributeValueExtractorConfig) config);
+        }
+    },
+    TEXT_VALUE_EXTRACTOR {
+        @Override
+        public ElementValueExtractor getElementValueExtractor(ExtractorConfig config) {
+            return ExtractorFactory.createExtractor((TextValueExtractorConfig) config);
+        }
+    };
+    
+    public abstract ElementValueExtractor getElementValueExtractor(ExtractorConfig config);
 }

@@ -31,16 +31,16 @@ import java.util.Objects;
  * 
  * @author Szymon Grzelak
  */
-public class Image {
+public class ParsedImage {
     
     private URL imageURL;
     private Integer numberOfComments;
     private Integer rating;
 
-    public Image() {
+    public ParsedImage() {
     }
     
-    public Image(URL url, Integer comments, Integer rating) {
+    public ParsedImage(URL url, Integer comments, Integer rating) {
         this.imageURL = url;
         this.numberOfComments = comments;
         this.rating = rating;
@@ -95,7 +95,7 @@ public class Image {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Image other = (Image) obj;
+        final ParsedImage other = (ParsedImage) obj;
         if (!Objects.equals(this.imageURL, other.imageURL)) {
             return false;
         }

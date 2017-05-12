@@ -42,6 +42,9 @@ public class ConfigConstants {
     // Pliki z właściwościami
     public static final String APP_DEV_PROPERTIES_FILE = "classpath:app-dev.properties";
     
+    // Pliki do inicjalizacji danych
+    public static final String DEVELOPMENT_INIT_DATA_FILE = "db/init-data-dev.sql";
+    
     // Właściwości na potrzeby konfiguracji dostępu do danych
     public static final String DATA_SOURCE_DATABASE_NAME = "dataSource.databaseName";
     public static final String DATA_SOURCE_PASSWORD = "dataSource.password";

@@ -34,13 +34,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.beardeddev.crawler.app.domain.ParsedImage;
-import pl.beardeddev.crawler.app.repositories.ParsedImageRepository;
+import pl.beardeddev.crawler.app.domain.ConfigPackageMaster;
+import pl.beardeddev.crawler.app.domain.Image;
+import pl.beardeddev.crawler.app.factory.CrawlerFactoryImpl;
 import pl.beardeddev.crawler.app.services.CrawlerService;
 import pl.beardeddev.crawler.core.Crawler;
 import pl.beardeddev.crawler.core.factory.CrawlerFactory;
-import pl.beardeddev.crawler.core.model.Image;
+import pl.beardeddev.crawler.core.model.ParsedImage;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
+import pl.beardeddev.crawler.app.repositories.ImageRepository;
 
 /**
  * Implementacja serwisu związanego z głównymi funkcjonalnościami robota internetowego.
@@ -54,38 +56,47 @@ public class CrawlerServiceImpl implements CrawlerService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CrawlerServiceImpl.class);
     
     @Autowired
-    private ParsedImageRepository parsedImageRepository;
+    private ImageRepository parsedImageRepository;
     
     @Override
-    public Future<List<ParsedImage>> runCralwerAsync(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits) {
+    public Future<List<Image>> runCralwerAsync(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits) {
+        LOGGER.info("Running crawler async with: {}, {}", startUrl, maxVisits);
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<List<ParsedImage>> result = executor.submit(() -> { 
+        Future<List<Image>> result = executor.submit(() -> { 
             return runCrawler(crawlerFactory, startUrl, maxVisits);
         });
         return result;
     }
+       
+    @Override
+    public List<Image> runCrawler(ConfigPackageMaster config, URLWrapper startUrl, int maxVisits) {
+        LOGGER.info("Running crawler with: {}, {}, {}", config, startUrl, maxVisits);
+        CrawlerFactory factory = new CrawlerFactoryImpl(config);
+        return runCrawler(factory, startUrl, maxVisits);
+    }
     
     @Override
-    public List<ParsedImage> runCrawler(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits) {
+    public List<Image> runCrawler(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits) {
+        LOGGER.info("Running crawler with: {}, {}", startUrl, maxVisits);
         Crawler crawler = crawlerFactory.makeCrawler();
-        List<Image> images = crawler.getImages(startUrl, maxVisits);
-        List<ParsedImage> parsedImages = parseImages(images);
+        List<ParsedImage> images = crawler.getImages(startUrl, maxVisits);
+        List<Image> parsedImages = parseImages(images);
         return parsedImages;
     }
-
-    private List<ParsedImage> parseImages(List<Image> images) {
-        List<ParsedImage> result = new ArrayList<>(images.size());
+    
+    private List<Image> parseImages(List<ParsedImage> images) {
+        List<Image> result = new ArrayList<>(images.size());
         Date currentDate = new Date();
-        for (Image image : images) {
-            ParsedImage parsedImage = new ParsedImage(image);
+        for (ParsedImage image : images) {
+            Image parsedImage = new Image(image);
             parsedImage.setCreateDate(currentDate);
             result.add(parsedImage);
         }
         return result;
     }
-    
+
     @Override
-    public void saveParsedImage(List<ParsedImage> parsedImages) {
+    public void saveParsedImage(List<Image> parsedImages) {
         parsedImageRepository.save(parsedImages);
     }
 }

@@ -24,6 +24,8 @@
         <versions.mysql.connector>6.0.6</versions.mysql.connector>
         <versions.hibernate.core>5.2.9.Final</versions.hibernate.core>
         <versions.h2-database>1.4.195</versions.h2-database>
+        <versions.jackson-databinder>2.8.8.1</versions.jackson-databinder>
+        <versions.projectlombok>1.16.16</versions.projectlombok>
     </properties>
     
     <modules>

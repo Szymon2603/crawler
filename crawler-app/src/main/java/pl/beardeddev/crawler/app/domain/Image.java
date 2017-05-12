@@ -25,13 +25,16 @@ package pl.beardeddev.crawler.app.domain;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import pl.beardeddev.crawler.core.model.Image;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import pl.beardeddev.crawler.core.model.ParsedImage;
 
 /**
  * Klasa encyjna reprezentująca przetworzony przez crawler dokument zawierający poszukiwany obraz.
@@ -39,11 +42,15 @@ import pl.beardeddev.crawler.core.model.Image;
  * @author Szymon Grzelak
  */
 @Entity
-public class ParsedImage implements Serializable {
+@Table(name = "IMAGE")
+@ToString
+@EqualsAndHashCode(of = "id")
+public class Image implements Serializable {
 
     private static final long serialVersionUID = -5416841741916906006L;
     
     @Id
+    @GeneratedValue
     @Column(name = "ID")
     private Long id;
     
@@ -60,9 +67,9 @@ public class ParsedImage implements Serializable {
     @Column(name = "CREATE_DATE")
     private Date createDate;
     
-    public ParsedImage() {}
+    public Image() {}
 
-    public ParsedImage(Long id, String imageURL, Integer numberOfComments, Integer rating, Date createDate) {
+    public Image(Long id, String imageURL, Integer numberOfComments, Integer rating, Date createDate) {
         this.id = id;
         this.imageURL = imageURL;
         this.numberOfComments = numberOfComments;
@@ -70,7 +77,7 @@ public class ParsedImage implements Serializable {
         this.createDate = createDate;
     }
     
-    public ParsedImage(Image image) {
+    public Image(ParsedImage image) {
         imageURL = image.getImageURL().toString();
         numberOfComments = image.getNumberOfComments();
         rating = image.getRating();
@@ -114,30 +121,5 @@ public class ParsedImage implements Serializable {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 23 * hash + Objects.hashCode(this.id);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ParsedImage other = (ParsedImage) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return true;
     }
 }
