@@ -60,15 +60,24 @@ public class CrawlerServiceImpl implements CrawlerService {
     
     @Override
     public Future<List<Image>> runCralwerAsync(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits) {
+        LOGGER.info("Running crawler async with: {}, {}", startUrl, maxVisits);
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<List<Image>> result = executor.submit(() -> { 
             return runCrawler(crawlerFactory, startUrl, maxVisits);
         });
         return result;
     }
+       
+    @Override
+    public List<Image> runCrawler(ConfigPackageMaster config, URLWrapper startUrl, int maxVisits) {
+        LOGGER.info("Running crawler with: {}, {}, {}", config, startUrl, maxVisits);
+        CrawlerFactory factory = new CrawlerFactoryImpl(config);
+        return runCrawler(factory, startUrl, maxVisits);
+    }
     
     @Override
     public List<Image> runCrawler(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits) {
+        LOGGER.info("Running crawler with: {}, {}", startUrl, maxVisits);
         Crawler crawler = crawlerFactory.makeCrawler();
         List<ParsedImage> images = crawler.getImages(startUrl, maxVisits);
         List<Image> parsedImages = parseImages(images);
@@ -84,13 +93,6 @@ public class CrawlerServiceImpl implements CrawlerService {
             result.add(parsedImage);
         }
         return result;
-    }
-    
-    @Override
-    public List<Image> runCrawler(ConfigPackageMaster config, URLWrapper startUrl, int maxVisits) {
-        LOGGER.info("Running crawler with: {}, {}, {}", config, startUrl, maxVisits);
-        CrawlerFactory factory = new CrawlerFactoryImpl(config);
-        return runCrawler(factory, startUrl, maxVisits);
     }
 
     @Override

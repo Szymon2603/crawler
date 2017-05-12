@@ -54,23 +54,23 @@ public interface CrawlerService {
      * Uruchamia robota internetowego w zadanej konfiguracji przekazanej jako parametry. Rezultatem jest
      * lista sprasowanych obiektów przetworzonych na odpowiednią klasę domenową.
      * 
-     * @param crawlerFactory fabryka tworząca skonfigurowanego robota internetowego.
-     * @param startUrl początkowy adres.
-     * @param maxVisits maksymalna liczba wizyt.
-     * @return lista sprasowanych dokumentów.
-     */
-    List<Image> runCrawler(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits);
-    
-    /**
-     * Uruchamia robota internetowego w zadanej konfiguracji przekazanej jako parametry. Rezultatem jest
-     * lista sprasowanych obiektów przetworzonych na odpowiednią klasę domenową.
-     * 
      * @param config konfiguracja potrzebna do utworzenia fabryki robotów internetowych.
      * @param startUrl początkowy adres.
      * @param maxVisits maksymalna liczba wizyt.
      * @return lista sprasowanych dokumentów.
      */
     List<Image> runCrawler(ConfigPackageMaster config, URLWrapper startUrl, int maxVisits);
+    
+    /**
+     * Uruchamia robota internetowego w zadanej konfiguracji przekazanej jako parametry. Rezultatem jest
+     * lista sprasowanych obiektów przetworzonych na odpowiednią klasę domenową.
+     * 
+     * @param crawlerFactory fabryka tworząca skonfigurowanego robota internetowego.
+     * @param startUrl początkowy adres.
+     * @param maxVisits maksymalna liczba wizyt.
+     * @return lista sprasowanych dokumentów.
+     */
+    List<Image> runCrawler(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits);
     
     /**
      * Zapis listy sparsowanych dokumentów.
