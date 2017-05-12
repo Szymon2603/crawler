@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -36,7 +35,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.beardeddev.crawler.app.domain.ConfigPackageMaster;
 import pl.beardeddev.crawler.app.domain.Image;
+import pl.beardeddev.crawler.app.factory.CrawlerFactoryImpl;
 import pl.beardeddev.crawler.app.services.CrawlerService;
 import pl.beardeddev.crawler.core.Crawler;
 import pl.beardeddev.crawler.core.factory.CrawlerFactory;
@@ -86,6 +87,12 @@ public class CrawlerServiceImpl implements CrawlerService {
         return result;
     }
     
+    @Override
+    public List<Image> runCrawler(ConfigPackageMaster config, URLWrapper startUrl, int maxVisits, Locale locale) {
+        CrawlerFactory factory = new CrawlerFactoryImpl(locale, config);
+        return runCrawler(factory, startUrl, maxVisits);
+    }
+
     @Override
     public void saveParsedImage(List<Image> parsedImages) {
         parsedImageRepository.save(parsedImages);
