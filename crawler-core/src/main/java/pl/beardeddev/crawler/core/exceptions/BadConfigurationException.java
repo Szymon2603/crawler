@@ -21,43 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.core.suppliers;
-
-import lombok.ToString;
+package pl.beardeddev.crawler.core.exceptions;
 
 /**
- * Klasa agregujaca ekstraktory {@class ElementValueExtractor}.
+ * Wyjątek komunikujący błędną konfigurację elementu biblioteki.
  * 
  * @author Szymon Grzelak
  */
-@ToString
-public class ImageElementsExtractors {
+public class BadConfigurationException extends Exception {
     
-    private final ElementValueExtractor IMAGE_EXTRACTOR;
-    private final ElementValueExtractor NEXT_ELEMENT_EXTRACTOR;
-    private final ElementValueExtractor COMMENTS_EXTRACTOR;
-    private final ElementValueExtractor RATING_EXTRACTOR;
-
-    public ImageElementsExtractors(ElementValueExtractor imageExtractor, ElementValueExtractor nextElementExtractor, ElementValueExtractor commentsExtractor, ElementValueExtractor ratingExtractor) {
-        this.IMAGE_EXTRACTOR = imageExtractor;
-        this.NEXT_ELEMENT_EXTRACTOR = nextElementExtractor;
-        this.COMMENTS_EXTRACTOR = commentsExtractor;
-        this.RATING_EXTRACTOR = ratingExtractor;
+    private static final long serialVersionUID = 7646881644321175874L;
+    
+    public static BadConfigurationException createWithDefaultMessage() {
+        return new BadConfigurationException("Bad configuration!");
     }
     
-    public ElementValueExtractor getImageExtractor() {
-        return IMAGE_EXTRACTOR;
+    public static BadConfigurationException createWithDefaultMessage(Object object) {
+        return new BadConfigurationException("Bad configuration for: " + object.toString());
     }
 
-    public ElementValueExtractor getNextElementExtractor() {
-        return NEXT_ELEMENT_EXTRACTOR;
+    public BadConfigurationException() {}
+
+    public BadConfigurationException(String message) {
+        super(message);
     }
 
-    public ElementValueExtractor getCommentsExtractor() {
-        return COMMENTS_EXTRACTOR;
+    public BadConfigurationException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public ElementValueExtractor getRatingExtractor() {
-        return RATING_EXTRACTOR;
+    public BadConfigurationException(Throwable cause) {
+        super(cause);
     }
+
+    public BadConfigurationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
+    
 }

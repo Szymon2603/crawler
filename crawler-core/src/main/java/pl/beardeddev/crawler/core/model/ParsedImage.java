@@ -24,13 +24,16 @@
 package pl.beardeddev.crawler.core.model;
 
 import java.net.URL;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Klasa modelu, reprezentuje produkt robota internetowego przetwarzającego strony HTML
  * 
  * @author Szymon Grzelak
  */
+@ToString
+@EqualsAndHashCode
 public class ParsedImage {
     
     private URL imageURL;
@@ -68,43 +71,5 @@ public class ParsedImage {
 
     public void setRating(Integer rating) {
         this.rating = rating;
-    }
-
-    @Override
-    public String toString() {
-        return "Image{" + "imageURL=" + imageURL + ", numberOfComments=" + numberOfComments + ", rating=" + rating + '}';
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 61 * hash + Objects.hashCode(this.imageURL);
-        hash = 61 * hash + Objects.hashCode(this.numberOfComments);
-        hash = 61 * hash + Objects.hashCode(this.rating);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ParsedImage other = (ParsedImage) obj;
-        if (!Objects.equals(this.imageURL, other.imageURL)) {
-            return false;
-        }
-        if (!Objects.equals(this.numberOfComments, other.numberOfComments)) {
-            return false;
-        }
-        if (!Objects.equals(this.rating, other.rating)) {
-            return false;
-        }
-        return true;
     }
 }

@@ -21,6 +21,13 @@
             <version>${versions.jsoup}</version>
         </dependency>
         
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${versions.projectlombok}</version>
+        </dependency>
+        
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
         <dependency>
             <groupId>org.slf4j</groupId>

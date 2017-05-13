@@ -49,15 +49,15 @@ public class PageProvider implements DocumentProvider, Serializable {
     /**
      * Metoda pobierająca dokument HTML z danego źródła określonego adresem URL.
      * 
-     * @param urlWrapper zasób URL.
+     * @param documentURL adresu URL dokumentu.
      * @return sparsowany dokument przedstawiony jako instancja klasy {@code org.jsoup.nodes.Document}.
      * @throws CoreException wyjątek zgłaszany w przypadku błędów odczytywania zasobów z podanego adresu URL.
      */
     @Override
-    public Document getDocument(URLWrapper urlWrapper) throws CoreException {
+    public Document getDocument(URLWrapper documentURL) throws CoreException {
         try {
-            URLConnection connection = urlWrapper.openConnection();
-            return getBody(connection);
+            URLConnection connection = documentURL.openConnection();
+            return parseDocument(connection);
         } catch(CoreException ex) {
             throw ex;
         } catch (IOException ex) {
@@ -66,12 +66,12 @@ public class PageProvider implements DocumentProvider, Serializable {
         }
     }
 
-    private Document getBody(URLConnection connection) throws CoreException {
+    private Document parseDocument(URLConnection connection) throws CoreException {
         try(InputStream input = connection.getInputStream()) {
             return Jsoup.parse(input, null, connection.getURL().toString());
         } catch(IOException ex) {
             LOGGER.error("Error while trying get page", ex);
-            throw new CoreException("Core exception while geting page.", ex);
+            throw new CoreException("Core exception while getting page.", ex);
         }
     }
 }

@@ -33,10 +33,22 @@ import org.jsoup.nodes.Document;
 public interface ElementValueExtractor {
 
     /**
-     * Metoda pozyskująca wartość elementu z dokumentu. Zwraca ją w postaci łańcucha znakowego.
+     * Metoda pozyskująca wartość elementu z dokumentu. Zwraca ją w postaci łańcucha znakowego. Przed wywołaniem
+     * tej motody należy się upewnić, że konfiguracja jest poprawna przy pomocy metody {@link #isValid()}.
      * 
      * @param document dokument z którego ma zostać pozyskana wartość.
      * @return wartość elementu.
      */
     String getValue(Document document);
+    
+    /**
+     * Metoda służąca do sprawdzenia czy ekstraktor posiada poprawną i pełną konfigurację. Błąd konfiguracji może zostać 
+     * również zakomunikowany wyjątkiem {@class BadConfigurationException}. Poprawność ekstraktora najlepiej jest
+     * sprawdzić w momencie tworzenia jego instancji.
+     * Nie powinno używać się wartośći null jako komunikatu błędnej konfiguracji (chyba, że w ramach danej implementacji
+     * ekstraktora będzie ona uzasadniona)
+     * 
+     * @return true jeżeli ekstraktor posiada poprawną konfigurację.
+     */
+    Boolean isValid();
 }
