@@ -21,29 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.app.config;
+package pl.beardeddev.crawler.app.controllers;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+import pl.beardeddev.crawler.app.domain.Image;
+import pl.beardeddev.crawler.app.dto.ImageDto;
+import pl.beardeddev.crawler.app.repositories.ImageRepository;
 
 /**
- * Konfiguracja ogólna dla całej aplikacji
- * 
+ *
  * @author Szymon Grzelak
  */
-@Configuration
-@ComponentScan(basePackages = ConfigConstants.SERVICES_PACKAGE)
-@EnableJpaRepositories(basePackages = ConfigConstants.REPOSITORIES_PACKAGE)
-@Import({ DevelopmentConfig.class, TestConfig.class})
-public class ApplicationConfig {
-    
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
+@RestController
+public class ImageController {
 
+    @Autowired
+    private ImageRepository imageRepository;
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @GetMapping("/images")
+    public List<ImageDto> getImages() {
+        List<Image> images = imageRepository.findAll();
+        return images.stream().map(this::imageToDto).collect(Collectors.toList());
+    }
+    
+    @GetMapping("/image/{id}")
+    public ImageDto getImage(@PathVariable Long id) {
+        Image image = imageRepository.findOne(id);
+        return imageToDto(image);
+    }
+    
+    private ImageDto imageToDto(Image image) {
+        return image != null ? modelMapper.map(image, ImageDto.class) : null;
+    }
 }

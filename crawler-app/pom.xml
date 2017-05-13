@@ -38,6 +38,13 @@
             <version>${versions.projectlombok}</version>
         </dependency>
         
+        <!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${versions.modelmapper}</version>
+        </dependency>
+        
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
         <dependency>
             <groupId>mysql</groupId>
