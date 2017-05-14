@@ -21,55 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.core.model;
-
-import java.net.URL;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+package pl.beardeddev.crawler.core.exceptions;
 
 /**
- * Klasa modelu, reprezentuje produkt robota internetowego przetwarzającego strony HTML
+ * Wyjątek zgłaszany w przypadku gdy extractor nie został ustawiony. Używany w klasie {@class ImageElementsExtractors}.
  * 
  * @author Szymon Grzelak
  */
-@ToString
-@EqualsAndHashCode
-public class ParsedImage {
+public class ElementExtractorNotSetException extends Exception {
     
-    private URL imageURL;
-    private Integer numberOfComments;
-    private Integer rating;
+    private static final long serialVersionUID = 7057278538477045367L;
 
-    public ParsedImage() {
-    }
-    
-    public ParsedImage(URL url, Integer comments, Integer rating) {
-        this.imageURL = url;
-        this.numberOfComments = comments;
-        this.rating = rating;
+    public ElementExtractorNotSetException() {}
+
+    public ElementExtractorNotSetException(String message) {
+        super(message);
     }
 
-    public URL getImageURL() {
-        return imageURL;
+    public ElementExtractorNotSetException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public void setImageURL(URL imageURL) {
-        this.imageURL = imageURL;
+    public ElementExtractorNotSetException(Throwable cause) {
+        super(cause);
     }
 
-    public Integer getNumberOfComments() {
-        return numberOfComments;
-    }
-
-    public void setNumberOfComments(Integer numberOfComments) {
-        this.numberOfComments = numberOfComments;
-    }
-
-    public Integer getRating() {
-        return rating;
-    }
-
-    public void setRating(Integer rating) {
-        this.rating = rating;
+    public ElementExtractorNotSetException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

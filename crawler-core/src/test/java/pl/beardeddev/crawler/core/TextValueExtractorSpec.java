@@ -28,8 +28,10 @@ import org.jsoup.select.Elements;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import pl.beardeddev.crawler.core.exceptions.BadConfigurationException;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 import pl.beardeddev.crawler.core.suppliers.impl.TextValueExtractor;
 
@@ -45,16 +47,21 @@ public class TextValueExtractorSpec {
     private String commentsSelector;
     
     @Before
-    public void setUp() {
+    public void setUp() throws BadConfigurationException {
         commentsSelector = "div#commentsNumber";
-        extractor = new TextValueExtractor(commentsSelector);
-        document = mock(Document.class);
+        extractor = TextValueExtractor.getInstance(commentsSelector);
         elements = mock(Elements.class);
+        document = mock(Document.class);
+        doReturn(elements).when(document).select(commentsSelector);
+    }
+    
+    @Test(expected = BadConfigurationException.class)
+    public void givenNullCommentsSelectorWhenCallGetInstanceThenThrowBadConfigurationException() throws BadConfigurationException {
+        extractor = TextValueExtractor.getInstance(null);
     }
     
     @Test
     public void whenElementAbsentThenReturnValue() {
-        doReturn(elements).when(document).select(commentsSelector);
         final String expected = "value";
         doReturn(expected).when(elements).text();
         String value = extractor.getValue(document);
@@ -63,7 +70,6 @@ public class TextValueExtractorSpec {
     
     @Test
     public void whenElementsEmptyThenReturnNull() {
-        doReturn(elements).when(document).select(commentsSelector);
         doReturn(true).when(elements).isEmpty();
         String value = extractor.getValue(document);
         Assert.assertNull("Expected null value!", value);
@@ -71,9 +77,16 @@ public class TextValueExtractorSpec {
     
     @Test
     public void whenAttributeHaveNoValueThenReturnNull() {
-        doReturn(elements).when(document).select(commentsSelector);
         doReturn(null).when(elements).text();
         String value = extractor.getValue(document);
         Assert.assertNull("Expected null value!", value);
+    }
+    
+    @Test
+    public void whenBadSelectorThenReturnNull() throws BadConfigurationException {
+        extractor = TextValueExtractor.getInstance("");
+        doReturn(elements).when(document).select(any(String.class));
+        String result = extractor.getValue(document);
+        Assert.assertNull(result);
     }
 }

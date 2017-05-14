@@ -28,10 +28,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import pl.beardeddev.crawler.core.suppliers.impl.AttributeValueExtractor;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 import static org.mockito.Mockito.mock;
+import pl.beardeddev.crawler.core.exceptions.BadConfigurationException;
 
 /**
  *
@@ -46,17 +48,32 @@ public class AttributeValueExtractorSpec {
     private String attributeName;
     
     @Before
-    public void setUp() {
+    public void setUp() throws BadConfigurationException {
         imageSelector = "img";
         attributeName = "src";
-        extractor = new AttributeValueExtractor(imageSelector, attributeName);
-        document = mock(Document.class);
+        extractor = AttributeValueExtractor.getInstance(imageSelector, attributeName);
         elements = mock(Elements.class);
+        document = mock(Document.class);
+        doReturn(elements).when(document).select(imageSelector);
+    }
+       
+    @Test(expected = BadConfigurationException.class)
+    public void givenNullImageSelectorWhenCallGetInstanceThenThrowBadConfigurationException() throws BadConfigurationException {
+        extractor = AttributeValueExtractor.getInstance(null, attributeName);
+    }
+    
+    @Test(expected = BadConfigurationException.class)
+    public void givenNullAttributeNameWhenCallGetInstanceThenThrowBadConfigurationException() throws BadConfigurationException {
+        extractor = AttributeValueExtractor.getInstance(imageSelector, null);
+    }
+    
+    @Test(expected = BadConfigurationException.class)
+    public void givenBothArgNullWhenCallGetInstanceThenThrowBadConfigurationException() throws BadConfigurationException {
+        extractor = AttributeValueExtractor.getInstance(null, null);
     }
     
     @Test
-    public void whenElementAbsentThenReturnValue() {
-        doReturn(elements).when(document).select(imageSelector);
+    public void whenElementPresentThenReturnValue() {
         final String expected = "value";
         doReturn(expected).when(elements).attr(attributeName);
         String value = extractor.getValue(document);
@@ -65,7 +82,6 @@ public class AttributeValueExtractorSpec {
     
     @Test
     public void whenElementsEmptyThenReturnNull() {
-        doReturn(elements).when(document).select(imageSelector);
         doReturn(true).when(elements).isEmpty();
         String value = extractor.getValue(document);
         Assert.assertNull("Expected null value!", value);
@@ -73,9 +89,24 @@ public class AttributeValueExtractorSpec {
     
     @Test
     public void whenAttributeHaveNoValueThenReturnNull() {
-        doReturn(elements).when(document).select(imageSelector);
         doReturn(null).when(elements).attr(attributeName);
         String value = extractor.getValue(document);
         Assert.assertNull("Expected null value!", value);
+    }
+    
+    @Test
+    public void whenBadSelektorThenReturnNull() throws BadConfigurationException {
+        extractor = AttributeValueExtractor.getInstance("", attributeName);
+        doReturn(elements).when(document).select(any(String.class));
+        doReturn(true).when(elements).isEmpty();
+        String result = extractor.getValue(document);
+        Assert.assertNull(result);
+    }
+    
+    @Test
+    public void whenBadAttributeNameThenReturnNull() throws BadConfigurationException {
+        extractor = AttributeValueExtractor.getInstance(imageSelector, "");
+        String result = extractor.getValue(document);
+        Assert.assertNull(result);
     }
 }

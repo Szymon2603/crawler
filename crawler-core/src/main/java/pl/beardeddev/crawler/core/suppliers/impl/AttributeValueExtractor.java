@@ -23,10 +23,13 @@
  */
 package pl.beardeddev.crawler.core.suppliers.impl;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.beardeddev.crawler.core.exceptions.BadConfigurationException;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 
 /**
@@ -34,33 +37,58 @@ import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
  * 
  * @author Szymon Grzelak
  */
+@ToString
+@EqualsAndHashCode
 public class AttributeValueExtractor implements ElementValueExtractor {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(AttributeValueExtractor.class);
     
-    private String elementQuery;
-    private String attributeName;
+    private final String ELEMENT_QUERY;
+    private final String ATTRIBUTE_NAME;
 
+    /**
+     * Metoda fabrykująca tworząca instancję {@class AttributeValueExtractor} oraz sprawdzająca jej poprawność.
+     * Jeżeli chcemy uzyskać odnośnik ze ścieżką absolutną do nazwy atrybutu należy dodać przedrostek "abs:".
+     * 
+     * @param elementQuery selektor CSS elementu.
+     * @param attributeName nazwa atrybutu dla którego ma zostać pozyskana wartość.
+     * @return instancja {@class AttributeValueExtractor} z poprawną konfiguracją.
+     * @throws BadConfigurationException jeżeli konfiguracja nie jest poprawna.
+     */
+    public static AttributeValueExtractor getInstance(String elementQuery, String attributeName) throws BadConfigurationException {
+        AttributeValueExtractor instance = new AttributeValueExtractor(elementQuery, attributeName);
+        if (!instance.isValid()) {
+            throw BadConfigurationException.createWithDefaultMessage(instance);
+        }
+        return instance;
+    }
+    
     /**
      * Konstruktor parametrowy. Jeżeli chcemy uzyskać odnośnik ze ścieżką absolutną do nazwy atrybutu należy dodać
      * przedrostek "abs:".
      * 
      * @param elementQuery selektor CSS elementu.
      * @param attributeName nazwa atrybutu dla którego ma zostać pozyskana wartość.
+     * @throws BadConfigurationException jeżeli konfiguracja jest niepoprawna
      */
-    public AttributeValueExtractor(String elementQuery, String attributeName) {
-        this.elementQuery = elementQuery;
-        this.attributeName = attributeName;
+    private AttributeValueExtractor(String elementQuery, String attributeName) {
+        ELEMENT_QUERY = elementQuery;
+        ATTRIBUTE_NAME = attributeName;
     }
     
     @Override
     public String getValue(Document document) {
-        Elements elements = document.select(elementQuery);
-        if(elements.isEmpty()) {
+        Elements elements = document.select(ELEMENT_QUERY);
+        if (elements.isEmpty()) {
             return null;
         }
-        String value = elements.attr(attributeName);
+        String value = elements.attr(ATTRIBUTE_NAME);
         LOGGER.debug("Return value: {}", value);
         return value;
+    }
+
+    @Override
+    public Boolean isValid() {
+        return ELEMENT_QUERY != null && ATTRIBUTE_NAME != null;
     }
 }

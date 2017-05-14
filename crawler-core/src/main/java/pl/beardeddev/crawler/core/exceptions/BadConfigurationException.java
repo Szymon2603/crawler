@@ -21,55 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.core.model;
-
-import java.net.URL;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+package pl.beardeddev.crawler.core.exceptions;
 
 /**
- * Klasa modelu, reprezentuje produkt robota internetowego przetwarzającego strony HTML
+ * Wyjątek komunikujący błędną konfigurację elementu biblioteki.
  * 
  * @author Szymon Grzelak
  */
-@ToString
-@EqualsAndHashCode
-public class ParsedImage {
+public class BadConfigurationException extends Exception {
     
-    private URL imageURL;
-    private Integer numberOfComments;
-    private Integer rating;
-
-    public ParsedImage() {
+    private static final long serialVersionUID = 7646881644321175874L;
+    
+    public static BadConfigurationException createWithDefaultMessage() {
+        return new BadConfigurationException("Bad configuration!");
     }
     
-    public ParsedImage(URL url, Integer comments, Integer rating) {
-        this.imageURL = url;
-        this.numberOfComments = comments;
-        this.rating = rating;
+    public static BadConfigurationException createWithDefaultMessage(Object object) {
+        return new BadConfigurationException("Bad configuration for: " + object.toString());
     }
 
-    public URL getImageURL() {
-        return imageURL;
+    public BadConfigurationException() {}
+
+    public BadConfigurationException(String message) {
+        super(message);
     }
 
-    public void setImageURL(URL imageURL) {
-        this.imageURL = imageURL;
+    public BadConfigurationException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public Integer getNumberOfComments() {
-        return numberOfComments;
+    public BadConfigurationException(Throwable cause) {
+        super(cause);
     }
 
-    public void setNumberOfComments(Integer numberOfComments) {
-        this.numberOfComments = numberOfComments;
+    public BadConfigurationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
-
-    public Integer getRating() {
-        return rating;
-    }
-
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
+    
 }

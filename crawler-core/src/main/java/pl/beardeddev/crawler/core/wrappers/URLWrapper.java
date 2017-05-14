@@ -28,12 +28,16 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Klasa opakowująca klasę {@code java.net.URL} umożliwiająca wykonanie testów jednostkowych.
  * 
  * @author Szymon Grzelak
  */
+@ToString
+@EqualsAndHashCode
 public class URLWrapper implements Serializable {
 
     private static final long serialVersionUID = 6024044659311363956L;

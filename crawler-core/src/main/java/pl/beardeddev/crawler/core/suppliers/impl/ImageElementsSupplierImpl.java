@@ -24,16 +24,17 @@
 package pl.beardeddev.crawler.core.suppliers.impl;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import lombok.ToString;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.beardeddev.crawler.core.exceptions.CoreException;
+import pl.beardeddev.crawler.core.exceptions.ElementExtractorNotSetException;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 import pl.beardeddev.crawler.core.suppliers.ImageElementsExtractors;
 import pl.beardeddev.crawler.core.suppliers.ImageElementsSupplier;
@@ -46,6 +47,7 @@ import pl.beardeddev.crawler.core.wrappers.URLWrapper;
  * 
  * @author Szymon Grzelak
  */
+@ToString
 public class ImageElementsSupplierImpl implements ImageElementsSupplier {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageElementsSupplierImpl.class);
@@ -60,59 +62,76 @@ public class ImageElementsSupplierImpl implements ImageElementsSupplier {
     @Override
     public URLWrapper getImageURL(Document document) throws CoreException {
         try {
-            ElementValueExtractor extractor = IMAGE_ELEMENTS_EXTRACTORS.getImageExtractor();
-            String urlString = extractor.getValue(document);
-            LOGGER.debug("Extracted URL: {}", urlString);
-            return urlString != null ? new URLWrapper(urlString) : null;
+            String stringValue = getStringValue(IMAGE_ELEMENTS_EXTRACTORS::getImageExtractor, document);
+            LOGGER.debug("Extracted URL: {}", stringValue);
+            return new URLWrapper(stringValue);
         } catch(MalformedURLException ex) {
-            LOGGER.error("Bad URL!", ex);
-            throw new CoreException("Bad URL!", ex);
+            LOGGER.warn("Bad URL!", ex);
+        } catch (NoSuchElementException ex) {
+            LOGGER.warn("Can't find image url. Return null instead", ex);
+        } catch (ElementExtractorNotSetException ex) {
+            LOGGER.warn("Image extractor is not set, return null instead.", ex);
         }
+        return null;
     }
 
     @Override
     public Integer getImageNumberOfComments(Document document) throws CoreException {
-        ElementValueExtractor extractor = IMAGE_ELEMENTS_EXTRACTORS.getCommentsExtractor();
         try {
-            String elementValue = Optional.ofNullable(extractor.getValue(document)).get();
-            Integer numberOfComments = NUMBER_FORMAT.parse(elementValue).intValue();
+            String stringValue = getStringValue(IMAGE_ELEMENTS_EXTRACTORS::getCommentsExtractor, document);
+            Integer numberOfComments = NUMBER_FORMAT.parse(stringValue).intValue();
             return numberOfComments;
         } catch(ParseException ex) {
             LOGGER.warn("Can't parse number of comments. Return null instead.", ex);
         } catch(NoSuchElementException ex) {
             LOGGER.info("Can't find number of comments. Return null instead");
+        } catch (ElementExtractorNotSetException ex) {
+            LOGGER.warn("Number of comments extractor is not set, return null instead.", ex);
         }
         return null;
     }
 
     @Override
     public Integer getImageRatings(Document document) throws CoreException {
-        ElementValueExtractor extractor = IMAGE_ELEMENTS_EXTRACTORS.getRatingExtractor();
         try {
-            String elementValue = Optional.ofNullable(extractor.getValue(document)).get();
-            Integer rating = NUMBER_FORMAT.parse(elementValue).intValue();
+            String stringValue = getStringValue(IMAGE_ELEMENTS_EXTRACTORS::getRatingExtractor, document);
+            Integer rating = NUMBER_FORMAT.parse(stringValue).intValue();
             return rating;
         } catch (ParseException ex) {
             LOGGER.warn("Can't parse ratings. Return null instead.", ex);
         } catch(NoSuchElementException ex) {
             LOGGER.info("Can't find ratings. Return null instead"); 
+        } catch (ElementExtractorNotSetException ex) {
+            LOGGER.warn("Ratings extractor is not set, return null instead.", ex);
         }
         return null;
     }
 
     @Override
     public URLWrapper getNextImageURL(Document document) throws CoreException {
-        ElementValueExtractor extractor = IMAGE_ELEMENTS_EXTRACTORS.getNextElementExtractor();
         try {
-            String elementValue = Optional.ofNullable(extractor.getValue(document)).get();
-            LOGGER.info("Extracted next image URL is: {}", elementValue);
-            URL url = new URL(elementValue);
-            return new URLWrapper(url);
+            String stringValue = getStringValue(IMAGE_ELEMENTS_EXTRACTORS::getNextElementExtractor, document);
+            LOGGER.info("Extracted next image URL is: {}", stringValue);
+            return new URLWrapper(stringValue);
         } catch(MalformedURLException ex) {
             LOGGER.warn("Bad URL!", ex);
         } catch(NoSuchElementException ex) {
             LOGGER.warn("URL not found!");
+        } catch (ElementExtractorNotSetException ex) {
+            LOGGER.warn("Next image URL extractor is not set, return null instead.", ex);
         }
         return null;
+    }
+    
+    private String getStringValue(ElementValueExtractorSupplier supplier, Document document) throws ElementExtractorNotSetException {
+        ElementValueExtractor extractor = supplier.get();
+        Optional<String> elementValue = Optional.ofNullable(extractor.getValue(document));
+        String stringValue = elementValue.get();
+        return stringValue;
+    }
+    
+    @FunctionalInterface
+    private interface ElementValueExtractorSupplier {
+        ElementValueExtractor get() throws ElementExtractorNotSetException;
     }
 }

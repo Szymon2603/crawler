@@ -18,3 +18,4 @@ nb-configuration.xml
 /crawler-app/target/
 /crawler-core/logs/*
 /crawler-app/nbproject/
+/crawler-core/nbproject/

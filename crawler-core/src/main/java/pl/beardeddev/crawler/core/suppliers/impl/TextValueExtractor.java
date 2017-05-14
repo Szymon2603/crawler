@@ -23,10 +23,13 @@
  */
 package pl.beardeddev.crawler.core.suppliers.impl;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.beardeddev.crawler.core.exceptions.BadConfigurationException;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 
 /**
@@ -34,26 +37,48 @@ import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
  * 
  * @author Szymon Grzelak
  */
+@ToString
+@EqualsAndHashCode
 public class TextValueExtractor implements ElementValueExtractor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextValueExtractor.class);
 
-    private String elementQuery;
+    private final String ELEMENT_QUERY;
 
+    /**
+     * Metoda fabrykująca tworząca instancję {@class TextValueExtractor} oraz sprawdzająca jej poprawność.
+     * 
+     * @param elementQuery selektor elementu z którego ma zostać pozyskana wartość tekstowa.
+     * @return instancja {@class TextValueExtractor} z poprawną konfiguracją.
+     * @throws BadConfigurationException jeżeli konfiguracja jest niepoprawna.
+     */
+    public static TextValueExtractor getInstance(String elementQuery) throws BadConfigurationException {
+        TextValueExtractor instance = new TextValueExtractor(elementQuery);
+        if(!instance.isValid()) {
+            throw BadConfigurationException.createWithDefaultMessage(instance);
+        }
+        return instance;
+    }
+    
     /**
      * Konstruktor parametrowy.
      * 
-     * @param elementQuery selektro elementu z którego ma zostać pozyskana wartość tekstowa.
+     * @param elementQuery selektor elementu z którego ma zostać pozyskana wartość tekstowa.
      */
-    public TextValueExtractor(String elementQuery) {
-        this.elementQuery = elementQuery;
+    private TextValueExtractor(String elementQuery) {
+        ELEMENT_QUERY = elementQuery;
     }
     
     @Override
     public String getValue(Document document) {
-        Elements elements = document.select(elementQuery);
+        Elements elements = document.select(ELEMENT_QUERY);
         String value = elements.text();
         LOGGER.debug("Return value: {}", value);
         return value;
+    }
+
+    @Override
+    public Boolean isValid() {
+        return ELEMENT_QUERY != null;
     }
 }

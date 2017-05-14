@@ -23,7 +23,6 @@
  */
 package pl.beardeddev.crawler.core;
 
-import pl.beardeddev.crawler.core.suppliers.ImageElementsSupplier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
@@ -35,19 +34,21 @@ import org.jsoup.nodes.Document;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.any;
-import pl.beardeddev.crawler.core.wrappers.URLWrapper;
-import pl.beardeddev.crawler.core.model.ParsedImage;
+import pl.beardeddev.crawler.core.exceptions.BadConfigurationException;
 import pl.beardeddev.crawler.core.exceptions.CoreException;
-import pl.beardeddev.crawler.core.suppliers.impl.AttributeValueExtractor;
+import pl.beardeddev.crawler.core.model.ParsedImage;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 import pl.beardeddev.crawler.core.suppliers.ImageElementsExtractors;
 import pl.beardeddev.crawler.core.suppliers.ImageElementsExtractorsBuilder;
+import pl.beardeddev.crawler.core.suppliers.ImageElementsSupplier;
+import pl.beardeddev.crawler.core.suppliers.impl.AttributeValueExtractor;
 import pl.beardeddev.crawler.core.suppliers.impl.ImageElementsSupplierImpl;
 import pl.beardeddev.crawler.core.suppliers.impl.TextValueExtractor;
+import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 
 /**
  *
@@ -67,7 +68,7 @@ public class CrawlerSpec {
     private ImageElementsSupplier imageElementsSupplier;
     
     @Before
-    public void setUp() {
+    public void setUp() throws BadConfigurationException {
         url = this.getClass().getClassLoader().getResource("testPage.html");
         urlWrapper = spy(new URLWrapper(url));
         documentProvider = spy(new PageProvider());
@@ -77,10 +78,10 @@ public class CrawlerSpec {
         String commentsSelector = "div#commentsNumber";
         String ratingSelector = "div[id=rateNummber]";
         
-        imageExtractor = spy(new AttributeValueExtractor(imageSelector, "abs:src"));
-        nextElementExtractor = spy(new AttributeValueExtractor(nextElementSelector, "abs:href"));
-        commentsExtractor = spy(new TextValueExtractor(commentsSelector));
-        ratingExtractor = spy(new TextValueExtractor(ratingSelector));
+        imageExtractor = spy(AttributeValueExtractor.getInstance(imageSelector, "abs:src"));
+        nextElementExtractor = spy(AttributeValueExtractor.getInstance(nextElementSelector, "abs:href"));
+        commentsExtractor = spy(TextValueExtractor.getInstance(commentsSelector));
+        ratingExtractor = spy(TextValueExtractor.getInstance(ratingSelector));
         
         ImageElementsExtractorsBuilder builder = new ImageElementsExtractorsBuilder();
         builder.setImageExtractor(imageExtractor)

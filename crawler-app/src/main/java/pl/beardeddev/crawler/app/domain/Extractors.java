@@ -24,6 +24,7 @@
 package pl.beardeddev.crawler.app.domain;
 
 import pl.beardeddev.crawler.app.factory.ExtractorFactory;
+import pl.beardeddev.crawler.core.exceptions.BadConfigurationException;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 
 /**
@@ -36,16 +37,16 @@ public enum Extractors {
     
     ATTRIBUTE_VALUE_EXTRACTOR {
         @Override
-        public ElementValueExtractor getElementValueExtractor(ExtractorConfig config) {
+        public ElementValueExtractor getElementValueExtractor(ExtractorConfig config) throws BadConfigurationException {
             return ExtractorFactory.createExtractor((AttributeValueExtractorConfig) config);
         }
     },
     TEXT_VALUE_EXTRACTOR {
         @Override
-        public ElementValueExtractor getElementValueExtractor(ExtractorConfig config) {
+        public ElementValueExtractor getElementValueExtractor(ExtractorConfig config) throws BadConfigurationException {
             return ExtractorFactory.createExtractor((TextValueExtractorConfig) config);
         }
     };
     
-    public abstract ElementValueExtractor getElementValueExtractor(ExtractorConfig config);
+    public abstract ElementValueExtractor getElementValueExtractor(ExtractorConfig config) throws BadConfigurationException;
 }

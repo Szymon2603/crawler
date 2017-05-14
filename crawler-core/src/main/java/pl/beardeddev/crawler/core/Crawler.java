@@ -77,7 +77,7 @@ public class Crawler implements Serializable {
             isNotNull(urlStartPoint);
             URLWrapper nextURLToVisit = urlStartPoint;
             int visitsLeft = maxVisits;
-            while(visitsLeft-- != 0 && nextURLToVisit != null) {
+            while(visitsLeft-- != 0 && checkNextURLToVisit(nextURLToVisit)) {
                 ParsedImage image = getImage(nextURLToVisit);
                 if (image != null) {
                     result.add(image);
@@ -85,9 +85,19 @@ public class Crawler implements Serializable {
                 }
             }
         } catch(CoreException ex) {
-            LOGGER.warn("Przerwanie przetwarzania zbierania!", ex);
+            LOGGER.warn("Stopping document processing!", ex);
         }
         return result;
+    }
+
+    private boolean checkNextURLToVisit(URLWrapper nextURLToVisit) {
+        if(nextURLToVisit != null) {
+            LOGGER.info("Next document URL: {}", nextURLToVisit);
+            return true;
+        } else {
+            LOGGER.warn("Next document URL is null!");
+            return false;
+        }
     }
     
     /**
@@ -100,12 +110,12 @@ public class Crawler implements Serializable {
      */
     public ParsedImage getImage(URLWrapper url) throws CoreException {
         isNotNull(url);
-        return createImage(url);
+        return findAndCreateImage(url);
     }
 
-    private ParsedImage createImage(URLWrapper url) throws CoreException {
-        LOGGER.trace("Creating image for: {}.", url.getURL().toString());
-        document = DOCUMENT_PROVIDER.getDocument(url);
+    private ParsedImage findAndCreateImage(URLWrapper documentURL) throws CoreException {
+        LOGGER.trace("Finding image from document: {}.", documentURL);
+        document = DOCUMENT_PROVIDER.getDocument(documentURL);
         URLWrapper urlImg = IMAGE_ELEMENTS_SUPPLIER.getImageURL(document);
         if(urlImg != null) {
             ParsedImage image = new ParsedImage();
@@ -114,11 +124,12 @@ public class Crawler implements Serializable {
             image.setNumberOfComments(numberOfComments);
             Integer rating = IMAGE_ELEMENTS_SUPPLIER.getImageRatings(document);
             image.setRating(rating);
-            LOGGER.trace(String.format("Return image object: %s.", image.toString()));
+            LOGGER.trace(String.format("Return parsed image: %s.", image.toString()));
             return image;
+        } else {
+            LOGGER.trace("Can't find image URL, returning null reference.");
+            return null;
         }
-        LOGGER.trace("Can't find image URL, returning null reference.");
-        return null;
     }
     
     private void isNotNull(URLWrapper url) throws CoreException {

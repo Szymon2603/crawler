@@ -25,6 +25,7 @@ package pl.beardeddev.crawler.app.factory;
 
 import pl.beardeddev.crawler.app.domain.AttributeValueExtractorConfig;
 import pl.beardeddev.crawler.app.domain.TextValueExtractorConfig;
+import pl.beardeddev.crawler.core.exceptions.BadConfigurationException;
 import pl.beardeddev.crawler.core.suppliers.impl.AttributeValueExtractor;
 import pl.beardeddev.crawler.core.suppliers.impl.TextValueExtractor;
 
@@ -41,21 +42,23 @@ public class ExtractorFactory {
      * Tworzy instancję {@class AttributeValueExtractor} na podstawie konfiguracji opisanej za pomocą
      * klasy encyjnej {@class AttributeValueExtractorConfig}.
      * 
-     * @param config instancja klasy konfiguracyjnej
-     * @return instancja {@class AttributeValueExtractor} 
+     * @param config instancja klasy konfiguracyjnej.
+     * @return instancja {@class AttributeValueExtractor}.
+     * @throws BadConfigurationException jeżeli przesłano błędną konfigurację.
      */
-    public static AttributeValueExtractor createExtractor(AttributeValueExtractorConfig config) {
-        return new AttributeValueExtractor(config.getElementSelector(), config.getAttributeName());
+    public static AttributeValueExtractor createExtractor(AttributeValueExtractorConfig config) throws BadConfigurationException {
+        return AttributeValueExtractor.getInstance(config.getElementSelector(), config.getAttributeName());
     }
     
     /**
      * Tworzy instancję {@class TextValueExtractor} na podstawie konfiguracji opisanej za pomocą
      * klasy encyjnej {@class TextValueExtractorConfig}.
      * 
-     * @param config instancja klasy konfiguracyjnej
-     * @return instancja {@class TextValueExtractor} 
+     * @param config instancja klasy konfiguracyjnej.
+     * @return instancja {@class TextValueExtractor}.
+     * @throws BadConfigurationException jeżeli przesłano błędną konfigurację.
      */
-    public static TextValueExtractor createExtractor(TextValueExtractorConfig config) {
-        return new TextValueExtractor(config.getElementSelector());
+    public static TextValueExtractor createExtractor(TextValueExtractorConfig config) throws BadConfigurationException {
+        return TextValueExtractor.getInstance(config.getElementSelector());
     }
 }
