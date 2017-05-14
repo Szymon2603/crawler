@@ -81,7 +81,7 @@ public class Crawler implements Serializable {
                 ParsedImage image = getImage(nextURLToVisit);
                 if (image != null) {
                     result.add(image);
-                    nextURLToVisit = IMAGE_ELEMENTS_SUPPLIER.getNextImageURL(document);
+                    nextURLToVisit = getValueOrNullOnException(IMAGE_ELEMENTS_SUPPLIER::getNextImageURL, document);
                 }
             }
         } catch(CoreException ex) {
@@ -112,17 +112,24 @@ public class Crawler implements Serializable {
         isNotNull(url);
         return findAndCreateImage(url);
     }
+    
+    private void isNotNull(URLWrapper url) throws CoreException {
+        if(url == null) {
+            LOGGER.error("URL is null!");
+            throw new CoreException("URL can't be null!");
+        }
+    }
 
     private ParsedImage findAndCreateImage(URLWrapper documentURL) throws CoreException {
         LOGGER.trace("Finding image from document: {}.", documentURL);
         document = DOCUMENT_PROVIDER.getDocument(documentURL);
-        URLWrapper urlImg = IMAGE_ELEMENTS_SUPPLIER.getImageURL(document);
+        URLWrapper urlImg = getValueOrNullOnException(IMAGE_ELEMENTS_SUPPLIER::getImageURL, document);
         if(urlImg != null) {
             ParsedImage image = new ParsedImage();
             image.setImageURL(urlImg.getURL());
-            Integer numberOfComments = IMAGE_ELEMENTS_SUPPLIER.getImageNumberOfComments(document);
+            Integer numberOfComments = getValueOrNullOnException(IMAGE_ELEMENTS_SUPPLIER::getImageNumberOfComments, document);
             image.setNumberOfComments(numberOfComments);
-            Integer rating = IMAGE_ELEMENTS_SUPPLIER.getImageRatings(document);
+            Integer rating = getValueOrNullOnException(IMAGE_ELEMENTS_SUPPLIER::getImageRating, document);
             image.setRating(rating);
             LOGGER.trace(String.format("Return parsed image: %s.", image.toString()));
             return image;
@@ -132,10 +139,17 @@ public class Crawler implements Serializable {
         }
     }
     
-    private void isNotNull(URLWrapper url) throws CoreException {
-        if(url == null) {
-            LOGGER.error("URL is null!");
-            throw new CoreException("URL can't be null!");
+    private <T> T getValueOrNullOnException(ElementSupplier<T> elementSupplier, Document document) {
+        try {
+            return elementSupplier.get(document);
+        } catch (CoreException ex) {
+            LOGGER.debug("CoreException was thrown when trying get some value! Return null instead.", ex);
+            return null;
         }
+    }
+    
+    @FunctionalInterface
+    private interface ElementSupplier<T> {
+        T get(Document document) throws CoreException;
     }
 }

@@ -107,7 +107,7 @@ public class ImageElementsSupplierImplSpec {
     public void givenRatingExtractorWhenGetImageRatingsThenReturnNotNull() throws CoreException, MalformedURLException, ElementExtractorNotSetException {
         doReturn(NUM).when(elementValueExtractor).getValue(document);
         doReturn(elementValueExtractor).when(imageElementsExtractors).getRatingExtractor();
-        Integer result = instance.getImageRatings(document);
+        Integer result = instance.getImageRating(document);
         Assert.assertEquals(Integer.valueOf(NUM), result);
     }
     
@@ -115,13 +115,13 @@ public class ImageElementsSupplierImplSpec {
     public void givenBadNumberWhenGetImageRatingsThenReturnNull() throws CoreException, MalformedURLException, ElementExtractorNotSetException {
         doReturn("").when(elementValueExtractor).getValue(document);
         doReturn(elementValueExtractor).when(imageElementsExtractors).getRatingExtractor();
-        Integer result = instance.getImageRatings(document);
+        Integer result = instance.getImageRating(document);
         Assert.assertNull(result);
     }
     
     @Test
     public void givenNullRatingExtractorWhenGetImageRatingsThenReturnNull() throws CoreException, MalformedURLException {
-        Integer result = instance.getImageRatings(document);
+        Integer result = instance.getImageRating(document);
         Assert.assertNull(result);
     }
     

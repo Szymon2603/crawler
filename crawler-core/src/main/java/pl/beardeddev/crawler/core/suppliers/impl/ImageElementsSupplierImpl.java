@@ -42,8 +42,7 @@ import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 
 /**
  * Domyślna implementacja interfejsu {@class ImageElementsSupplier}. Do poprawnego działania potrzeuje informacji
- * na temat protokołu jaki jest używany przez dany serwis w celu utworzenia poprawnych adresów URL do zasobów takich
- * jak adres obrazka lub adres następnego elementu.
+ * na temat lokalizacji w celu poprawnego sprasowania liczb.
  * 
  * @author Szymon Grzelak
  */
@@ -51,6 +50,7 @@ import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 public class ImageElementsSupplierImpl implements ImageElementsSupplier {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageElementsSupplierImpl.class);
+    private static final String MSG_TEMPLATE = "Can't get %s from document!";
     private final ImageElementsExtractors IMAGE_ELEMENTS_EXTRACTORS;
     private final NumberFormat NUMBER_FORMAT;
 
@@ -63,16 +63,13 @@ public class ImageElementsSupplierImpl implements ImageElementsSupplier {
     public URLWrapper getImageURL(Document document) throws CoreException {
         try {
             String stringValue = getStringValue(IMAGE_ELEMENTS_EXTRACTORS::getImageExtractor, document);
-            LOGGER.debug("Extracted URL: {}", stringValue);
+            LOGGER.trace("Extracted URL: {}", stringValue);
             return new URLWrapper(stringValue);
-        } catch(MalformedURLException ex) {
-            LOGGER.warn("Bad URL!", ex);
-        } catch (NoSuchElementException ex) {
-            LOGGER.warn("Can't find image url. Return null instead", ex);
-        } catch (ElementExtractorNotSetException ex) {
-            LOGGER.warn("Image extractor is not set, return null instead.", ex);
+        } catch(MalformedURLException | NoSuchElementException | ElementExtractorNotSetException ex) {
+            String msg = String.format(MSG_TEMPLATE, "image");
+            LOGGER.trace(msg, ex);
+            throw new CoreException(msg, ex);
         }
-        return null;
     }
 
     @Override
@@ -81,46 +78,37 @@ public class ImageElementsSupplierImpl implements ImageElementsSupplier {
             String stringValue = getStringValue(IMAGE_ELEMENTS_EXTRACTORS::getCommentsExtractor, document);
             Integer numberOfComments = NUMBER_FORMAT.parse(stringValue).intValue();
             return numberOfComments;
-        } catch(ParseException ex) {
-            LOGGER.warn("Can't parse number of comments. Return null instead.", ex);
-        } catch(NoSuchElementException ex) {
-            LOGGER.info("Can't find number of comments. Return null instead");
-        } catch (ElementExtractorNotSetException ex) {
-            LOGGER.warn("Number of comments extractor is not set, return null instead.", ex);
+        } catch(ParseException | NoSuchElementException | ElementExtractorNotSetException ex) {
+            String msg = String.format(MSG_TEMPLATE, "number of comments");
+            LOGGER.trace(msg, ex);
+            throw new CoreException(msg, ex);
         }
-        return null;
     }
 
     @Override
-    public Integer getImageRatings(Document document) throws CoreException {
+    public Integer getImageRating(Document document) throws CoreException {
         try {
             String stringValue = getStringValue(IMAGE_ELEMENTS_EXTRACTORS::getRatingExtractor, document);
             Integer rating = NUMBER_FORMAT.parse(stringValue).intValue();
             return rating;
-        } catch (ParseException ex) {
-            LOGGER.warn("Can't parse ratings. Return null instead.", ex);
-        } catch(NoSuchElementException ex) {
-            LOGGER.info("Can't find ratings. Return null instead"); 
-        } catch (ElementExtractorNotSetException ex) {
-            LOGGER.warn("Ratings extractor is not set, return null instead.", ex);
+        } catch(ParseException | NoSuchElementException | ElementExtractorNotSetException ex) {
+            String msg = String.format(MSG_TEMPLATE, "image rating");
+            LOGGER.trace(msg, ex);
+            throw new CoreException(msg, ex);
         }
-        return null;
     }
 
     @Override
     public URLWrapper getNextImageURL(Document document) throws CoreException {
         try {
             String stringValue = getStringValue(IMAGE_ELEMENTS_EXTRACTORS::getNextElementExtractor, document);
-            LOGGER.info("Extracted next image URL is: {}", stringValue);
+            LOGGER.trace("Extracted next image URL is: {}", stringValue);
             return new URLWrapper(stringValue);
-        } catch(MalformedURLException ex) {
-            LOGGER.warn("Bad URL!", ex);
-        } catch(NoSuchElementException ex) {
-            LOGGER.warn("URL not found!");
-        } catch (ElementExtractorNotSetException ex) {
-            LOGGER.warn("Next image URL extractor is not set, return null instead.", ex);
+        } catch(MalformedURLException | NoSuchElementException | ElementExtractorNotSetException ex) {
+            String msg = String.format(MSG_TEMPLATE, "next image URL");
+            LOGGER.trace(msg, ex);
+            throw new CoreException(msg, ex);
         }
-        return null;
     }
     
     private String getStringValue(ElementValueExtractorSupplier supplier, Document document) throws ElementExtractorNotSetException {
