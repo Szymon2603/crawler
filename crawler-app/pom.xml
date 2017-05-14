@@ -31,11 +31,26 @@
             <scope>provided</scope>
         </dependency>
         
+        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${versions.javax.servlet}</version>
+            <scope>provided</scope>
+        </dependency>
+        
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${versions.projectlombok}</version>
+        </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${versions.modelmapper}</version>
         </dependency>
         
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->

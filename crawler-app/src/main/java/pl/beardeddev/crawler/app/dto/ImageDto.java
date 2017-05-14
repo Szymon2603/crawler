@@ -21,29 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.app.config;
+package pl.beardeddev.crawler.app.dto;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import java.util.Date;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
- * Konfiguracja ogólna dla całej aplikacji
+ * DTO dla {@class Image}.
  * 
  * @author Szymon Grzelak
  */
-@Configuration
-@ComponentScan(basePackages = ConfigConstants.SERVICES_PACKAGE)
-@EnableJpaRepositories(basePackages = ConfigConstants.REPOSITORIES_PACKAGE)
-@Import({ DevelopmentConfig.class, TestConfig.class})
-public class ApplicationConfig {
+@ToString
+@EqualsAndHashCode
+public class ImageDto {
     
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
-
+    @Getter @Setter
+    private Long id;
+    
+    @Getter @Setter
+    private String imageURL;    
+    
+    @Getter @Setter
+    private Integer numberOfComments;
+    
+    @Getter @Setter
+    private Integer rating;
+    
+    @Getter @Setter
+    private Date createDate;
 }

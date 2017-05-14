@@ -21,29 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.app.config;
+package pl.beardeddev.crawler.app.repositories;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.jpa.repository.JpaRepository;
+import pl.beardeddev.crawler.app.domain.ConfigPackageMaster;
 
 /**
- * Konfiguracja ogólna dla całej aplikacji
+ * Automatycznie generowane repozytorium Spring-Data dla encji {@class ConfigPackageMaster}.
  * 
  * @author Szymon Grzelak
  */
-@Configuration
-@ComponentScan(basePackages = ConfigConstants.SERVICES_PACKAGE)
-@EnableJpaRepositories(basePackages = ConfigConstants.REPOSITORIES_PACKAGE)
-@Import({ DevelopmentConfig.class, TestConfig.class})
-public class ApplicationConfig {
-    
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
-
+public interface ConfigPackageMasterRepository extends JpaRepository<ConfigPackageMaster, Long> {
 }
