@@ -21,55 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.core.wrappers;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+package pl.beardeddev.crawler.core.exceptions;
 
 /**
- * Klasa opakowująca klasę {@code java.net.URL} umożliwiająca wykonanie testów jednostkowych.
+ * Wyjątek zgłaszany w przypadku gdy extractor nie został ustawiony. Używany w klasie {@class ImageElementsExtractors}.
  * 
  * @author Szymon Grzelak
  */
-@ToString
-@EqualsAndHashCode
-public class URLWrapper implements Serializable {
-
-    private static final long serialVersionUID = 6024044659311363956L;
-
-    private URL url;
-
-    public URLWrapper() {}
-
-    public URLWrapper(String url) throws MalformedURLException {
-        this.url = new URL(url);
-    }
+public class ElementExtractorNotSetException extends Exception {
     
-    public URLWrapper(URL url) {
-        this.url = url;
-    }
-    
-    /**
-     * Wywołuje odpowiednią metodę klasy {@code java.net.URL} w celu uzyskania połączenia z danym zasobem
-     * 
-     * @return połączenie z danym zasobem
-     * @throws IOException błędy przy próbie utworzenia połączenia
-     */
-    public URLConnection openConnection() throws IOException {
-        return url.openConnection();
+    private static final long serialVersionUID = 7057278538477045367L;
+
+    public ElementExtractorNotSetException() {}
+
+    public ElementExtractorNotSetException(String message) {
+        super(message);
     }
 
-    public URL getURL() {
-        return url;
+    public ElementExtractorNotSetException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public void setURL(URL url) {
-        this.url = url;
+    public ElementExtractorNotSetException(Throwable cause) {
+        super(cause);
     }
-    
+
+    public ElementExtractorNotSetException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

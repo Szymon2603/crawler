@@ -24,9 +24,11 @@
 package pl.beardeddev.crawler.core.suppliers;
 
 import lombok.ToString;
+import pl.beardeddev.crawler.core.exceptions.ElementExtractorNotSetException;
 
 /**
- * Klasa agregujaca ekstraktory {@class ElementValueExtractor}.
+ * Klasa agregujaca ekstraktory {@class ElementValueExtractor}. W przypadku, gdy którś z ekstraktorów nie został ustawiony
+ * zostaje zgłoszony wyjątek {@class ElementExtractorNotSetException}.
  * 
  * @author Szymon Grzelak
  */
@@ -45,19 +47,31 @@ public class ImageElementsExtractors {
         this.RATING_EXTRACTOR = ratingExtractor;
     }
     
-    public ElementValueExtractor getImageExtractor() {
+    public ElementValueExtractor getImageExtractor() throws ElementExtractorNotSetException {
+        if(IMAGE_EXTRACTOR == null) {
+            throw new ElementExtractorNotSetException("Image extractor not set!");
+        }
         return IMAGE_EXTRACTOR;
     }
 
-    public ElementValueExtractor getNextElementExtractor() {
+    public ElementValueExtractor getNextElementExtractor() throws ElementExtractorNotSetException {
+        if(IMAGE_EXTRACTOR == null) {
+            throw new ElementExtractorNotSetException("Next element extractor not set!");
+        }
         return NEXT_ELEMENT_EXTRACTOR;
     }
 
-    public ElementValueExtractor getCommentsExtractor() {
+    public ElementValueExtractor getCommentsExtractor() throws ElementExtractorNotSetException {
+        if(IMAGE_EXTRACTOR == null) {
+            throw new ElementExtractorNotSetException("Comments extractor not set!");
+        }
         return COMMENTS_EXTRACTOR;
     }
 
-    public ElementValueExtractor getRatingExtractor() {
+    public ElementValueExtractor getRatingExtractor() throws ElementExtractorNotSetException {
+        if(IMAGE_EXTRACTOR == null) {
+            throw new ElementExtractorNotSetException("Rating extractor not set!");
+        }
         return RATING_EXTRACTOR;
     }
 }

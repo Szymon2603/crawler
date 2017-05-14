@@ -39,7 +39,7 @@ import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
  */
 @ToString
 @EqualsAndHashCode
-public final class AttributeValueExtractor implements ElementValueExtractor {
+public class AttributeValueExtractor implements ElementValueExtractor {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(AttributeValueExtractor.class);
     
