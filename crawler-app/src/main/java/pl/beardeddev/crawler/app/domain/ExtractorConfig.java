@@ -36,6 +36,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import pl.beardeddev.crawler.core.exceptions.BadConfigurationException;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 
 /**
@@ -96,7 +97,7 @@ public abstract class ExtractorConfig implements Serializable {
         this.elementSelector = elementSelector;
     }
     
-    public ElementValueExtractor getElementValueExtractor() {
+    public ElementValueExtractor getElementValueExtractor() throws BadConfigurationException {
         return type.getElementValueExtractor(this);
     }
 }

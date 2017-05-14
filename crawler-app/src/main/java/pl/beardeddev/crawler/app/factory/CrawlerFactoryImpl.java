@@ -23,6 +23,8 @@
  */
 package pl.beardeddev.crawler.app.factory;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +33,8 @@ import pl.beardeddev.crawler.app.domain.ConfigPackageMaster;
 import pl.beardeddev.crawler.app.domain.Configs;
 import pl.beardeddev.crawler.app.domain.ExtractorConfig;
 import pl.beardeddev.crawler.app.domain.NumberFormatLocale;
-import pl.beardeddev.crawler.app.exceptions.BusinessLogicRuntimeException;
 import pl.beardeddev.crawler.core.Crawler;
+import pl.beardeddev.crawler.core.exceptions.BadConfigurationException;
 import pl.beardeddev.crawler.core.factory.BaseCrawlerFactory;
 import pl.beardeddev.crawler.core.suppliers.ElementValueExtractor;
 import pl.beardeddev.crawler.core.suppliers.ImageElementsExtractors;
@@ -87,22 +89,24 @@ public class CrawlerFactoryImpl extends BaseCrawlerFactory {
     
     private ElementValueExtractor findElementValueExtractor(Set<ConfigPackageDetail> details, Configs configType) {
         LOGGER.debug("Looking for config type: {}", configType);
-        ExtractorConfig extractorConfig = details
+        Optional<ExtractorConfig> extractorConfig = details
                 .stream()
                 .filter(e -> configType.equals(e.getDetailName()))
-                .findFirst().get().getConfig();
+                .findFirst().map(e -> e.getConfig());
         
         return getElementValueExtractor(extractorConfig, configType);
     }
 
-    private ElementValueExtractor getElementValueExtractor(ExtractorConfig extractorConfig, Configs configType) {
-        if(extractorConfig != null) {
-            ElementValueExtractor elementValueExtractor = extractorConfig.getElementValueExtractor();
+    private ElementValueExtractor getElementValueExtractor(Optional<ExtractorConfig> extractorConfig, Configs configType) {
+        try {
+            ElementValueExtractor elementValueExtractor = extractorConfig
+                    .get()
+                    .getElementValueExtractor();
             LOGGER.info("Return {} for config type {}", elementValueExtractor, configType);
             return elementValueExtractor;
-        } else {
-            LOGGER.error("Can't find ElementValueExtractor for config: {}.", configType);
-            throw new BusinessLogicRuntimeException("ElementValueExtractor is required");
+        } catch (BadConfigurationException | NoSuchElementException ex) {
+            LOGGER.error("Can't find ElementValueExtractor for config: {}.", configType, ex);
+            return null;
         }
     }
 }
