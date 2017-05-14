@@ -85,7 +85,7 @@ public class Crawler implements Serializable {
                 }
             }
         } catch(CoreException ex) {
-            LOGGER.warn("Przerwanie przetwarzania dokumentów!", ex);
+            LOGGER.warn("Stopping document processing!", ex);
         }
         return result;
     }
