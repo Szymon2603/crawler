@@ -56,7 +56,7 @@ public class CrawlerController {
     private ModelMapper modelMapper;
     
     @GetMapping("/runCrawler")
-    public List<ImageDto> runCrawler(@RequestParam String startUrl, @RequestParam int maxVisits,
+    public List<ImageDto> runCrawler(@RequestParam String startUrl, @RequestParam(defaultValue = "10") int maxVisits,
                                      @RequestParam Long configId) throws MalformedURLException {
         ConfigPackageMaster configPackage = configPackageMasterRepository.findOne(configId);
         URLWrapper startUrlWrapper = new URLWrapper(startUrl);
@@ -65,7 +65,7 @@ public class CrawlerController {
     }
     
     @GetMapping("/runAndSaveCrawler")
-    public List<ImageDto> runAndSaveCrawler(@RequestParam String startUrl, @RequestParam int maxVisits,
+    public List<ImageDto> runAndSaveCrawler(@RequestParam String startUrl, @RequestParam(defaultValue = "10") int maxVisits,
                                             @RequestParam Long configId) throws MalformedURLException {
         ConfigPackageMaster configPackage = configPackageMasterRepository.findOne(configId);
         URLWrapper startUrlWrapper = new URLWrapper(startUrl);

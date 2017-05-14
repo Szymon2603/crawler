@@ -36,6 +36,8 @@ import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -81,23 +83,23 @@ public class CrawlerControllerTest {
     private List<Image> imagesList;
     private ConfigPackageMaster config;
     private String startUrl;
-    private int maxVisits;
+    private int maxVisitsDefault;
     
     
     @Before
     public void setUp() throws MalformedURLException {
-        imagesList = LongStream
-                .rangeClosed(1, 15)
+        imagesList = spy(LongStream
+                .rangeClosed(1, 11)
                 .mapToObj((id) -> new Image(id, "some-site/" + id, Long.valueOf(id).intValue(), Long.valueOf(id).intValue(), new Date()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
         config = mock(ConfigPackageMaster.class);
         startUrl = "http://some-site.com";
-        maxVisits = 10;
+        maxVisitsDefault = 10;
     }
     
     @Test
     public void whenGetImagesThenGetListOfImages() throws Exception {
-        when(crawlerServiceMock.runCrawler(eq(config), any(URLWrapper.class), eq(maxVisits))).thenReturn(imagesList);
+        when(crawlerServiceMock.runCrawler(eq(config), any(URLWrapper.class), eq(maxVisitsDefault))).thenReturn(imagesList);
         when(configPackageMasterRepositoryMock.findOne(any(Long.class))).thenReturn(config);
         String responseValue = mockMvc
                 .perform(get("/runCrawler")
@@ -111,8 +113,22 @@ public class CrawlerControllerTest {
     }
     
     @Test
+    public void whenNoMaxVisitsAndGetImagesThenGetListOfImages() throws Exception {
+        when(crawlerServiceMock.runCrawler(eq(config), any(URLWrapper.class), eq(maxVisitsDefault))).thenReturn(imagesList);
+        when(configPackageMasterRepositoryMock.findOne(any(Long.class))).thenReturn(config);
+        String responseValue = mockMvc
+                .perform(get("/runCrawler")
+                        .param("startUrl", startUrl)
+                        .param("configId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(objectMapper.writeValueAsString(imagesList), responseValue);
+    }
+    
+    @Test
     public void whenGetImageThenReturnListOfImagesAndSaveThem() throws Exception {
-        when(crawlerServiceMock.runCrawler(eq(config), any(URLWrapper.class), eq(maxVisits))).thenReturn(imagesList);
+        when(crawlerServiceMock.runCrawler(eq(config), any(URLWrapper.class), eq(maxVisitsDefault))).thenReturn(imagesList);
         when(configPackageMasterRepositoryMock.findOne(any(Long.class))).thenReturn(config);
         String responseValue = mockMvc
                 .perform(get("/runAndSaveCrawler")
@@ -123,6 +139,23 @@ public class CrawlerControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn().getResponse().getContentAsString();
         Assert.assertEquals(objectMapper.writeValueAsString(imagesList), responseValue);
+        reset(imagesList);
+        verify(imageRepositoryMock, times(1)).save(imagesList);
+    }
+    
+    @Test
+    public void whenNoMaxVisitsAndGetImageThenReturnListOfImagesAndSaveThem() throws Exception {
+        when(crawlerServiceMock.runCrawler(eq(config), any(URLWrapper.class), eq(maxVisitsDefault))).thenReturn(imagesList);
+        when(configPackageMasterRepositoryMock.findOne(any(Long.class))).thenReturn(config);
+        String responseValue = mockMvc
+                .perform(get("/runAndSaveCrawler")
+                        .param("startUrl", startUrl)
+                        .param("configId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(objectMapper.writeValueAsString(imagesList), responseValue);
+        reset(imagesList);
         verify(imageRepositoryMock, times(1)).save(imagesList);
     }
     
