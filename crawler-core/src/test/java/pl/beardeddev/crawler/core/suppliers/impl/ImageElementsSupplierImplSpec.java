@@ -60,95 +60,95 @@ public class ImageElementsSupplierImplSpec {
     }
     
     @Test
-    public void givenImageExtractorWhenGetImageThenReturnNotNull() throws CoreException, MalformedURLException, ElementExtractorNotSetException {
+    public void givenImageExtractorWhenGetImageThenNoException() throws CoreException, ElementExtractorNotSetException, MalformedURLException {
         doReturn(IMAGE_URL).when(elementValueExtractor).getValue(document);
         doReturn(elementValueExtractor).when(imageElementsExtractors).getImageExtractor();
         URLWrapper result = instance.getImageURL(document);
         Assert.assertEquals(new URLWrapper(IMAGE_URL), result);
     }
     
-    @Test
-    public void givenMalformedURLWhenGetImageThenReturnNull() throws CoreException, MalformedURLException, ElementExtractorNotSetException {
+    @Test(expected = CoreException.class)
+    public void givenMalformedURLWhenGetImageThenCoreException() throws CoreException, ElementExtractorNotSetException {
         doReturn("").when(elementValueExtractor).getValue(document);
         doReturn(elementValueExtractor).when(imageElementsExtractors).getImageExtractor();
         URLWrapper result = instance.getImageURL(document);
         Assert.assertNull(result);
     }
     
-    @Test
-    public void givenNullImageExtractorWhenGetImageThenReturnNull() throws CoreException, MalformedURLException {
+    @Test(expected = CoreException.class)
+    public void givenNullImageExtractorWhenGetImageThenCoreException() throws CoreException {
         URLWrapper result = instance.getImageURL(document);
         Assert.assertNull(result);
     }
     
     @Test
-    public void givenCommentsExtractorWhenGetNumberOfCommentsThenReturnNotNull() throws CoreException, MalformedURLException, ElementExtractorNotSetException {
+    public void givenCommentsExtractorWhenGetNumberOfCommentsThenReturnNoException() throws CoreException, ElementExtractorNotSetException {
         doReturn(NUM).when(elementValueExtractor).getValue(document);
         doReturn(elementValueExtractor).when(imageElementsExtractors).getCommentsExtractor();
         Integer result = instance.getImageNumberOfComments(document);
         Assert.assertEquals(Integer.valueOf(NUM), result);
     }
     
-    @Test
-    public void givenBadNumberWhenGetNumberOfCommentsThenReturnNull() throws CoreException, MalformedURLException, ElementExtractorNotSetException {
+    @Test(expected = CoreException.class)
+    public void givenBadNumberWhenGetNumberOfCommentsThenCoreException() throws CoreException, ElementExtractorNotSetException {
         doReturn("").when(elementValueExtractor).getValue(document);
         doReturn(elementValueExtractor).when(imageElementsExtractors).getCommentsExtractor();
         Integer result = instance.getImageNumberOfComments(document);
         Assert.assertNull(result);
     }
     
-    @Test
-    public void givenNullCommentsExtractorWhenGetNumberOfCommentsThenReturnNull() throws CoreException, MalformedURLException {
+    @Test(expected = CoreException.class)
+    public void givenNullCommentsExtractorWhenGetNumberOfCommentsThenCoreException() throws CoreException {
         Integer result = instance.getImageNumberOfComments(document);
         Assert.assertNull(result);
     }
     
     @Test
-    public void givenRatingExtractorWhenGetImageRatingsThenReturnNotNull() throws CoreException, MalformedURLException, ElementExtractorNotSetException {
+    public void givenRatingExtractorWhenGetImageRatingsThenReturnNoException() throws CoreException, ElementExtractorNotSetException {
         doReturn(NUM).when(elementValueExtractor).getValue(document);
         doReturn(elementValueExtractor).when(imageElementsExtractors).getRatingExtractor();
         Integer result = instance.getImageRating(document);
         Assert.assertEquals(Integer.valueOf(NUM), result);
     }
     
-    @Test
-    public void givenBadNumberWhenGetImageRatingsThenReturnNull() throws CoreException, MalformedURLException, ElementExtractorNotSetException {
+    @Test(expected = CoreException.class)
+    public void givenBadNumberWhenGetImageRatingsThenCoreException() throws CoreException, ElementExtractorNotSetException {
         doReturn("").when(elementValueExtractor).getValue(document);
         doReturn(elementValueExtractor).when(imageElementsExtractors).getRatingExtractor();
         Integer result = instance.getImageRating(document);
         Assert.assertNull(result);
     }
     
-    @Test
-    public void givenNullRatingExtractorWhenGetImageRatingsThenReturnNull() throws CoreException, MalformedURLException {
+    @Test(expected = CoreException.class)
+    public void givenNullRatingExtractorWhenGetImageRatingsThenCoreException() throws CoreException {
         Integer result = instance.getImageRating(document);
         Assert.assertNull(result);
     }
     
     @Test
-    public void givenNextImageURLExtractorWhenGetNextImageURLThenReturnNotNull() throws CoreException, MalformedURLException, ElementExtractorNotSetException {
+    public void givenNextImageURLExtractorWhenGetNextImageURLThenReturnNoException() throws CoreException, MalformedURLException, ElementExtractorNotSetException {
         doReturn(IMAGE_URL).when(elementValueExtractor).getValue(document);
         doReturn(elementValueExtractor).when(imageElementsExtractors).getNextElementExtractor();
         URLWrapper result = instance.getNextImageURL(document);
         Assert.assertEquals(new URLWrapper(IMAGE_URL), result);
     }
     
-    @Test
-    public void givenMalformedURLWhenGetNextImageURLThenReturnNull() throws CoreException, MalformedURLException, ElementExtractorNotSetException {
+    @Test(expected = CoreException.class)
+    public void givenMalformedURLWhenGetNextImageURLThenCoreException() throws CoreException, ElementExtractorNotSetException {
         doReturn("").when(elementValueExtractor).getValue(document);
         doReturn(elementValueExtractor).when(imageElementsExtractors).getNextElementExtractor();
         URLWrapper result = instance.getNextImageURL(document);
         Assert.assertNull(result);
     }
     
-    @Test
-    public void givenNullNextImageURLExtractorWhenGetNextImageURLThenReturnNull() throws CoreException, MalformedURLException {
+    @Test(expected = CoreException.class)
+    public void givenNullNextImageURLExtractorWhenGetNextImageURLThenCoreException() throws CoreException {
         URLWrapper result = instance.getNextImageURL(document);
         Assert.assertNull(result);
     }
     
-    @Test
-    public void givenBadSelectorWhenGetNextImageURLThenReturnNull() throws CoreException, MalformedURLException, ElementExtractorNotSetException {
+    @Test(expected = CoreException.class)
+    public void givenBadSelectorWhenGetNextImageURLThenCoreException() throws CoreException, ElementExtractorNotSetException {
         doReturn(null).when(elementValueExtractor).getValue(document);
         doReturn(elementValueExtractor).when(imageElementsExtractors).getNextElementExtractor();
         URLWrapper result = instance.getNextImageURL(document);
