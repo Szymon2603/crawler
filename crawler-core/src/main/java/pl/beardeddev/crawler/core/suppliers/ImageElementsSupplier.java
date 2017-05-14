@@ -59,7 +59,7 @@ public interface ImageElementsSupplier {
      * @return ranking, null jeżeli nie udało się znaleźć elementu.
      * @throws CoreException błędy związane z przetwarzanie dokumentu lub parsowaniem wyników na obiekt {@see Integer}.
      */
-    public Integer getImageRatings(Document document) throws CoreException;
+    public Integer getImageRating(Document document) throws CoreException;
     
     /**
      * Zwraca adres URL do następnego obrazka zawarty w dokumencie.

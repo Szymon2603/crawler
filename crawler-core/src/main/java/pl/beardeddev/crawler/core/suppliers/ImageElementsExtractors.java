@@ -24,6 +24,8 @@
 package pl.beardeddev.crawler.core.suppliers;
 
 import lombok.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.beardeddev.crawler.core.exceptions.ElementExtractorNotSetException;
 
 /**
@@ -35,6 +37,12 @@ import pl.beardeddev.crawler.core.exceptions.ElementExtractorNotSetException;
 @ToString
 public class ImageElementsExtractors {
     
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageElementsExtractors.class);
+    private static final String IMAGE_EXTRACTOR_NOT_SET = "Image extractor not set! It may cause problems.";
+    private static final String NEXT_ELEMENT_EXTRACTOR_NOT_SET = "Next element extractor not set! It may cause problems.";
+    private static final String COMMENTS_EXTRACTOR_NOT_SET = "Comments extractor not set! It may cause problems.";
+    private static final String RATING_EXTRACTOR_NOT_SET = "Rating extractor not set! It may cause problems.";
+    
     private final ElementValueExtractor IMAGE_EXTRACTOR;
     private final ElementValueExtractor NEXT_ELEMENT_EXTRACTOR;
     private final ElementValueExtractor COMMENTS_EXTRACTOR;
@@ -45,33 +53,49 @@ public class ImageElementsExtractors {
         this.NEXT_ELEMENT_EXTRACTOR = nextElementExtractor;
         this.COMMENTS_EXTRACTOR = commentsExtractor;
         this.RATING_EXTRACTOR = ratingExtractor;
+        checkConfiguration();
     }
     
     public ElementValueExtractor getImageExtractor() throws ElementExtractorNotSetException {
         if(IMAGE_EXTRACTOR == null) {
-            throw new ElementExtractorNotSetException("Image extractor not set!");
+            throw new ElementExtractorNotSetException(IMAGE_EXTRACTOR_NOT_SET);
         }
         return IMAGE_EXTRACTOR;
     }
 
     public ElementValueExtractor getNextElementExtractor() throws ElementExtractorNotSetException {
-        if(IMAGE_EXTRACTOR == null) {
-            throw new ElementExtractorNotSetException("Next element extractor not set!");
+        if(NEXT_ELEMENT_EXTRACTOR == null) {
+            throw new ElementExtractorNotSetException(NEXT_ELEMENT_EXTRACTOR_NOT_SET);
         }
         return NEXT_ELEMENT_EXTRACTOR;
     }
 
     public ElementValueExtractor getCommentsExtractor() throws ElementExtractorNotSetException {
-        if(IMAGE_EXTRACTOR == null) {
-            throw new ElementExtractorNotSetException("Comments extractor not set!");
+        if(COMMENTS_EXTRACTOR == null) {
+            throw new ElementExtractorNotSetException(COMMENTS_EXTRACTOR_NOT_SET);
         }
         return COMMENTS_EXTRACTOR;
     }
 
     public ElementValueExtractor getRatingExtractor() throws ElementExtractorNotSetException {
-        if(IMAGE_EXTRACTOR == null) {
-            throw new ElementExtractorNotSetException("Rating extractor not set!");
+        if(RATING_EXTRACTOR == null) {
+            throw new ElementExtractorNotSetException(RATING_EXTRACTOR_NOT_SET);
         }
         return RATING_EXTRACTOR;
+    }
+
+    private void checkConfiguration() {
+        if (IMAGE_EXTRACTOR == null) {
+            LOGGER.warn(IMAGE_EXTRACTOR_NOT_SET);
+        }
+        if (NEXT_ELEMENT_EXTRACTOR == null) {
+            LOGGER.warn(NEXT_ELEMENT_EXTRACTOR_NOT_SET);
+        }
+        if (COMMENTS_EXTRACTOR == null) {
+            LOGGER.warn(COMMENTS_EXTRACTOR_NOT_SET);
+        }
+        if (RATING_EXTRACTOR == null) {
+            LOGGER.warn(RATING_EXTRACTOR_NOT_SET);
+        }
     }
 }
