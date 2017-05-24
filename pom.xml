@@ -28,6 +28,8 @@
         <versions.projectlombok>1.16.16</versions.projectlombok>
         <versions.modelmapper>0.7.8</versions.modelmapper>
         <versions.javax.servlet>3.1.0</versions.javax.servlet>
+        <versions.aspectjweaver>1.8.10</versions.aspectjweaver>
+        <versions.cglib>3.2.5</versions.cglib>
     </properties>
     
     <modules>

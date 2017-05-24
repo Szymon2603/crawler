@@ -21,35 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.app.config;
+package pl.beardeddev.crawler.app.aspects;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Konfiguracja elementów potrzebnych do działania aplikacji internetowej.
+ * Adnotacja do oznaczenia metod, których wywołanie ma zostać zalogowane.
  * 
  * @author Szymon Grzelak
  */
-@EnableWebMvc
-@Configuration
-@ComponentScan(basePackages = ConfigConstants.CONTROLLERS_PACKAGE)
-@Import( AspectsConfig.class )
-public class WebConfig extends WebMvcConfigurerAdapter {
-
-    @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
-    }
-
-    @Override
-    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-        configurer.defaultContentType(MediaType.APPLICATION_JSON);
-    }
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Loggable {
+    
+    /**
+     * Flaga czy mają zostać zalogowane argumenty wywołania.
+     * 
+     * @return true jeżeli mają zostać zalogowane argumenty wywołania.
+     */
+    public boolean logArguments() default true;
+    /**
+     * Flaga czy ma zostać zalogowana zwracana przez metodę wartość.
+     * 
+     * @return true jeżeli ma zostać zalogowana zwracana wartość.
+     */
+    public boolean logReturnValue() default true;
+    /**
+     * Flaga czy sygnatury method mają być logowane w skróconej postaci.
+     * 
+     * @return true jeżeli sygnatury mają być logowane w skróconej postaci.
+     */
+    public boolean shortMethodSignature() default false;
 }
