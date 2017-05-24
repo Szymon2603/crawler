@@ -38,7 +38,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @ComponentScan(basePackages = ConfigConstants.SERVICES_PACKAGE)
 @EnableJpaRepositories(basePackages = ConfigConstants.REPOSITORIES_PACKAGE)
-@Import({ DevelopmentConfig.class, TestConfig.class})
+@Import({ DevelopmentConfig.class, TestConfig.class, AspectsConfig.class })
 public class ApplicationConfig {
     
     @Bean

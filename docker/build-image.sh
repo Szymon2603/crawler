@@ -5,15 +5,20 @@
 # some arguments don't have a corresponding value to go with it such
 # as in the --default example).
 # note: if this is set to -gt 0 the /etc/hosts part is not recognized ( may be a bug )
+
+# Based on https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash
+
 PARAMETERS_DESC="Parametry wywołania:\n\
                  -s|--skipTests - pominięcie testów podczas budowania aplikacji\n\
                  -b|--build - wywołanie maven-a w celu przebudowania projektu\n\
                  -d|--dir <ścieżka> - ścieżka do katalogu z projektem\n\
                  -n|--image-name <nazwa> - nazwa obrazu docker, jeżeli nie podano to zostanie użyta domyślna nazwa crawler-app-dev-server\n\
                  -t|--tag <nazwa> - nazwa tagu, jeżeli nie podano to zostanie użyta domyślna nazwa latest\n\
-                 -f|--force - flaga do wymuszenia utworzenia nowego obrazu poprzez usunięcie istniejącego obrazu\n"
+                 -f|--force - flaga do wymuszenia utworzenia nowego obrazu poprzez usunięcie istniejącego obrazu\n\
+                 -ff| --double-force - flaga do wymuszenia utworzenia nowego obrazu poprzez usunięcie istniejącego obrazu oraz kontenerów"
 BUILD=false
 FORCE=false
+DOUBLE_FORCE=false
 SKIP_TESTS=false
 IMAGE_NAME="crawler-server-dev"
 IMAGE_TAG="latest"
@@ -43,6 +48,9 @@ case $key in
     ;;
     -f|--force)
     FORCE=true
+    ;;
+    -ff|--double-force)
+    DOUBLE_FORCE=true
     ;;
     -h|--help)
     echo "Skrypt do budowania obrazu aplikacji osadzonej w kontenerze Tomcat"
@@ -74,12 +82,23 @@ if $BUILD ; then
 fi
 
 if [[ "$(sudo docker images -q $IMAGE_NAME:$IMAGE_TAG 2> /dev/null)" != "" ]]; then
-    if ! $FORCE ; then
-        echo "Obraz istenieje! Użyj flagi -f lub --force aby nadpisać obraz."
-        exit 0
-    else
+    if  $FORCE || $DOUBLE_FORCE ; then
+        if [[ "$(sudo docker ps -q -f "ancestor=$IMAGE_NAME:$IMAGE_TAG" 2> /dev/null)" != "" ]]; then
+            if $DOUBLE_FORCE ; then
+                echo "Stopuję kontenery"
+                sudo docker stop $(sudo docker ps -q -f "ancestor=$IMAGE_NAME:$IMAGE_TAG" 2> /dev/null)
+                echo "Usuwam kontenery"
+                sudo docker rm $(sudo docker ps -aq -f "ancestor=$IMAGE_NAME:$IMAGE_TAG" 2> /dev/null)
+            else
+                echo "Istnieją kontenery oparte o obraz."
+                exit 0
+            fi
+        fi
         echo "Usuwam obraz."
         sudo docker rmi $(sudo docker images -q $IMAGE_NAME:$IMAGE_TAG 2> /dev/null)
+    else
+        echo "Obraz istnieje! Użyj flagi -f lub --force aby nadpisać obraz."
+        exit 0
     fi
 fi
 

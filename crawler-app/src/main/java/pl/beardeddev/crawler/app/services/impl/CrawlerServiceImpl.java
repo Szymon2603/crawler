@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.beardeddev.crawler.app.aspects.Loggable;
 import pl.beardeddev.crawler.app.domain.ConfigPackageMaster;
 import pl.beardeddev.crawler.app.domain.Image;
 import pl.beardeddev.crawler.app.factory.CrawlerFactoryImpl;
@@ -59,6 +60,7 @@ public class CrawlerServiceImpl implements CrawlerService {
     private ImageRepository parsedImageRepository;
     
     @Override
+    @Loggable
     public Future<List<Image>> runCralwerAsync(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits) {
         LOGGER.info("Running crawler async with: {}, {}", startUrl, maxVisits);
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -69,6 +71,7 @@ public class CrawlerServiceImpl implements CrawlerService {
     }
        
     @Override
+    @Loggable
     public List<Image> runCrawler(ConfigPackageMaster config, URLWrapper startUrl, int maxVisits) {
         LOGGER.info("Running crawler with: {}, {}, {}", config, startUrl, maxVisits);
         CrawlerFactory factory = new CrawlerFactoryImpl(config);
@@ -76,6 +79,7 @@ public class CrawlerServiceImpl implements CrawlerService {
     }
     
     @Override
+    @Loggable
     public List<Image> runCrawler(CrawlerFactory crawlerFactory, URLWrapper startUrl, int maxVisits) {
         LOGGER.info("Running crawler with: {}, {}", startUrl, maxVisits);
         Crawler crawler = crawlerFactory.makeCrawler();
@@ -96,6 +100,7 @@ public class CrawlerServiceImpl implements CrawlerService {
     }
 
     @Override
+    @Loggable
     public void saveParsedImage(List<Image> parsedImages) {
         parsedImageRepository.save(parsedImages);
     }

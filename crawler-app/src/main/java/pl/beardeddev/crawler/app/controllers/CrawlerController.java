@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pl.beardeddev.crawler.app.aspects.Loggable;
 import pl.beardeddev.crawler.app.domain.ConfigPackageMaster;
 import pl.beardeddev.crawler.app.domain.Image;
 import pl.beardeddev.crawler.app.dto.ImageDto;
@@ -56,6 +57,7 @@ public class CrawlerController {
     private ModelMapper modelMapper;
     
     @GetMapping("/runCrawler")
+    @Loggable(shortMethodSignature = true)
     public List<ImageDto> runCrawler(@RequestParam String startUrl, @RequestParam(defaultValue = "10") int maxVisits,
                                      @RequestParam Long configId) throws MalformedURLException {
         ConfigPackageMaster configPackage = configPackageMasterRepository.findOne(configId);
@@ -65,6 +67,7 @@ public class CrawlerController {
     }
     
     @GetMapping("/runAndSaveCrawler")
+    @Loggable(shortMethodSignature = true)
     public List<ImageDto> runAndSaveCrawler(@RequestParam String startUrl, @RequestParam(defaultValue = "10") int maxVisits,
                                             @RequestParam Long configId) throws MalformedURLException {
         ConfigPackageMaster configPackage = configPackageMasterRepository.findOne(configId);

@@ -23,33 +23,22 @@
  */
 package pl.beardeddev.crawler.app.config;
 
-import org.springframework.context.annotation.ComponentScan;
+import pl.beardeddev.crawler.app.aspects.MethodCallLogger;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 /**
- * Konfiguracja elementów potrzebnych do działania aplikacji internetowej.
+ * Konfiguracja apsektów dla całej aplikacji.
  * 
  * @author Szymon Grzelak
  */
-@EnableWebMvc
 @Configuration
-@ComponentScan(basePackages = ConfigConstants.CONTROLLERS_PACKAGE)
-@Import( AspectsConfig.class )
-public class WebConfig extends WebMvcConfigurerAdapter {
-
-    @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
-    }
-
-    @Override
-    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-        configurer.defaultContentType(MediaType.APPLICATION_JSON);
+@EnableAspectJAutoProxy(proxyTargetClass = true)
+public class AspectsConfig {
+    
+    @Bean
+    public MethodCallLogger methodCallLogger() {
+        return new MethodCallLogger();
     }
 }
