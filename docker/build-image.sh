@@ -6,7 +6,7 @@
 # as in the --default example).
 # note: if this is set to -gt 0 the /etc/hosts part is not recognized ( may be a bug )
 PARAMETERS_DESC="Parametry wywołania:\n\
-                 -s|--skipTests <true|false> - pominięcie testów podczas budowania aplikacji\n\
+                 -s|--skipTests - pominięcie testów podczas budowania aplikacji\n\
                  -b|--build - wywołanie maven-a w celu przebudowania projektu\n\
                  -d|--dir <ścieżka> - ścieżka do katalogu z projektem\n\
                  -n|--image-name <nazwa> - nazwa obrazu docker, jeżeli nie podano to zostanie użyta domyślna nazwa crawler-app-dev-server\n\
@@ -14,7 +14,9 @@ PARAMETERS_DESC="Parametry wywołania:\n\
                  -f|--force - flaga do wymuszenia utworzenia nowego obrazu poprzez usunięcie istniejącego obrazu\n"
 BUILD=false
 FORCE=false
-SKIP_TESTS="false"
+SKIP_TESTS=false
+IMAGE_NAME="crawler-server-dev"
+IMAGE_TAG="latest"
 
 while [[ $# -gt 0 ]]
 do
@@ -22,7 +24,7 @@ key="$1"
 
 case $key in
     -s|--skipTests)
-    SKIP_TESTS="$2"
+    SKIP_TESTS=true
     ;;
     -b|--build)
     BUILD=true
@@ -58,41 +60,28 @@ esac
 shift # past argument or value
 done
 
+set -e
+
 if ! [[ -z ${DIR+s} ]]; then
-    echo "Change directory first $DIR"
+    echo "Zmieniam katalog roboczy na $DIR"
     cd DIR
 fi
 
 if $BUILD ; then
-    if [[ -z ${SKIP_TESTS+s} ]]; then
-        echo "Skip tests by default!"
-        SKIP_TESTS=true
-    fi
-
-    echo "Run maven install."
+    echo "Uruchamiam polecenie mvn clean install -DskipTests=$SKIP_TESTS"
     mvn clean install -DskipTests=$SKIP_TESTS
-    echo "Build done."
-fi
-
-if [[ -z ${IMAGE_NAME+s} ]]; then
-    IMAGE_NAME="crawler-app-dev-server"
-    echo "Set default image name to $IMAGE_NAME."
-fi
-
-if [[ -z ${IMAGE_TAG+s} ]]; then
-    IMAGE_TAG="latest"
-    echo "Set default image tag to $IMAGE_TAG."
+    echo "Projekt zbudowany."
 fi
 
 if [[ "$(sudo docker images -q $IMAGE_NAME:$IMAGE_TAG 2> /dev/null)" != "" ]]; then
     if ! $FORCE ; then
-        echo "Image exist! Use force flag to override."
+        echo "Obraz istenieje! Użyj flagi -f lub --force aby nadpisać obraz."
         exit 0
     else
-        echo "Remove old image."
+        echo "Usuwam obraz."
         sudo docker rmi $(sudo docker images -q $IMAGE_NAME:$IMAGE_TAG 2> /dev/null)
     fi
 fi
 
-echo "Building image."
+echo "Buduję nowy obraz za pomocą komendy sudo docker build -t $IMAGE_NAME:$IMAGE_TAG ."
 sudo docker build -t $IMAGE_NAME:$IMAGE_TAG .
