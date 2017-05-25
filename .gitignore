@@ -19,3 +19,6 @@ nb-configuration.xml
 /crawler-core/logs/*
 /crawler-app/nbproject/
 /crawler-core/nbproject/
+
+/crawler-client/node_modules
+/crawler-client/dist
