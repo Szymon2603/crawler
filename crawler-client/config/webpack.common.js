@@ -22,7 +22,7 @@ module.exports = {
           {
             loader: 'awesome-typescript-loader',
             options: { configFileName: helpers.root('src', 'tsconfig.json') }
-          } , 'angular2-template-loader'
+          }, 'angular2-template-loader'
         ]
       },
       {
@@ -34,14 +34,14 @@ module.exports = {
         loader: 'file-loader?name=assets/[name].[hash].[ext]'
       },
       {
-          test: /\.scss$/,
-          include: helpers.root('src', 'app'),
-          loaders: ['raw-loader', 'sass-loader']
+        test: /\.scss$/,
+        include: helpers.root('src', 'app'),
+        loaders: ['raw-loader', 'sass-loader']
       },
       {
         test: /\.css$/,
         exclude: helpers.root('src', 'app'),
-        loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: 'css-loader?sourceMap' })
+        loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader?sourceMap' })
       },
     ]
   },
