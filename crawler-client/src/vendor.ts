@@ -6,3 +6,6 @@ import '@angular/common';
 
 // RxJS
 import 'rxjs';
+
+// Bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css'
