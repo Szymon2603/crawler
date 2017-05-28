@@ -23,3 +23,5 @@ nb-configuration.xml
 .git
 README.md
 .gitignore
+
+/crawler-client/
