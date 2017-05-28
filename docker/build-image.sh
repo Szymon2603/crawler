@@ -83,10 +83,10 @@ fi
 
 if [[ "$(sudo docker images -q $IMAGE_NAME:$IMAGE_TAG 2> /dev/null)" != "" ]]; then
     if  $FORCE || $DOUBLE_FORCE ; then
-        if [[ "$(sudo docker ps -q -f "ancestor=$IMAGE_NAME:$IMAGE_TAG" 2> /dev/null)" != "" ]]; then
+        if [[ "$(sudo docker ps -aq -f "ancestor=$IMAGE_NAME:$IMAGE_TAG" 2> /dev/null)" != "" ]]; then
             if $DOUBLE_FORCE ; then
                 echo "Stopuję kontenery"
-                sudo docker stop $(sudo docker ps -q -f "ancestor=$IMAGE_NAME:$IMAGE_TAG" 2> /dev/null)
+                sudo docker stop $(sudo docker ps -aq -f "ancestor=$IMAGE_NAME:$IMAGE_TAG" 2> /dev/null)
                 echo "Usuwam kontenery"
                 sudo docker rm $(sudo docker ps -aq -f "ancestor=$IMAGE_NAME:$IMAGE_TAG" 2> /dev/null)
             else
