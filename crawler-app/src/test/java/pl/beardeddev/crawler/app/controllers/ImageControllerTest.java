@@ -25,7 +25,6 @@ package pl.beardeddev.crawler.app.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import org.junit.Test;
@@ -33,7 +32,6 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -43,11 +41,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.junit.Assert;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 import pl.beardeddev.crawler.app.config.WebConfig;
 import pl.beardeddev.crawler.app.domain.Image;
 import pl.beardeddev.crawler.app.repositories.ImageRepository;
+import pl.beardeddev.crawler.app.utils.CollectionWrapper;
 
 /**
  *
@@ -84,7 +81,8 @@ public class ImageControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn().getResponse().getContentAsString();
-        Assert.assertEquals(responseValue, objectMapper.writeValueAsString(imagesList));
+        CollectionWrapper<Image> imagesWrapped = CollectionWrapper.of(imagesList);
+        Assert.assertEquals(responseValue, objectMapper.writeValueAsString(imagesWrapped));
     }
     
     @Test

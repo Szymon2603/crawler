@@ -57,6 +57,7 @@ import pl.beardeddev.crawler.app.domain.Image;
 import pl.beardeddev.crawler.app.repositories.ConfigPackageMasterRepository;
 import pl.beardeddev.crawler.app.repositories.ImageRepository;
 import pl.beardeddev.crawler.app.services.CrawlerService;
+import pl.beardeddev.crawler.app.utils.CollectionWrapper;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 
 /**
@@ -81,6 +82,7 @@ public class CrawlerControllerTest {
     private ObjectMapper objectMapper;
 
     private List<Image> imagesList;
+    private CollectionWrapper<Image> imagesListWrapped;
     private ConfigPackageMaster config;
     private String startUrl;
     private int maxVisitsDefault;
@@ -89,9 +91,10 @@ public class CrawlerControllerTest {
     @Before
     public void setUp() throws MalformedURLException {
         imagesList = spy(LongStream
-                .rangeClosed(1, 11)
+                .rangeClosed(1, 5)
                 .mapToObj((id) -> new Image(id, "some-site/" + id, Long.valueOf(id).intValue(), Long.valueOf(id).intValue(), new Date()))
                 .collect(Collectors.toList()));
+        imagesListWrapped = CollectionWrapper.of(imagesList);
         config = mock(ConfigPackageMaster.class);
         startUrl = "http://some-site.com";
         maxVisitsDefault = 10;
@@ -109,7 +112,7 @@ public class CrawlerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn().getResponse().getContentAsString();
-        Assert.assertEquals(objectMapper.writeValueAsString(imagesList), responseValue);
+        Assert.assertEquals(objectMapper.writeValueAsString(imagesListWrapped), responseValue);
     }
     
     @Test
@@ -123,7 +126,7 @@ public class CrawlerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn().getResponse().getContentAsString();
-        Assert.assertEquals(objectMapper.writeValueAsString(imagesList), responseValue);
+        Assert.assertEquals(objectMapper.writeValueAsString(imagesListWrapped), responseValue);
     }
     
     @Test
@@ -138,7 +141,7 @@ public class CrawlerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn().getResponse().getContentAsString();
-        Assert.assertEquals(objectMapper.writeValueAsString(imagesList), responseValue);
+        Assert.assertEquals(objectMapper.writeValueAsString(imagesListWrapped), responseValue);
         reset(imagesList);
         verify(imageRepositoryMock, times(1)).save(imagesList);
     }
@@ -154,7 +157,7 @@ public class CrawlerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn().getResponse().getContentAsString();
-        Assert.assertEquals(objectMapper.writeValueAsString(imagesList), responseValue);
+        Assert.assertEquals(objectMapper.writeValueAsString(imagesListWrapped), responseValue);
         reset(imagesList);
         verify(imageRepositoryMock, times(1)).save(imagesList);
     }

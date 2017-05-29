@@ -38,6 +38,7 @@ import pl.beardeddev.crawler.app.dto.ImageDto;
 import pl.beardeddev.crawler.app.repositories.ConfigPackageMasterRepository;
 import pl.beardeddev.crawler.app.repositories.ImageRepository;
 import pl.beardeddev.crawler.app.services.CrawlerService;
+import pl.beardeddev.crawler.app.utils.CollectionWrapper;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 
 /**
@@ -46,7 +47,7 @@ import pl.beardeddev.crawler.core.wrappers.URLWrapper;
  */
 @RestController
 public class CrawlerController {
-    
+
     @Autowired
     private CrawlerService crawlerService;
     @Autowired
@@ -55,28 +56,32 @@ public class CrawlerController {
     private ImageRepository imageRepository;
     @Autowired
     private ModelMapper modelMapper;
-    
+
     @GetMapping("/runCrawler")
     @Loggable(shortMethodSignature = true)
-    public List<ImageDto> runCrawler(@RequestParam String startUrl, @RequestParam(defaultValue = "10") int maxVisits,
-                                     @RequestParam Long configId) throws MalformedURLException {
+    public CollectionWrapper<ImageDto> runCrawler(@RequestParam String startUrl,
+                                                  @RequestParam(defaultValue = "10")int maxVisits,
+                                                  @RequestParam Long configId) throws MalformedURLException {
         ConfigPackageMaster configPackage = configPackageMasterRepository.findOne(configId);
         URLWrapper startUrlWrapper = new URLWrapper(startUrl);
         List<Image> images = crawlerService.runCrawler(configPackage, startUrlWrapper, maxVisits);
-        return images.stream().map(this::imageToDto).collect(Collectors.toList());
+        List<ImageDto> imagesDto = images.stream().map(this::imageToDto).collect(Collectors.toList());
+        return CollectionWrapper.of(imagesDto);
     }
-    
+
     @GetMapping("/runAndSaveCrawler")
     @Loggable(shortMethodSignature = true)
-    public List<ImageDto> runAndSaveCrawler(@RequestParam String startUrl, @RequestParam(defaultValue = "10") int maxVisits,
-                                            @RequestParam Long configId) throws MalformedURLException {
+    public CollectionWrapper<ImageDto> runAndSaveCrawler(@RequestParam String startUrl,
+                                                         @RequestParam(defaultValue = "10") int maxVisits,
+                                                         @RequestParam Long configId) throws MalformedURLException {
         ConfigPackageMaster configPackage = configPackageMasterRepository.findOne(configId);
         URLWrapper startUrlWrapper = new URLWrapper(startUrl);
         List<Image> images = crawlerService.runCrawler(configPackage, startUrlWrapper, maxVisits);
         imageRepository.save(images);
-        return images.stream().map(this::imageToDto).collect(Collectors.toList());
+        List<ImageDto> imagesDto = images.stream().map(this::imageToDto).collect(Collectors.toList());
+        return CollectionWrapper.of(imagesDto);
     }
-    
+
     private ImageDto imageToDto(Image image) {
         return image != null ? modelMapper.map(image, ImageDto.class) : null;
     }

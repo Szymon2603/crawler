@@ -9,19 +9,21 @@ export class CrawlerService {
 
     runCrawlerUrl = 'http://localhost:8080/crawler-app/runCrawler'
 
-    constructor(private http: Http) {}
+    constructor(private http: Http) { }
 
     runCrawler(startUrl: string, configId: number, maxVisits?: number): Observable<Image[]> {
         let params = this.prepareParams(startUrl, configId, maxVisits);
-        return this.http.get(this.runCrawlerUrl, { search: params })
-                        .map(this.extractData);
+        return this.http
+            .get(this.runCrawlerUrl, { search: params })
+            .map(this.extractData)
+            .catch(this.handleError);
     }
 
     private prepareParams(startUrl: string, configId: number, maxVisits?: number): URLSearchParams {
         let params = new URLSearchParams();
         params.set('startUrl', startUrl);
         params.set('configId', configId.toString());
-        if(maxVisits !== undefined) {
+        if (maxVisits !== undefined) {
             params.set('maxVisits', maxVisits.toString());
         }
         return params;
@@ -29,8 +31,20 @@ export class CrawlerService {
 
     private extractData(res: Response) {
         let body = res.json();
-        console.log(JSON.stringify(res.json()));
-        return body || {};
+        return body.data || {};
+    }
+
+    private handleError(error: Response | any) {
+        let errMsg: string;
+        if (error instanceof Response) {
+            const body = error.json() || '';
+            const err = body.error || JSON.stringify(body);
+            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+        } else {
+            errMsg = error.message ? error.message : error.toString();
+        }
+        console.error(errMsg);
+        return Observable.throw(errMsg);
     }
 
     /**
