@@ -5,10 +5,11 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent }  from './app.component';
 import { CrawlerRunnerComponent } from './crawler/crawler-runner.component';
+import { ImagesComponent } from './image/images.component';
 
 @NgModule({
   imports:      [ BrowserModule, FormsModule, HttpModule ],
-  declarations: [ AppComponent, CrawlerRunnerComponent ],
+  declarations: [ AppComponent, CrawlerRunnerComponent, ImagesComponent ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }

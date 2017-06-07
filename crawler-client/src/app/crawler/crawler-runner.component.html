@@ -14,13 +14,8 @@
           <option *ngFor="let c of configs" [value]="c.id">{{c.name}}</option>
         </select>
     </div>
-    <button type="submit" class="btn btn-default">Submit</button>
-    <!-- TODO: Do przeniesienia do komponentu -->
-    <ul class="list-group" *ngFor="let image of images">
-        <li class="list-group-item">{{image.id}}</li>
-        <li class="list-group-item">{{image.imageURL}}</li>
-        <li class="list-group-item">{{image.numberOfComments}}</li>
-        <li class="list-group-item">{{image.rating}}</li>
-        <li class="list-group-item">{{image.createDate | date: 'dd-MM-yyyy hh:mm:ss'}}</li>
-    </ul>
+    <div class="form-group">
+        <button type="submit" class="btn btn-default">Submit</button>
+    </div>
 </form>
+<images [images]="images"></images>

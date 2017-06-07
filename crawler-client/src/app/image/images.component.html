@@ -1,0 +1,22 @@
+<ul class="list-group" *ngFor="let image of images">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="thumbnail">
+                <a href="{{image.imageURL}}"><img class="img-responsive" src="{{image.imageURL}}" alt="..."></a>
+                <div class="caption">
+                    <ul class="nav nav-pills" role="tablist">
+                        <li role="presentation">
+                            <button class="btn btn-primary">Number of comments <span class="badge">{{image.numberOfComments}}</span></button>
+                        </li>
+                        <li role="presentation">
+                            <button class="btn btn-success">Original rating <span class="badge">{{image.rating}}</span></button>
+                        </li>
+                        <li role="presentation">
+                            <button class="btn btn-info">Create date <span class="badge">{{image.createDate | date: 'dd-MM-yyyy hh:mm:ss'}}</span></button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</ul>

@@ -13,7 +13,7 @@ export class CrawlerRunnerComponent implements OnInit {
 
     configs: ConfigPackageMaster[];
     //TODO: Remove default values (move to placeholder)
-    startUrl: string = 'https://9gag.com/gag/aRm8j8y';
+    startUrl: string = 'https://9gag.com/gag/amYEoMj';
     maxVisits: number = 1;
     configId: number;
     images: Image[] = [];
