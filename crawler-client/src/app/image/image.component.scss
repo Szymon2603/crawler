@@ -1,9 +1,14 @@
-//TODO: Trzeba to koniecznie poprawić, jakiś błąd przy ładowaniu plików .scss, prawdopodobnie raw-loader lub sass-loader
-.nav-pills > li {
-  display: inline-block;
-  float: none;
+.nav-pills {
+  > li {
+    display: inline-block;
+    float: none;
+  }
 }
 
-ul.nav.nav-pills {
-  text-align: center;
+ul {
+  &.nav {
+    &.nav-pills {
+      text-align: center;
+    }
+  }
 }
