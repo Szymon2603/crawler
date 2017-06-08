@@ -18,6 +18,7 @@ export class CrawlerRunnerComponent implements OnInit {
     configId: number;
     images: Image[] = [];
     mode = 'Observable';
+    activeLoader: boolean = false;
 
     constructor (private crawlerService: CrawlerService) {}
 
@@ -28,10 +29,15 @@ export class CrawlerRunnerComponent implements OnInit {
 
     //TODO: Do poprawy obsługa błędów
     onSubmit() {
+        this.activeLoader = true;
         this.crawlerService.runCrawler(this.startUrl, this.configId, this.maxVisits)
                                          .subscribe(
-                                             images => this.images = this.images.concat(images),
-                                             errors => console.log(JSON.stringify(errors))
+                                             images => {
+                                                 this.images = this.images.concat(images);
+                                                 this.activeLoader = false;
+                                             },
+                                             errors => console.log(JSON.stringify(errors)),
+                                             () => this.activeLoader = false
                                          );
     }
 }
