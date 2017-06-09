@@ -37,6 +37,7 @@ import org.springframework.web.context.WebApplicationContext;
 import pl.beardeddev.crawler.app.repositories.ConfigPackageMasterRepository;
 import pl.beardeddev.crawler.app.repositories.ImageRepository;
 import pl.beardeddev.crawler.app.services.CrawlerService;
+import pl.beardeddev.crawler.app.services.ImageService;
 
 /**
  * Klasa konfiguracyjna na potrzby testowania kontrolerów aplikacji. Zawiera atrapy repozytoriów oraz innych potrzebnych
@@ -61,6 +62,11 @@ class ControllerTestConfiguration {
     @Bean
     public CrawlerService crawlerService() {
         return Mockito.mock(CrawlerService.class);
+    }
+    
+    @Bean
+    public ImageService imageService() {
+        return Mockito.mock(ImageService.class);
     }
     
     @Bean
