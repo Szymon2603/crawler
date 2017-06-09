@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.beardeddev.crawler.app.domain.Image;
 import pl.beardeddev.crawler.app.dto.ImageDto;
 import pl.beardeddev.crawler.app.repositories.ImageRepository;
-import pl.beardeddev.crawler.app.utils.CollectionWrapper;
 
 /**
  *
@@ -48,10 +47,10 @@ public class ImageController {
     private ModelMapper modelMapper;
 
     @GetMapping("/images")
-    public CollectionWrapper<ImageDto> getImages() {
+    public List<ImageDto> getImages() {
         List<Image> images = imageRepository.findAll();
         List<ImageDto> imagesDto = images.stream().map(this::imageToDto).collect(Collectors.toList());
-        return CollectionWrapper.of(imagesDto);
+        return imagesDto;
     }
     
     @GetMapping("/image/{id}")

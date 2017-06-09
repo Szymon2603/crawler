@@ -31,19 +31,14 @@ import lombok.Setter;
  * Wrapper dla kolekcji. Głównym przeznaczeniem tej klasy jest uniknięcie serializowania kolekcji do tablic JSON.
  * 
  * @author Szymon Grzelak
- * @param <T> typ obiektów przechowywanych przez kolekcję.
  */
 @Getter
 @Setter
-public class CollectionWrapper<T> {
+public class CollectionWrapper {
     
-    private Collection<T> data;
-
-    public static <T> CollectionWrapper<T> of(Collection<T> data) {
-        return new CollectionWrapper<>(data);
-    }
+    private Collection data;
     
-    public CollectionWrapper(Collection<T> data) {
+    public CollectionWrapper(Collection data) {
         this.data = data;
     }
 }

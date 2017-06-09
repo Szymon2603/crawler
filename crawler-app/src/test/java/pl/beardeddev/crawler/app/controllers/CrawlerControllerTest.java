@@ -82,7 +82,7 @@ public class CrawlerControllerTest {
     private ObjectMapper objectMapper;
 
     private List<Image> imagesList;
-    private CollectionWrapper<Image> imagesListWrapped;
+    private CollectionWrapper imagesListWrapped;
     private ConfigPackageMaster config;
     private String startUrl;
     private int maxVisitsDefault;
@@ -94,7 +94,7 @@ public class CrawlerControllerTest {
                 .rangeClosed(1, 5)
                 .mapToObj((id) -> new Image(id, "some-site/" + id, Long.valueOf(id).intValue(), Long.valueOf(id).intValue(), new Date()))
                 .collect(Collectors.toList()));
-        imagesListWrapped = CollectionWrapper.of(imagesList);
+        imagesListWrapped = new CollectionWrapper(imagesList);
         config = mock(ConfigPackageMaster.class);
         startUrl = "http://some-site.com";
         maxVisitsDefault = 10;

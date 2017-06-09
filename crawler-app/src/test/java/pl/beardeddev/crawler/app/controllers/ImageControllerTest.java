@@ -81,7 +81,7 @@ public class ImageControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn().getResponse().getContentAsString();
-        CollectionWrapper<Image> imagesWrapped = CollectionWrapper.of(imagesList);
+        CollectionWrapper imagesWrapped = new CollectionWrapper(imagesList);
         Assert.assertEquals(responseValue, objectMapper.writeValueAsString(imagesWrapped));
     }
     

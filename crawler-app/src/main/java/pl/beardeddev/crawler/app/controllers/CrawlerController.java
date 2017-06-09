@@ -38,7 +38,6 @@ import pl.beardeddev.crawler.app.dto.ImageDto;
 import pl.beardeddev.crawler.app.repositories.ConfigPackageMasterRepository;
 import pl.beardeddev.crawler.app.repositories.ImageRepository;
 import pl.beardeddev.crawler.app.services.CrawlerService;
-import pl.beardeddev.crawler.app.utils.CollectionWrapper;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
 
 /**
@@ -59,19 +58,19 @@ public class CrawlerController {
 
     @GetMapping("/runCrawler")
     @Loggable(shortMethodSignature = true)
-    public CollectionWrapper<ImageDto> runCrawler(@RequestParam String startUrl,
+    public List<ImageDto> runCrawler(@RequestParam String startUrl,
                                                   @RequestParam(defaultValue = "10")int maxVisits,
                                                   @RequestParam Long configId) throws MalformedURLException {
         ConfigPackageMaster configPackage = configPackageMasterRepository.findOne(configId);
         URLWrapper startUrlWrapper = new URLWrapper(startUrl);
         List<Image> images = crawlerService.runCrawler(configPackage, startUrlWrapper, maxVisits);
         List<ImageDto> imagesDto = images.stream().map(this::imageToDto).collect(Collectors.toList());
-        return CollectionWrapper.of(imagesDto);
+        return imagesDto;
     }
 
     @GetMapping("/runAndSaveCrawler")
     @Loggable(shortMethodSignature = true)
-    public CollectionWrapper<ImageDto> runAndSaveCrawler(@RequestParam String startUrl,
+    public List<ImageDto> runAndSaveCrawler(@RequestParam String startUrl,
                                                          @RequestParam(defaultValue = "10") int maxVisits,
                                                          @RequestParam Long configId) throws MalformedURLException {
         ConfigPackageMaster configPackage = configPackageMasterRepository.findOne(configId);
@@ -79,7 +78,7 @@ public class CrawlerController {
         List<Image> images = crawlerService.runCrawler(configPackage, startUrlWrapper, maxVisits);
         imageRepository.save(images);
         List<ImageDto> imagesDto = images.stream().map(this::imageToDto).collect(Collectors.toList());
-        return CollectionWrapper.of(imagesDto);
+        return imagesDto;
     }
 
     private ImageDto imageToDto(Image image) {
