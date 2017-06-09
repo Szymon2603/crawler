@@ -45,8 +45,8 @@ import pl.beardeddev.crawler.app.services.CrawlerService;
  * @author Szymon Grzelak
  */
 @Configuration
-@Profile(value = TestConfiguration.CONTROLLER_TEST_PROFILE)
-class TestConfiguration {
+@Profile(value = ControllerTestConfiguration.CONTROLLER_TEST_PROFILE)
+class ControllerTestConfiguration {
     
     public static final String CONTROLLER_TEST_PROFILE = "controller-test-profile";
     

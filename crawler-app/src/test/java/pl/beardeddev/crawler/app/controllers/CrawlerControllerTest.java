@@ -33,13 +33,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -48,7 +43,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import pl.beardeddev.crawler.app.config.WebConfig;
@@ -59,6 +53,12 @@ import pl.beardeddev.crawler.app.repositories.ImageRepository;
 import pl.beardeddev.crawler.app.services.CrawlerService;
 import pl.beardeddev.crawler.app.utils.CollectionWrapper;
 import pl.beardeddev.crawler.core.wrappers.URLWrapper;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  *
@@ -66,8 +66,8 @@ import pl.beardeddev.crawler.core.wrappers.URLWrapper;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = { TestConfiguration.class, WebConfig.class })
-@ActiveProfiles(profiles = TestConfiguration.CONTROLLER_TEST_PROFILE)
+@ContextConfiguration(classes = { ControllerTestConfiguration.class, WebConfig.class })
+@ActiveProfiles(profiles = ControllerTestConfiguration.CONTROLLER_TEST_PROFILE)
 public class CrawlerControllerTest {
     
     @Autowired

@@ -26,13 +26,21 @@ package pl.beardeddev.crawler.app.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.beardeddev.crawler.app.domain.Image;
 import pl.beardeddev.crawler.app.dto.ImageDto;
+import pl.beardeddev.crawler.app.exceptions.BusinessEntityExistsException;
 import pl.beardeddev.crawler.app.repositories.ImageRepository;
+import pl.beardeddev.crawler.app.services.ImageService;
 
 /**
  *
@@ -40,9 +48,13 @@ import pl.beardeddev.crawler.app.repositories.ImageRepository;
  */
 @RestController
 public class ImageController {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
 
     @Autowired
     private ImageRepository imageRepository;
+    @Autowired
+    private ImageService imageService;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -59,7 +71,19 @@ public class ImageController {
         return imageToDto(image);
     }
     
+    @PostMapping("/image")
+    public ResponseEntity<Void> createImage(@RequestBody ImageDto imageDto) throws BusinessEntityExistsException {
+        LOGGER.debug("Create new image");
+        Image image = dtoToImage(imageDto);
+        imageService.createImage(image);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    
     private ImageDto imageToDto(Image image) {
         return image != null ? modelMapper.map(image, ImageDto.class) : null;
+    }
+    
+    private Image dtoToImage(ImageDto dto) {
+        return dto != null ? modelMapper.map(dto, Image.class) : null;
     }
 }

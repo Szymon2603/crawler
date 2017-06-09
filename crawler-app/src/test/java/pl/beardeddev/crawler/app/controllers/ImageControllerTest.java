@@ -52,8 +52,8 @@ import pl.beardeddev.crawler.app.utils.CollectionWrapper;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = { TestConfiguration.class, WebConfig.class })
-@ActiveProfiles(profiles = TestConfiguration.CONTROLLER_TEST_PROFILE)
+@ContextConfiguration(classes = { ControllerTestConfiguration.class, WebConfig.class })
+@ActiveProfiles(profiles = ControllerTestConfiguration.CONTROLLER_TEST_PROFILE)
 public class ImageControllerTest {
     
     @Autowired

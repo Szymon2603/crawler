@@ -44,7 +44,7 @@ import pl.beardeddev.crawler.core.model.ParsedImage;
 @Entity
 @Table(name = "IMAGE")
 @ToString
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = { "id", "imageURL" })
 public class Image implements Serializable {
 
     private static final long serialVersionUID = -5416841741916906006L;
