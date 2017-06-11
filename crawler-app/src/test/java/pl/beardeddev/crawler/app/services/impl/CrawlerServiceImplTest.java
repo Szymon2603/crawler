@@ -57,8 +57,7 @@ import pl.beardeddev.crawler.core.wrappers.URLWrapper;
  * @author Szymon Grzelak
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { ApplicationConfig.class })
-@ActiveProfiles(profiles = ConfigConstants.DEVELOPMENT_PROFILE)
+@ContextConfiguration(classes = { ServiceTestConfiguration.class })
 public class CrawlerServiceImplTest {
     
     @Autowired

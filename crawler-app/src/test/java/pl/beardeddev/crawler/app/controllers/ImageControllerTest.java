@@ -41,9 +41,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.junit.Assert;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import pl.beardeddev.crawler.app.config.WebConfig;
 import pl.beardeddev.crawler.app.domain.Image;
+import pl.beardeddev.crawler.app.exceptions.BusinessEntityExistsException;
 import pl.beardeddev.crawler.app.repositories.ImageRepository;
+import pl.beardeddev.crawler.app.services.ImageService;
 import pl.beardeddev.crawler.app.utils.CollectionWrapper;
 
 /**
@@ -58,6 +64,8 @@ public class ImageControllerTest {
     
     @Autowired
     private ImageRepository imageRepositoryMock;
+    @Autowired
+    private ImageService imageService;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -104,5 +112,23 @@ public class ImageControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         Assert.assertEquals("", responseValue);
+    }
+    
+    @Test
+    public void whenCreateImageThenCallCreateImage() throws Exception {
+        MockHttpServletRequestBuilder reqBuilder = post("/image")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(image1));
+        mockMvc.perform(reqBuilder).andExpect(status().isCreated());
+        verify(imageService, times(1)).createImage(image1);
+    }
+    
+    @Test
+    public void givenExistImageWhenCreateImageThenResponseStatusIsConflict() throws Exception {
+        doThrow(BusinessEntityExistsException.class).when(imageService).createImage(image1);
+        MockHttpServletRequestBuilder reqBuilder = post("/image")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(image1));
+        mockMvc.perform(reqBuilder).andExpect(status().isConflict());
     }
 }
