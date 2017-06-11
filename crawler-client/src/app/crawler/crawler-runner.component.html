@@ -1,22 +1,32 @@
-<h1>Crawler Runner</h1>
-<form (ngSubmit)="onSubmit()" #crawlerRunnerForm="ngForm">
-    <div class="form-group">
-        <label for="startUrl">Start URL</label>
-        <input [(ngModel)]="startUrl" type="text" class="form-control" id="startUrl" placeholder="Start URL" name="startUrl">
-    </div>
-    <div class="form-group">
-        <label for="maxVisits">Max visits</label>
-        <input [(ngModel)]="maxVisits" type="text" class="form-control" id="maxVisits" placeholder="Max visits" name="maxVisits">
-    </div>
-    <div class="form-group">
-        <label for="configId">Config</label>
-        <select class="form-control" id="configId" [(ngModel)]="configId" name="configId">
-          <option *ngFor="let c of configs" [value]="c.id">{{c.name}}</option>
-        </select>
-    </div>
-    <div class="form-group" *ngIf="!activeLoader">
-        <button type="submit" class="btn btn-default">Submit</button>
-    </div>
-</form>
-<loader [active]="activeLoader"></loader>
-<images [images]="images"></images>
+<fieldset>
+    <legend>Crawler Runner</legend>
+    <form (ngSubmit)="onSubmit()" #crawlerRunnerForm="ngForm" class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-md-2" for="startUrl">Start URL</label>
+            <div class="col-md-8">
+                <input [(ngModel)]="startUrl" type="text" class="form-control" id="startUrl" placeholder="Start URL" name="startUrl">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2" for="maxVisits">Max visits</label>
+            <div class="col-md-8">
+                <input [(ngModel)]="maxVisits" type="text" class="form-control" id="maxVisits" placeholder="Max visits" name="maxVisits">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2" for="configId">Config</label>
+            <div class="col-md-8">
+                <select class="form-control" id="configId" [(ngModel)]="configId" name="configId">
+                  <option *ngFor="let c of configs" [value]="c.id">{{c.name}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-8">
+                <button type="submit" class="btn btn-default" *ngIf="!activeLoader">Submit</button>
+                <loader [active]="activeLoader"></loader>
+            </div>
+        </div>
+    </form>
+    <images [images]="images"></images>
+</fieldset>
