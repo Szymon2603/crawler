@@ -24,7 +24,7 @@ export class CrawlerRunnerComponent implements OnInit {
 
     ngOnInit() {
         this.configs = this.crawlerService.getConfigPackageMaster();
-         this.configId = this.configs[0].id;
+        this.configId = this.configs[0].id;
     }
 
     //TODO: Do poprawy obsługa błędów
