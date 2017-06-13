@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 @Component({
     selector: 'crawler-runner',
     templateUrl: 'crawler-runner.component.html',
-    providers: [ CrawlerService ]
+    providers: [CrawlerService]
 })
 export class CrawlerRunnerComponent implements OnInit {
 
@@ -20,24 +20,24 @@ export class CrawlerRunnerComponent implements OnInit {
     mode = 'Observable';
     activeLoader: boolean = false;
 
-    constructor (private crawlerService: CrawlerService) {}
+    constructor(private crawlerService: CrawlerService) { }
 
     ngOnInit() {
         this.configs = this.crawlerService.getConfigPackageMaster();
         this.configId = this.configs[0].id;
     }
 
-    //TODO: Do poprawy obsługa błędów
+    //TODO: Do poprawy obsługa błędów, usunięcie mockowych metod
     onSubmit() {
         this.activeLoader = true;
-        this.crawlerService.runCrawler(this.startUrl, this.configId, this.maxVisits)
-                                         .subscribe(
-                                             images => {
-                                                 this.images = this.images.concat(images);
-                                                 this.activeLoader = false;
-                                             },
-                                             errors => console.log(JSON.stringify(errors)),
-                                             () => this.activeLoader = false
-                                         );
+        this.crawlerService.runCrawlerMock(this.startUrl, this.configId, this.maxVisits)
+            .subscribe(
+                images => {
+                    this.images = this.images.concat(images);
+                    this.activeLoader = false;
+                },
+                errors => console.log(JSON.stringify(errors)),
+                () => this.activeLoader = false
+            );
     }
 }

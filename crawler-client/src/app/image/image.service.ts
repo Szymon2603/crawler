@@ -17,4 +17,18 @@ export class ImageService extends ServiceBase {
             .map(this.extractData)
             .catch(this.handleError)
     }
+
+    /**
+    * Atrapa na potrzeby testów
+    */
+    imagesMock() : Observable<Image[]> {
+        let images: Image[] = [];
+        let imageURL = 'https://img-9gag-fun.9cache.com/photo/a6bWMX8_700b.jpg';
+        for(let i = 0; i < 10; ++i) {
+            images.push(new Image(i + 1, imageURL, i + 10, i + 20, new Date(Date.now())));
+        }
+        return Observable
+            .from([images])
+            .delay(images.length * 100);
+    }
 }

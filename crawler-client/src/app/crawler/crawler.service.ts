@@ -31,6 +31,21 @@ export class CrawlerService extends ServiceBase {
     }
 
     /**
+    * Atrapa na moment testów lokalnych
+    */
+    runCrawlerMock(startUrl: string, configId: number, maxVisits?: number): Observable<Image[]> {
+        let loops = maxVisits === undefined ? 10 : maxVisits;
+        let images: Image[] = [];
+        let imageURL = 'https://img-9gag-fun.9cache.com/photo/a6bWMX8_700b.jpg';
+        for(let i = 0; i < loops; ++i) {
+            images.push(new Image(null, imageURL, i + 10, i + 20, new Date(Date.now())));
+        }
+        return Observable
+            .from([images])
+            .delay(loops * 100);
+    }
+
+    /**
     * Atrapa na moment braku komponentu do pobierania konfiguracji. Zostanie uzupełnione po dodanie router-a oraz
     * rozbudowie części serwerowej.
     */
