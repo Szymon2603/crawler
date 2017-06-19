@@ -4,8 +4,7 @@ import { Image } from './../models/image';
 
 @Component({
     selector: 'initialized-image-list',
-    template: '<images [images]="images"></images>',
-    providers: [ ImageService ]
+    template: '<images [images]="images"></images>'
 })
 export class InitializedImageListComponent implements OnInit {
 
