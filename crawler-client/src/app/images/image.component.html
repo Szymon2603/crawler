@@ -1,5 +1,13 @@
 <div class="thumbnail">
-    <a href="{{image.imageURL}}"><img class="img-responsive" src="{{image.imageURL}}" alt="..."></a>
+    <div class="row top">
+        <div class="col-xs-6 text-align-left">
+            <p class="text-muted">Źródło: <a href="{{image.imageURL}}">{{image.imageURL}}</a></p>
+        </div>
+        <div class="col-xs-6 text-align-right">
+            <button (click)="add()" class="btn btn-sm btn-success" *ngIf="isNew"><span class="glyphicon glyphicon-plus"></span> Add</button>
+        </div>
+    </div>
+    <img class="img-responsive" src="{{image.imageURL}}" alt="...">
     <div class="caption">
         <ul class="nav nav-pills" role="tablist">
             <li role="presentation">

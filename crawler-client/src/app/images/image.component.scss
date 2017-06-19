@@ -1,14 +1,36 @@
 .nav-pills {
-  > li {
-    display: inline-block;
-    float: none;
-  }
+    > li {
+        display: inline-block;
+        float: none;
+    }
 }
 
 ul {
-  &.nav {
-    &.nav-pills {
-      text-align: center;
+    &.nav {
+        &.nav-pills {
+            text-align: center;
+        }
     }
-  }
+}
+
+div {
+    &.thumbnail {
+        display: inline-block;
+    }
+
+    &.top {
+        margin-bottom: 10px;
+    }
+
+    &.text-align-right {
+        text-align: right;
+    }
+
+    &.text-align-left {
+        text-align: left;
+    }
+
+    p {
+        font-size: 10px;
+    }
 }
