@@ -3,7 +3,7 @@ import { Http, URLSearchParams } from '@angular/http';
 import { Image } from '../models/image';
 import { ConfigPackageMaster } from '../models/config-package-master';
 import { Observable } from 'rxjs/Observable';
-import { ServiceBase } from '../service/basic-service';
+import { ServiceBase } from '../commons/services/basic-service';
 
 @Injectable()
 export class CrawlerService extends ServiceBase {

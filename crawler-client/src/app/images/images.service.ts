@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams } from '@angular/http';
 import { Image } from '../models/image';
 import { Observable } from 'rxjs/Observable';
-import { ServiceBase } from '../service/basic-service';
+import { ServiceBase } from '../commons/services/basic-service';
 
 @Injectable()
-export class ImageService extends ServiceBase {
+export class ImagesService extends ServiceBase {
 
     constructor(private http: Http) { super() }
 

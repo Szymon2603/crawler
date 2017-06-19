@@ -6,19 +6,19 @@ import { HttpModule } from '@angular/http';
 import { AppComponent }  from './app.component';
 import { CrawlerRunnerComponent } from './crawler/crawler-runner.component';
 import { CrawlerService } from './crawler/crawler.service';
-import { ImageModule } from './image/image.module';
-import { LoaderComponent } from './commons/loader.component';
+import { ImagesModule } from './images/images.module';
+import { LoaderComponent } from './commons/components/loader.component';
 
 import { AppRoutingModule } from './app-routing.module';
-import { ImageRoutingModule } from './image/image-routing.module';
+import { ImagesRoutingModule } from './images/images-routing.module';
 
 @NgModule({
     imports: [
         BrowserModule,
         FormsModule,
         HttpModule,
-        ImageModule,
-        ImageRoutingModule,
+        ImagesModule,
+        ImagesRoutingModule,
         AppRoutingModule
     ],
     declarations: [

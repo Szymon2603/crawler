@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ImageComponent } from './image.component'
 import { ImagesComponent } from './images.component';
 import { InitializedImageListComponent } from './initialized-image-list.component';
-import { ImageService } from './image.service';
+import { ImagesService } from './images.service';
 
 @NgModule({
     imports: [
@@ -19,7 +19,7 @@ import { ImageService } from './image.service';
         InitializedImageListComponent
     ],
     providers: [
-        ImageService
+        ImagesService
     ]
 })
-export class ImageModule { }
+export class ImagesModule { }

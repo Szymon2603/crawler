@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ImageService } from './image.service';
+import { ImagesService } from './images.service';
 import { Image } from './../models/image';
 
 @Component({
@@ -10,7 +10,7 @@ export class InitializedImageListComponent implements OnInit {
 
     images: Image[] = [];
 
-    constructor(private imageService: ImageService) { }
+    constructor(private imageService: ImagesService) { }
 
     ngOnInit() {
         this.imageService.imagesMock()
