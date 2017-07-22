@@ -35,6 +35,7 @@
     <modules>
         <module>crawler-core</module>
         <module>crawler-app</module>
+        <module>crawler-core-v2</module>
     </modules>
     
     <dependencyManagement>
