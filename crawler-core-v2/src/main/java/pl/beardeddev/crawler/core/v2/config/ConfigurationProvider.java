@@ -21,35 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.core.v2.exceptions;
+package pl.beardeddev.crawler.core.v2.config;
+
+import java.io.Reader;
+import pl.beardeddev.crawler.core.v2.model.configuration.RootElementConfig;
 
 /**
- * Wyjątek zgłaszany przez elementy główne wchodzące w skład robota internetowego. Sygnalizuje różne ogólne błędy
- * jake napotkano w czasie pracy crawler-a.
- * 
+ *
  * @author Szymon Grzelak
  */
-public class CoreException extends RuntimeException {
+public interface ConfigurationProvider {
     
-    private static final long serialVersionUID = -1383408999562606473L;
-
-    public CoreException() {
-    }
-
-    public CoreException(String message) {
-        super(message);
-    }
-
-    public CoreException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public CoreException(Throwable cause) {
-        super(cause);
-    }
-
-    public CoreException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
-
+    RootElementConfig getConfigurationFromXml(String xml);
+    RootElementConfig getConfigurationFromXml(Reader xml);
 }

@@ -22,3 +22,5 @@ nb-configuration.xml
 
 /crawler-client/node_modules
 /crawler-client/dist
+/crawler-core-v2/nbproject/
+/crawler-core-v2/target/

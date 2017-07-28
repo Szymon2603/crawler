@@ -24,32 +24,28 @@
 package pl.beardeddev.crawler.core.v2.exceptions;
 
 /**
- * Wyjątek zgłaszany przez elementy główne wchodzące w skład robota internetowego. Sygnalizuje różne ogólne błędy
- * jake napotkano w czasie pracy crawler-a.
- * 
+ *
  * @author Szymon Grzelak
  */
-public class CoreException extends RuntimeException {
+public class BadConfigurationException extends RuntimeException {
     
-    private static final long serialVersionUID = -1383408999562606473L;
+    private static final long serialVersionUID = 7275112820663714502L;
 
-    public CoreException() {
-    }
+    public BadConfigurationException() { }
 
-    public CoreException(String message) {
+    public BadConfigurationException(String message) {
         super(message);
     }
 
-    public CoreException(String message, Throwable cause) {
+    public BadConfigurationException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public CoreException(Throwable cause) {
+    public BadConfigurationException(Throwable cause) {
         super(cause);
     }
 
-    public CoreException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public BadConfigurationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
-
 }

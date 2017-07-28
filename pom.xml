@@ -30,6 +30,7 @@
         <versions.javax.servlet>3.1.0</versions.javax.servlet>
         <versions.aspectjweaver>1.8.10</versions.aspectjweaver>
         <versions.cglib>3.2.5</versions.cglib>
+        <versions.jaxb2-basic>1.11.1</versions.jaxb2-basic>
     </properties>
     
     <modules>
