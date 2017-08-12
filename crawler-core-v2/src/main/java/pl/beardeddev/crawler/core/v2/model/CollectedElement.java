@@ -21,15 +21,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.beardeddev.crawler.core.v2.extractors;
+package pl.beardeddev.crawler.core.v2.model;
 
-import pl.beardeddev.crawler.core.v2.model.Type;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import pl.beardeddev.crawler.core.v2.model.configuration.Type;
 
 /**
  *
  * @author Szymon Grzelak
  */
-public interface ExtractorFactory {
-    
-    AttributeValueExtractor getExtractor(Type type);
+@ToString
+@EqualsAndHashCode
+public class CollectedElement {
+
+    private final Map<String, Attribute> ATTRIBUTES;
+
+    public CollectedElement() {
+        this.ATTRIBUTES = new HashMap<>();
+    }
+
+    public CollectedElement(Map<String, Attribute> result) {
+        this.ATTRIBUTES = result;
+    }
+
+    public Attribute getElementAttr(String name) {
+        return ATTRIBUTES.get(name);
+    }
+
+    public Optional<Attribute> addElementAttr(String name, Attribute attribute) {
+        return Optional.ofNullable(ATTRIBUTES.put(name, attribute));
+    }
+
+    @Getter
+    @Setter
+    @ToString
+    @EqualsAndHashCode
+    public static class Attribute {
+
+        private Type type;
+        private String value;
+
+        public Attribute(Type type, String value) {
+            this.type = type;
+            this.value = value;
+        }
+    }
 }

@@ -74,6 +74,7 @@ THE SOFTWARE.
         <xs:sequence>
             <xs:element type="tns:selectorConfig" name="selector"/>
             <xs:element type="tns:elementConfig" name="elements" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="xs:int" name="maxVisists"/>
         </xs:sequence>
     </xs:complexType>
     
