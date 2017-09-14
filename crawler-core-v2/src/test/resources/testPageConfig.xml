@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 The MIT License
 
@@ -22,17 +22,31 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
-<html>
-    <head>
-        <title>Test page</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>Test page</div>
-        <img src="https://local" alt="local"/>
-        <a href="testPage.html">Next</a>
-        <div id="commentsNumber">100</div>
-        <div id="rateNummber">150,00</div>
-    </body>
-</html>
+
+<conf:rootElementConfig 
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns:conf='http://model.v2.core.crawler.beardeddev.pl/Configuration'
+    xsi:schemaLocation='http://model.v2.core.crawler.beardeddev.pl/Configuration file:///home/szymon/Workspace/git_repository/crawler/crawler-core-v2/src/main/resources/jaxb/Configuration.xsd'>
+    
+    <selector>body</selector>
+    <maxVisists>10</maxVisists>
+    
+    <elements>
+        <attribute attributeName="src">body &gt; img</attribute>
+        <elementName>image</elementName>
+        <elementType>STRING</elementType>
+    </elements>
+    
+    <elements>
+        <textNode>#commentsNumber</textNode>
+        <elementName>number of comments</elementName>
+        <elementType>INTEGER</elementType>
+    </elements>
+    
+    <elements>
+        <textNode>#rateNummber</textNode>
+        <elementName>rating</elementName>
+        <elementType>INTEGER</elementType>
+    </elements>
+
+</conf:rootElementConfig>

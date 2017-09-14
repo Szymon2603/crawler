@@ -57,6 +57,10 @@ public class CollectedElement {
     public Optional<Attribute> addElementAttr(String name, Attribute attribute) {
         return Optional.ofNullable(ATTRIBUTES.put(name, attribute));
     }
+    
+    public Boolean isEmpty() {
+        return ATTRIBUTES.isEmpty();
+    }
 
     @Getter
     @Setter

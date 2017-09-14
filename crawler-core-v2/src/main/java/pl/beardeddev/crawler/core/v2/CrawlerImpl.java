@@ -86,6 +86,8 @@ public class CrawlerImpl {
         SelectorConfig selector = rootElementConfig.getSelector();
         LOGGER.debug("Looking for root elements using selector {}", selector.getValue());
         Elements elements = doc.select(selector.getValue());
+        CollectedElement element = new CollectedElement();
+        result.add(element);
         elements.forEach(el -> {
             List<ElementConfig> elementsConfig = rootElementConfig.getElements();
             elementsConfig.forEach(conf -> {
@@ -99,9 +101,7 @@ public class CrawlerImpl {
                     Elements found = el.select(textNodeConfig.getValue());
                     value = found.text();
                 }
-                CollectedElement element = new CollectedElement();
                 element.addElementAttr(conf.getElementName(), new CollectedElement.Attribute(conf.getElementType(), value));
-                result.add(element);
             });
         });
     }
