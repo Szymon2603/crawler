@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!--
+The MIT License
+
+Copyright 2017 Szymon Grzelak.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://model.v2.core.crawler.beardeddev.pl/Configuration"
+           xmlns:tns="http://model.v2.core.crawler.beardeddev.pl/Configuration">
+    
+    <xs:element name="rootElementConfig" type="tns:rootElementConfig"/>
+    
+    <xs:complexType name="attributeConfig">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="attributeName"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:complexType name="textNodeConfig">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:complexType name="selectorConfig">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:simpleType name="type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="INTEGER"/>
+            <xs:enumeration value="STRING"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="elementConfig">
+        <xs:sequence>
+            <xs:choice>
+                <xs:element type="tns:attributeConfig" name="attribute" minOccurs="0"/>
+                <xs:element type="tns:textNodeConfig" name="textNode" minOccurs="0"/>
+            </xs:choice>
+            <xs:element type="xs:string" name="elementName"/>
+            <xs:element type="tns:type" name="elementType"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="rootElementConfig">
+        <xs:sequence>
+            <xs:element type="tns:selectorConfig" name="selector"/>
+            <xs:element type="tns:elementConfig" name="elements" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="xs:int" name="maxVisists"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+</xs:schema>
+
+<!--<element>
+    <selector>.bage</selector>
+    <elements>
+        <element>
+            <attribute name="src">img</attribute>
+        </element>
+        <element>
+            <textNode>comments</textNode>
+        </element>
+    </elements>
+</element>-->
